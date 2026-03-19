@@ -1,4 +1,6 @@
-public interface I_SupplierAPI {
+package iposSA;
+
+public interface ISupplierAPI {
 
 	ProductList[] getProductCatalogue();
 
