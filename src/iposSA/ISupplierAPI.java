@@ -5,7 +5,7 @@ public interface ISupplierAPI {
 	ProductList[] getProductCatalogue();
 
 	/**
-	 * hello
+	 * hello 
 	 * @param order
 	 */
 	boolean submitPurchaseOrder(Order order);
