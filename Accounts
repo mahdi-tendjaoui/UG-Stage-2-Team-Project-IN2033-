@@ -7,6 +7,8 @@ public class Accounts {
         this.password = password;
     }
 
+//editing
+
     public String getEmail() {
         return email;
     }

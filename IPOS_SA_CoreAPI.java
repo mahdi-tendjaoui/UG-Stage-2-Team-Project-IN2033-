@@ -6,7 +6,7 @@ public class IPOS_SA_CoreAPI implements submitPurchaseOrder {
 
 	public IPOS_SA_CoreAPI() {
 		// TODO - implement IPOS_SA_CoreAPI.IPOS_SA_CoreAPI
-		throw new UnsupportedOperationException();
+		throw new UnsupporxtedOperationException();
 	}
 
 	public ProductList[] getProductCatalogue() {
