@@ -1,4 +1,4 @@
-public class Reports {
+public class Report {
     public void generateReport() {
         // Implement logic to generate report here
     }
