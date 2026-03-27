@@ -13,19 +13,19 @@ public class Accounts {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String newEmail) {
+        this.email = newEmail;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
     }
 
-    public void login(this.email, this.password) {
+    public void login(email, password) {
         // Implement login logic here
     }
 
