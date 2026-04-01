@@ -1,5 +1,3 @@
-package iposSA;
-
 import iposSA.ISupplierAPI.*;
 
 public class IPOS_SA_CoreAPI implements submitPurchaseOrder {

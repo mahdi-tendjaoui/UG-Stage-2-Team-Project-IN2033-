@@ -1,5 +1,3 @@
-package iposSA;
-
 public interface ISupplierAPI {
 
 	ProductList[] getProductCatalogue();
