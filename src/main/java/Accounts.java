@@ -1,6 +1,7 @@
 public class Accounts {
     private String email;
     private String password;
+    private float balance;
     
     public Accounts(String email, String password) {
         this.email = email;
@@ -25,7 +26,7 @@ public class Accounts {
         this.password = newPassword;
     }
 
-    public void login(email, password) {
+    public void login(String email, String password) {
         // Implement login logic here
     }
 
@@ -35,6 +36,7 @@ public class Accounts {
 
     public float getBalance() {
         // Implement logic to retrieve account balance here
+        return balance;
     }
 
     public void viewAccountDetails() {
