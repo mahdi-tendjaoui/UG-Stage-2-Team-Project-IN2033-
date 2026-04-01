@@ -1,63 +1,85 @@
+
+/**
+ * Matches the database structure named varibles.
+ */
 public class CatalogueItem {
 
-    private String itemId;
-    private String itemName;
+    private String categoryId;
+    private String medicineId;
     private String description;
-    private double unitPrice;
-    private int stockQuantity;
+    private String packageType;
+    private String unit;
+    private int unitsInPack;
+    private double packageCost;
+    private int availability;
+    private int stockLimit;
 
-    
     public CatalogueItem() {
     }
 
-    /**
-     * Constructor with the main catalogue item details
-     */
-    public CatalogueItem(String itemId, String itemName, String description, double unitPrice, int stockQuantity) {
-        this.itemId = itemId;
-        this.itemName = itemName;
+    public CatalogueItem(String categoryId, String medicineId, String description,
+                         String packageType, String unit, int unitsInPack,
+                         double packageCost, int availability, int stockLimit) {
+        this.categoryId = categoryId;
+        this.medicineId = medicineId;
         this.description = description;
-        this.unitPrice = unitPrice;
-        this.stockQuantity = stockQuantity;
+        this.packageType = packageType;
+        this.unit = unit;
+        this.unitsInPack = unitsInPack;
+        this.packageCost = packageCost;
+        this.availability = availability;
+        this.stockLimit = stockLimit;
     }
 
-    public String getItemId() {
-        return itemId;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    public String getMedicineId() {
+        return medicineId;
     }
 
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public String getFullItemId() {
+        return categoryId + " " + medicineId;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getPackageType() {
+        return packageType;
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
+    public int getUnitsInPack() {
+        return unitsInPack;
     }
 
-    public int getStockQuantity() {
-        return stockQuantity;
+    public double getPackageCost() {
+        return packageCost;
     }
 
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public int getAvailability() {
+        return availability;
+    }
+
+    public int getStockLimit() {
+        return stockLimit;
+    }
+
+    public void setAvailability(int availability) {
+        this.availability = availability;
+    }
+
+    public void setStockLimit(int stockLimit) {
+        this.stockLimit = stockLimit;
+    }
+
+    public void setPackageCost(double packageCost) {
+        this.packageCost = packageCost;
     }
 }
