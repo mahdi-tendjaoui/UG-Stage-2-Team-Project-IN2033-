@@ -7,7 +7,7 @@ public class Accounts {
         this.password = password;
     }
 
-//editing
+//editing dfddd
 
     public String getEmail() {
         return email;
