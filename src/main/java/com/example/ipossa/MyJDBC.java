@@ -14,20 +14,42 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 
 public class MyJDBC {
     public static void main (String[] args) throws ClassNotFoundException {
-        String host = "mysql-75ba1ad-ipos-sa-db.g.aivencloud.com";
-        String port = "12995";
-        String databaseName = "defaultdb";
-        String username = "avnadmin";
-        String password = "AVNS_RYEO3o9oYDlqbowxGy-";
+        String host, port, database, username, password;
+        host = port = database = username = password = null;
+
+        for (int i = 0; i < args.length - 1; i++) {
+            switch (args[i].toLowerCase(Locale.ROOT)) {
+                case "-host":
+                    host = args[++i];
+                    break;
+                case "-port":
+                    port = args[++i];
+                    break;
+                case "-database":
+                    database = args[++i];
+                    break;
+                case "-username":
+                    username = args[++i];
+                    break;
+                case "-password":
+                    password = args[++i];
+                    break;
+            }
+        }
+        if (host == null || port == null || database == null) {
+            System.out.println("Host, port, database is null");
+            return;
+        }
 
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         try (
                 Connection connection = DriverManager.getConnection(
-                        "jdbc:mysql://" + host + ":" + port + "/" + databaseName + "?sslmode=require", username, password
+                        "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslmode=require", username, password
                 );
                 Statement statement = connection.createStatement();
                 ) {
