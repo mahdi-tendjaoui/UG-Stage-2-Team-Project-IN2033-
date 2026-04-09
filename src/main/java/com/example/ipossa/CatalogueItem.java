@@ -1,12 +1,11 @@
-package main;
+package com.example.ipossa;
 
 /**
- * Matches the database structure named varibles.
+ * Represents one product from the catalogue table.
  */
 public class CatalogueItem {
 
-    private String categoryId;
-    private String medicineId;
+    private String itemId;
     private String description;
     private String packageType;
     private String unit;
@@ -18,11 +17,9 @@ public class CatalogueItem {
     public CatalogueItem() {
     }
 
-    public CatalogueItem(String categoryId, String medicineId, String description,
-                         String packageType, String unit, int unitsInPack,
-                         double packageCost, int availability, int stockLimit) {
-        this.categoryId = categoryId;
-        this.medicineId = medicineId;
+    public CatalogueItem(String itemId, String description, String packageType, String unit,
+                         int unitsInPack, double packageCost, int availability, int stockLimit) {
+        this.itemId = itemId;
         this.description = description;
         this.packageType = packageType;
         this.unit = unit;
@@ -32,16 +29,8 @@ public class CatalogueItem {
         this.stockLimit = stockLimit;
     }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public String getMedicineId() {
-        return medicineId;
-    }
-
-    public String getFullItemId() {
-        return categoryId + " " + medicineId;
+    public String getItemId() {
+        return itemId;
     }
 
     public String getDescription() {

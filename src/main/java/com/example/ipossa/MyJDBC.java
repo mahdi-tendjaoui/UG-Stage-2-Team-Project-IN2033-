@@ -86,9 +86,14 @@ public class MyJDBC {
             }
             catalogueResult.close();
 
+
+
         } catch (SQLException e) {
             System.out.println("Connection failure");
             e.printStackTrace();
         }
+
+
+
     }
 }
