@@ -1,3 +1,5 @@
+package main;
+
 public class Report {
     public void generateReport() {
         // Implement logic to generate report here

@@ -1,3 +1,4 @@
+package main;
 
 /**
  * Matches the database structure named varibles.
