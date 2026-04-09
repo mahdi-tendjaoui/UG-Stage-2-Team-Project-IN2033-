@@ -1,6 +1,6 @@
 public interface ISupplierAPI {
 
-	ProductList[] getProductCatalogue();
+	//ProductList[] getProductCatalogue();
 
 	/**
 	 * hello
@@ -12,8 +12,8 @@ public interface ISupplierAPI {
 	 * 
 	 * @param orderID
 	 */
-	string getDeliveryStatus(string orderID);
+	String getDeliveryStatus(String orderID);
 
-	Invoice[] getOutstandingInvoices();
+	//Invoice[] getOutstandingInvoices();
 
 }

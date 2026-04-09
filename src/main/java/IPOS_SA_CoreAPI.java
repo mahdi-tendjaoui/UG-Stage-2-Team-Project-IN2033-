@@ -1,10 +1,10 @@
-import iposSA.ISupplierAPI.*;
+import ISupplierAPI.*;
 
 public class IPOS_SA_CoreAPI implements submitPurchaseOrder {
 
 	public IPOS_SA_CoreAPI() {
 		// TODO - implement IPOS_SA_CoreAPI.IPOS_SA_CoreAPI
-		throw new UnsupporxtedOperationException();
+		throw new UnsupportedOperationException();
 	}
 
 	public ProductList[] getProductCatalogue() {
