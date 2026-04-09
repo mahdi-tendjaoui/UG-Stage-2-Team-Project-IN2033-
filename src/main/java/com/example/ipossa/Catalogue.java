@@ -9,18 +9,7 @@ import java.util.List;
  */
 public class Catalogue {
 
-    private final String host = "mysql-75ba1ad-ipos-sa-db.g.aivencloud.com";
-    private final String port = "12995";
-    private final String database = "defaultdb";
-    private final String username = "avnadmin";
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(
-                "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslmode=require",
-                username,
-                password
-        );
-    }
 
     public List<CatalogueItem> viewCatalogue() {
         List<CatalogueItem> items = new ArrayList<>();
