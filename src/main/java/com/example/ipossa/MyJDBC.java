@@ -1,3 +1,12 @@
+/*
+Website URL: https://aiven.io/
+Email: sanjeebilly05@gmail.com
+Password: Creeper7?
+
+Access the one server called: mysql-75ba1ad
+Click on the name and click on three dots. Power on the service and wait for the server to be "running"
+Then you can access the database
+ */
 package com.example.ipossa;
 
 import java.sql.Connection;
