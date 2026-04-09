@@ -10,6 +10,7 @@ module com.example.ipossa {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.sql;
 
     opens com.example.ipossa to javafx.fxml;
     exports com.example.ipossa;
