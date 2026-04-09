@@ -1,32 +1,62 @@
 package com.example.ipossa;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class MyJDBC {
-    public static void main (String[] args) {
-        try {
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://127.0.0.1:3306/ipos_sa_db",
-                    "root",
-                    "Creeper7?"
-            );
+    public static void main (String[] args) throws ClassNotFoundException {
+        String host = "mysql-75ba1ad-ipos-sa-db.g.aivencloud.com";
+        String port = "12995";
+        String databaseName = "defaultdb";
+        String username = "avnadmin";
+        String password = "AVNS_RYEO3o9oYDlqbowxGy-";
 
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM catalogue");
+        Class.forName("com.mysql.cj.jdbc.Driver");
 
-            while(resultSet.next()) {
-                System.out.println(resultSet.getString("catalogue_ID"));
-                System.out.println(resultSet.getString("description"));
-                System.out.println(resultSet.getString("package_type"));
-                System.out.println(resultSet.getString("unit"));
-                System.out.println(resultSet.getInt("units_in_a_pack"));
-                System.out.println(resultSet.getBigDecimal("package_cost"));
-                System.out.println(resultSet.getInt("availability"));
-                System.out.println(resultSet.getInt("stock_limit"));
-                System.out.println(resultSet.getInt("category_ID"));
+        try (
+                Connection connection = DriverManager.getConnection(
+                        "jdbc:mysql://" + host + ":" + port + "/" + databaseName + "?sslmode=require", username, password
+                );
+                Statement statement = connection.createStatement();
+                ) {
+
+            //Code to run from the database
+            ResultSet versionResult = statement.executeQuery("SELECT version() AS version");
+            while (versionResult.next()) {
+                System.out.println("Version: " + versionResult.getString("version"));
             }
-        }
-        catch (SQLException e) {
+            versionResult.close();
+
+            ResultSet loginResult = statement.executeQuery("SELECT * FROM logins");
+            while (loginResult.next()) {
+                System.out.println(
+                        "Username: " + loginResult.getString("username") + ", " +
+                        "Password: " + loginResult.getString("password") + ", " +
+                        "Role: " + loginResult.getString("role")
+                );
+            }
+            loginResult.close();
+
+            ResultSet catalogueResult = statement.executeQuery("SELECT * FROM catalogue");
+            while (catalogueResult.next()) {
+                System.out.println(
+                        "Item ID: " + catalogueResult.getString("item_ID") + ", " +
+                        "Description: " + catalogueResult.getString("description") + ", " +
+                        "Package Type: " + catalogueResult.getString("package_type") + ", " +
+                        "Unit: " + catalogueResult.getString("unit") + ", " +
+                        "Units in a pack: " + catalogueResult.getInt("units_in_a_pack") + ", " +
+                        "Package Cost: " + catalogueResult.getDouble("package_cost") + ", " +
+                        "Availability: " + catalogueResult.getInt("availability") + ", " +
+                        "Stock Limit: " + catalogueResult.getInt("stock_limit")
+                );
+            }
+            catalogueResult.close();
+
+        } catch (SQLException e) {
+            System.out.println("Connection failure");
             e.printStackTrace();
         }
     }
