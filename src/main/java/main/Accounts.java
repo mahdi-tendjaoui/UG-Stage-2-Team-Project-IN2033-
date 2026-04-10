@@ -1,52 +1,31 @@
 package main;
 
 public class Accounts {
-    private String email;
+    private String username;
     private String password;
-    private float balance;
-    
-    public Accounts(String email, String password) {
-        this.email = email;
+    private String role;
+
+    public Accounts(String username, String password, String role) {
+        this.username = username;
         this.password = password;
+        this.role = role;
     }
-
-//editing dfddd
-
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
-
-    public void setEmail(String newEmail) {
-        this.email = newEmail;
+    public void setUsername(String username) {
+        this.username = username;
     }
-
     public String getPassword() {
         return password;
     }
-
-    public void setPassword(String newPassword) {
-        this.password = newPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
-    public void login(String email, String password) {
-        // Implement login logic here
+    public String getRole() {
+        return role;
     }
-
-    public void logout() {
-        // Implement logout logic here
+    public void setRole(String role) {
+        this.role = role;
     }
-
-    public float getBalance() {
-        // Implement logic to retrieve account balance here
-        return balance;
-    }
-
-    public void viewAccountDetails() {
-        // Implement logic to view account details here
-    }
-
-    public void manageAccount() {
-        // Implement logic to manage account settings here
-    }
-
 }
