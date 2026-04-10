@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.ipossa.HelloController">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-  </padding>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.ipossa.HelloController"
+      fx:id="rootBox">
+
+      <!--side bar for the buttons-->
+      <children>
+            <AnchorPane fx:id="sideBar" style="-fx-background-color: lightgrey;">
+                  <children>
+                        <VBox fx:id="dataSnipersTemplate"
+                              AnchorPane.topAnchor="20.0"
+                              AnchorPane.bottomAnchor="20.0"
+                              AnchorPane.leftAnchor="20.0"
+                              AnchorPane.rightAnchor="20.0">
+                              <!--square template to be placed by the data snipers logos-->
+                              <children>
+                                    <AnchorPane prefHeight="180.0"
+                                                prefWidth="180.0"
+                                                style="-fx-background-color: FFA500; -fx-border-color: black;" />
+                  <VBox spacing="25.0" fillWidth="true">
+                        <children>
+                              <Button text="Accounts" maxWidth="-Infinity"/>
+                              <Button text="Catalogue" maxWidth="-Infinity"/>
+                              <Button text="Order" maxWidth="-Infinity"/>
+                              <Button text="Report" maxWidth="-Infinity"/>
+                        </children>
+                        <VBox.margin>
+                              <Insets top="40.0"/>
+                        </VBox.margin>
+                  </VBox>
+            </children>
+            <padding>
+                  <Insets top="10.0" bottom="10.0" right="10.0" left="10.0"/>
+            </padding>
+                        </VBox>
+                  </children>
+            </AnchorPane>
+      </children>
+</HBox>
