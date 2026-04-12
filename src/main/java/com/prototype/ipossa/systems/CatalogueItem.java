@@ -1,4 +1,4 @@
-package main;
+package com.prototype.ipossa.systems;
 
 /**
  * Matches the database structure named varibles.

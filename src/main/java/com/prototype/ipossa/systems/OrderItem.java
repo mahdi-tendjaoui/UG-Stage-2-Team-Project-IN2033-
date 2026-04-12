@@ -1,4 +1,4 @@
-package main;
+package com.prototype.ipossa.systems;
 
 public class OrderItem {
     private String productID;

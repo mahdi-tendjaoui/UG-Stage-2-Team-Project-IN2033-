@@ -1,4 +1,4 @@
-package main;
+package com.prototype.ipossa.systems;
 
 public class Report {
     public void generateReport() {
