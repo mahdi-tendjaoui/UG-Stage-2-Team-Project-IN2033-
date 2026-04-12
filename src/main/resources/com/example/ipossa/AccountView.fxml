@@ -9,5 +9,8 @@
 <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 40; -fx-background-color: #feb5a3;"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.ipossa.views.AccountView">
-    <Label text="IPOS-SA Account Page" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label text="IPOS-SA Account Page" style="-fx-font-size: 24px; -fx-font-weight: lighter;"/>
+
+    <Button text="Show Accounts" onAction="#showAccounts" prefWidth="250"
+            style="-fx-background-color: #6a2222; -fx-text-fill: black; -fx-font-weight: bold;"/>
 </VBox>

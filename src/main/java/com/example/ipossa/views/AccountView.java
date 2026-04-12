@@ -1,16 +1,14 @@
 package com.example.ipossa.views;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
-public class AccountView extends Application {
+public class AccountView {
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-
+    @FXML
+    private void showAccounts()
+    {
+        System.out.println("Button press.");
     }
 }
