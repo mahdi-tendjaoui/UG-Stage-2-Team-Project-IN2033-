@@ -14,4 +14,6 @@ module com.example.ipossa {
 
     opens com.example.ipossa to javafx.fxml;
     exports com.example.ipossa;
+    exports com.example.ipossa.views;
+    opens com.example.ipossa.views to javafx.fxml;
 }
