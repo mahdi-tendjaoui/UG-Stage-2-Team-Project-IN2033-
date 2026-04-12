@@ -12,8 +12,8 @@ module com.example.ipossa {
     requires com.almasb.fxgl.all;
     requires java.sql;
 
-    opens com.example.ipossa to javafx.fxml;
-    exports com.example.ipossa;
-    exports com.example.ipossa.views;
-    opens com.example.ipossa.views to javafx.fxml;
+    opens com.prototype.ipossa to javafx.fxml;
+    exports com.prototype.ipossa;
+    exports com.prototype.ipossa.views;
+    opens com.prototype.ipossa.views to javafx.fxml;
 }

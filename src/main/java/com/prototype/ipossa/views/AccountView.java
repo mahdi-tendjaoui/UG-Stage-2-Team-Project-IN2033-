@@ -1,4 +1,4 @@
-package com.example.ipossa.views;
+package com.prototype.ipossa.views;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;

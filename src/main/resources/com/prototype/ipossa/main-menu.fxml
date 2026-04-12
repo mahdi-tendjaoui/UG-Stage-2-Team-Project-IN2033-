@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 
 <HBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.ipossa.HelloController"
+      fx:controller="com.prototype.ipossa.HelloController"
       fx:id="rootBox">
 
       <!--side bar for the buttons-->

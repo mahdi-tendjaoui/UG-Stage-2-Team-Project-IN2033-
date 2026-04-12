@@ -1,16 +1,11 @@
-package com.example.ipossa;
+package com.prototype.ipossa;
 
 import javafx.application.Application;
 
 import javafx.stage.Stage;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
-import javafx.scene.control.Label;
-
-import java.io.IOException;
 
 public class Launcher extends Application {
 
@@ -24,7 +19,7 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/com/example/ipossa/AccountView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/com/prototype/ipossa/AccountView.fxml"));
         Scene scene = new Scene(root, WIDTH, HEIGHT);
 
         primaryStage.setTitle("IPOS-SA");
