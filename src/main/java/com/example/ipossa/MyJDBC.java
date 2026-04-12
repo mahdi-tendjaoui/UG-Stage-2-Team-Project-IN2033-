@@ -86,6 +86,36 @@ public class MyJDBC {
             }
             catalogueResult.close();
 
+            ResultSet merchantsResult = statement.executeQuery("SELECT * FROM merchants");
+            while (merchantsResult.next()) {
+                System.out.println(
+                        "Merchant ID: " + merchantsResult.getInt("merchant_ID") + ", " +
+                        "Account Holder Name: " + merchantsResult.getString("account_holder_name") + ", " +
+                        "Account Number: " + merchantsResult.getString("account_number") + ", " +
+                        "Contact Name: " + merchantsResult.getString("contact_name") + ", " +
+                        "Address: " + merchantsResult.getString("address") + ", " +
+                        "Phone Number: " + merchantsResult.getString("phone_number") + ", " +
+                        "Credit Limit: " + merchantsResult.getDouble("credit_limit") + ", " +
+                        "Agreed Discount: " + merchantsResult.getString("agreed_discount") + ", " +
+                        "Login: " + merchantsResult.getString("login") + ", " +
+                        "Password: " + merchantsResult.getString("password") + ", " +
+                        "Account State: " + merchantsResult.getString("account_state")
+                );
+            }
+            merchantsResult.close();
+
+            ResultSet merchantsDiscountResult = statement.executeQuery("SELECT * FROM merchants_discounts");
+            while (merchantsDiscountResult.next()) {
+                System.out.println(
+                        "Discount ID: " + merchantsDiscountResult.getInt("discount_ID") + ", " +
+                        "Merchant ID: " + merchantsDiscountResult.getInt("merchant_ID") + ", " +
+                        "Min Order Value: " + merchantsDiscountResult.getDouble("min_order_value") + ", " +
+                        "Max Order Value: " + merchantsDiscountResult.getDouble("max_order_value") + ", " +
+                        "Discount Rate: " + merchantsDiscountResult.getDouble("discount_rate")
+                );
+            }
+            merchantsDiscountResult.close();
+
         } catch (SQLException e) {
             System.out.println("Connection failure");
             e.printStackTrace();
