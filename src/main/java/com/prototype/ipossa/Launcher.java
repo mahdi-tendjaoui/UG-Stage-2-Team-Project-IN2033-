@@ -18,12 +18,11 @@ public class Launcher extends Application {
     private static final int HEIGHT = 600;
 
     public static void main(String[] args) throws Exception {
-        launch(args);
 
         //Testing the classes
-//        Connection conn = MyJDBC.getConnection();
-//        System.out.println("=== Connected to DB ===\n");
-//
+        Connection conn = MyJDBC.getConnection();
+        System.out.println("=== Connected to DB ===\n");
+
 //        // --- LOGINS ---
 //        System.out.println("--- Staff Logins ---");
 //        ResultSet users = AccountSQL.getAllUsers(conn);
@@ -67,9 +66,11 @@ public class Launcher extends Application {
 //                    " | Max: £"     + discounts.getString("max_order_value") +
 //                    " | Rate: "     + discounts.getString("discount_rate") + "%");
 //        }
-//
-//        conn.close();
-//        System.out.println("\n=== Done ===");
+
+
+        launch(args);
+        conn.close();
+        System.out.println("\n=== Done ===");
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
