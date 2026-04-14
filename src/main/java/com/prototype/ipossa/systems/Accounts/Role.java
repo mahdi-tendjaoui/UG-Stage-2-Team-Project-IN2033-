@@ -14,6 +14,7 @@ public enum Role {
     DIRECTOR_OF_OPERATIONS("Director of Operations"),
     SENIOR_ACCOUNTANT("Senior accountant"),
     ACCOUNTANT("Accountant"),
+    MANAGER("Manager"),
     WAREHOUSE_EMPLOYEE("Warehouse employee"),
     DELIVERY_EMPLOYEE("Delivery department employee"),
     //Merchant role
