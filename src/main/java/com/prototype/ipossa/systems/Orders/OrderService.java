@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderService {
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 
     public OrderService() {
-        this.orders = new ArrayList<>();
+
 
     }
     public boolean orderExists(String orderID) {
         return searchOrder(orderID) != null;
     }
+
     public List<Order> getMerchantOrders(String merchantID) {
         List<Order> merchantOrders = new ArrayList<>();
 
@@ -25,6 +26,7 @@ public class OrderService {
         }
         return merchantOrders;
     }
+
     public List<Order> getIncompleteOrders() {
         List<Order> inompleteOrders = new ArrayList<>();
 
@@ -35,6 +37,7 @@ public class OrderService {
         }
         return inompleteOrders;
     }
+
     public boolean updateOrderStatus(String orderID, Order.OrderStatus newStatus) {
         Order order = searchOrder(orderID);
 
@@ -56,6 +59,7 @@ public class OrderService {
         }
         return false;
     }
+
     public Order searchOrder(String orderID) {
         for (Order order : orders) {
             if (order.getOrderID().equals(orderID)) {
@@ -64,6 +68,7 @@ public class OrderService {
         }
         return null;
     }
+
     public boolean removeOrder(String orderID) {
         Order order = searchOrder(orderID);
         if (order != null) {
@@ -72,6 +77,7 @@ public class OrderService {
         }
         return false;
     }
+
     public boolean addOrder(Order order) {
         if (order == null ||orderExists(order.getOrderID())) {
             return false;
