@@ -1,11 +1,11 @@
 package com.prototype.ipossa.systems;
 
-public class Accounts {
+public class UserAccounts {
     private String username;
     private String password;
     private String role;
 
-    public Accounts(String username, String password, String role) {
+    public UserAccounts(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
