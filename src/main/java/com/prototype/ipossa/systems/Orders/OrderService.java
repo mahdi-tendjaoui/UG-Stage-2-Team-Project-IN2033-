@@ -3,6 +3,11 @@ package com.prototype.ipossa.systems.Orders;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import com.prototype.ipossa.MyJDBC;
+
 public class OrderService {
     private List<Order> orders = new ArrayList<>();
 
@@ -10,6 +15,7 @@ public class OrderService {
 
 
     }
+
     public boolean orderExists(String orderID) {
         return searchOrder(orderID) != null;
     }
@@ -78,13 +84,9 @@ public class OrderService {
         return false;
     }
 
-    public boolean addOrder(Order order) {
-        if (order == null ||orderExists(order.getOrderID())) {
-            return false;
-        }
-        else {
-            orders.add(order);
-            return true;
-        }
+    public void addOrder(String orderID, String merchantID, String merchantName,
+                            double totalAmount, Order.OrderStatus status, String invoiceID, String orderDate,
+                            List<OrderItem> items) {
+        orders.add(new Order(orderID, merchantID, merchantName, totalAmount, invoiceID, orderDate));
     }
 }
