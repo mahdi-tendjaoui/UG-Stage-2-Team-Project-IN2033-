@@ -1,12 +1,18 @@
 package com.prototype.ipossa.systems.Catalogue;
+
 import com.prototype.ipossa.MyJDBC;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
 public class CatalogueService {
+
+
     // GET ALL ITEMS
+
     public List<CatalogueItem> getAllItems() {
 
         List<CatalogueItem> items = new ArrayList<>();
@@ -28,9 +34,11 @@ public class CatalogueService {
                         rs.getInt("stock_limit")
                 ));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return items;
     }
 
