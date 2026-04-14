@@ -1,14 +1,13 @@
 package com.prototype.ipossa.systems.Accounts;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountSQL {
 
-    /*
-    User Accounts
-    Table used: logins
-     */
-    //Validate staff login
+    //validate staff accounts
     public static boolean validateUser(Connection conn, String username, String password) throws SQLException {
         String query = "SELECT * FROM logins WHERE username = ? AND password = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -18,7 +17,7 @@ public class AccountSQL {
         }
     }
 
-    //Get role of user
+    //get role from staff member
     public static String getUserRole(Connection conn, String username) throws SQLException {
         String query = "SELECT role FROM logins WHERE username = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -29,7 +28,35 @@ public class AccountSQL {
         return null;
     }
 
-    //Create new staff account
+    // Log in a staff member — returns a UserAccount or null if credentials wrong
+    public static UserAccount loginStaff(Connection conn, String username, String password) throws SQLException {
+        String query = "SELECT * FROM logins WHERE username = ? AND password = ?";
+        try (PreparedStatement st = conn.prepareStatement(query)) {
+            st.setString(1, username);
+            st.setString(2, password);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return new UserAccount(
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"));
+            }
+        }
+        return null;
+    }
+
+    // Get all staff accounts
+    public static List<UserAccount> getAllStaff(Connection conn) throws SQLException {
+        List<UserAccount> users = new ArrayList<>();
+        String query = "SELECT username, role FROM logins";
+        ResultSet rs = conn.prepareStatement(query).executeQuery();
+        while (rs.next()) {
+            users.add(new UserAccount(rs.getString("username"), "", rs.getString("role")));
+        }
+        return users;
+    }
+
+    // Create a new staff account
     public static void createUserAccount(Connection conn, String username, String password, String role) throws SQLException {
         String query = "INSERT INTO logins (username, password, role) VALUES (?, ?, ?)";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -40,7 +67,7 @@ public class AccountSQL {
         }
     }
 
-    //Delete a staff account
+    // Delete a staff account
     public static void deleteUserAccount(Connection conn, String username) throws SQLException {
         String query = "DELETE FROM logins WHERE username = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -49,7 +76,7 @@ public class AccountSQL {
         }
     }
 
-    //Change a user's role
+    // Change a staff member's role
     public static void changeUserRole(Connection conn, String username, String newRole) throws SQLException {
         String query = "UPDATE logins SET role = ? WHERE username = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -59,33 +86,54 @@ public class AccountSQL {
         }
     }
 
-    //Get all user accounts
-    public static ResultSet getAllUsers(Connection conn) throws SQLException {
-        String query = "SELECT username, role FROM logins";
-        return conn.prepareStatement(query).executeQuery();
-    }
+    // =========================================================================
+    // MERCHANT ACCOUNTS (merchants table)
+    // =========================================================================
 
-    /*
-    Merchant accounts
-    Tables used: merchants, merchants_discounts
-     */
-
-    //Validate merchant login
-    public static boolean authenticateMerchant(Connection conn, String login, String password) throws SQLException {
+    // Log in a merchant — returns a MerchantAccount or null if credentials wrong
+    public static MerchantAccount loginMerchant(Connection conn, String login, String password) throws SQLException {
         String query = "SELECT * FROM merchants WHERE login = ? AND password = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
             st.setString(1, login);
             st.setString(2, password);
-            return st.executeQuery().next();
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return mapToMerchant(rs);
+            }
         }
+        return null;
     }
 
-    //Create a new merchant account
-    public static void createMerchantAccount(Connection conn, String accountHolderName, String accountNumber, String contactName, String address,
-                                             String phoneNumber, double creditLimit, String agreedDiscount, String login, String password) throws SQLException {
-        String query = "INSERT INTO merchants (account_holder_name, account_number, contact_name, address, " +
-                        "phone_number, credit_limit, agreed_discount, login, password) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // Get a single merchant by their ID
+    public static MerchantAccount getMerchant(Connection conn, int merchantID) throws SQLException {
+        String query = "SELECT * FROM merchants WHERE merchant_ID = ?";
+        try (PreparedStatement st = conn.prepareStatement(query)) {
+            st.setInt(1, merchantID);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) return mapToMerchant(rs);
+        }
+        return null;
+    }
+
+    // Get all merchant accounts
+    public static List<MerchantAccount> getAllMerchants(Connection conn) throws SQLException {
+        List<MerchantAccount> merchants = new ArrayList<>();
+        String query = "SELECT * FROM merchants";
+        ResultSet rs = conn.prepareStatement(query).executeQuery();
+        while (rs.next()) {
+            merchants.add(mapToMerchant(rs));
+        }
+        return merchants;
+    }
+
+    // Create a new merchant account
+    public static void createMerchantAccount(Connection conn, String accountHolderName, String accountNumber,
+                                             String contactName, String address, String phoneNumber,
+                                             double creditLimit, String agreedDiscount,
+                                             String login, String password) throws SQLException {
+        String query = "INSERT INTO merchants (account_holder_name, account_number, contact_name, " +
+                "address, phone_number, credit_limit, agreed_discount, login, password) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement st = conn.prepareStatement(query)) {
             st.setString(1, accountHolderName);
             st.setString(2, accountNumber);
@@ -100,21 +148,7 @@ public class AccountSQL {
         }
     }
 
-    //Delete a merchant account
-    public static void deleteMerchantAccount(Connection conn, int merchantID) throws SQLException {
-        String query1 = "DELETE FROM merchants_discounts WHERE merchant_ID = ?";
-        try (PreparedStatement st = conn.prepareStatement(query1)) {
-            st.setInt(1, merchantID);
-            st.executeUpdate();
-        }
-        String query2 = "DELETE FROM merchants WHERE merchant_ID = ?";
-        try (PreparedStatement st = conn.prepareStatement(query2)) {
-            st.setInt(1, merchantID);
-            st.executeUpdate();
-        }
-    }
-
-    //Update merchant account details
+    // Update merchant contact details
     public static void updateMerchantAccount(Connection conn, int merchantID, String contactName,
                                              String address, String phoneNumber) throws SQLException {
         String query = "UPDATE merchants SET contact_name = ?, address = ?, phone_number = ? WHERE merchant_ID = ?";
@@ -127,7 +161,21 @@ public class AccountSQL {
         }
     }
 
-    //Set credit limit
+    // Delete a merchant account (also deletes their discount tiers first)
+    public static void deleteMerchantAccount(Connection conn, int merchantID) throws SQLException {
+        String deleteDiscounts = "DELETE FROM merchants_discounts WHERE merchant_ID = ?";
+        try (PreparedStatement st = conn.prepareStatement(deleteDiscounts)) {
+            st.setInt(1, merchantID);
+            st.executeUpdate();
+        }
+        String deleteMerchant = "DELETE FROM merchants WHERE merchant_ID = ?";
+        try (PreparedStatement st = conn.prepareStatement(deleteMerchant)) {
+            st.setInt(1, merchantID);
+            st.executeUpdate();
+        }
+    }
+
+    // Set a merchant's credit limit
     public static void setCreditLimit(Connection conn, int merchantID, double creditLimit) throws SQLException {
         String query = "UPDATE merchants SET credit_limit = ? WHERE merchant_ID = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -137,66 +185,74 @@ public class AccountSQL {
         }
     }
 
-    //Update merchant account state
-    public static void updateMerchantStatus(Connection conn, int merchantID, String status) throws SQLException {
+    // Update a merchant's account state (normal / suspended / in_default)
+    public static void updateAccountState(Connection conn, int merchantID, String state) throws SQLException {
         String query = "UPDATE merchants SET account_state = ? WHERE merchant_ID = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
-            st.setString(1, status);
+            st.setString(1, state);
             st.setInt(2, merchantID);
             st.executeUpdate();
         }
     }
 
-    // Get merchant account state
-    public static String getMerchantStatus(Connection conn, int merchantID) throws SQLException {
-        String query = "SELECT account_state FROM merchants WHERE merchant_ID = ?";
-        try (PreparedStatement st = conn.prepareStatement(query)) {
-            st.setInt(1, merchantID);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) return rs.getString("account_state");
-        }
-        return null;
-    }
+    // =========================================================================
+    // ACCOUNT STATE — automatic normal → suspended → in_default transitions
+    // =========================================================================
 
-    // Get merchant ID
-    public static int getMerchantID(Connection conn, String login) throws SQLException {
-        String query = "SELECT merchant_ID FROM merchants WHERE login = ?";
-        try (PreparedStatement st = conn.prepareStatement(query)) {
-            st.setString(1, login);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) return rs.getInt("merchant_ID");
-        }
-        return -1;
-    }
-
-    // Get all merchants
-    public static ResultSet getAllMerchants(Connection conn) throws SQLException {
-        String query = "SELECT * FROM merchants";
-        return conn.prepareStatement(query).executeQuery();
-    }
-
-    /*
-    Discount methods
-    Tables used: merchants_discounts
+    /**
+     * Checks if a merchant's account state needs updating based on their
+     * payment due date, and updates the DB if so.
+     *
+     * Rules from the brief:
+     *   Payment due at end of month
+     *   > 15 days late  → suspended
+     *   > 30 days late  → in_default
+     *   Paid on time    → stays normal
      */
+    public static String checkAndUpdateAccountState(Connection conn, int merchantID, LocalDate paymentDueDate) throws SQLException {
+        long daysLate = java.time.temporal.ChronoUnit.DAYS.between(paymentDueDate, LocalDate.now());
 
-    //Add discount tier for a merchant
-    public static void addDiscountTier(Connection conn, int merchantID, Double minOrderValue,
-                                       Double maxOrderValue, double discountRate) throws SQLException {
+        String newState;
+        if (daysLate <= 15) {
+            newState = "normal";
+        } else if (daysLate <= 30) {
+            newState = "suspended";
+        } else {
+            newState = "in_default";
+        }
+
+        updateAccountState(conn, merchantID, newState);
+        return newState;
+    }
+
+    // =========================================================================
+    // DISCOUNT TIERS (merchants_discounts table)
+    // =========================================================================
+
+    // Get all discount tiers for a merchant
+    public static ResultSet getDiscountTiers(Connection conn, int merchantID) throws SQLException {
+        String query = "SELECT * FROM merchants_discounts WHERE merchant_ID = ?";
+        PreparedStatement st = conn.prepareStatement(query);
+        st.setInt(1, merchantID);
+        return st.executeQuery();
+    }
+
+    // Add a discount tier for a merchant
+    public static void addDiscountTier(Connection conn, int merchantID,
+                                       Double minOrderValue, Double maxOrderValue,
+                                       double discountRate) throws SQLException {
         String query = "INSERT INTO merchants_discounts (merchant_ID, min_order_value, max_order_value, discount_rate) " +
                 "VALUES (?, ?, ?, ?)";
         try (PreparedStatement st = conn.prepareStatement(query)) {
             st.setInt(1, merchantID);
-            if (minOrderValue == null) st.setNull(2, Types.DECIMAL);
-            else st.setDouble(2, minOrderValue);
-            if (maxOrderValue == null) st.setNull(3, Types.DECIMAL);
-            else st.setDouble(3, maxOrderValue);
+            if (minOrderValue == null) st.setNull(2, Types.DECIMAL); else st.setDouble(2, minOrderValue);
+            if (maxOrderValue == null) st.setNull(3, Types.DECIMAL); else st.setDouble(3, maxOrderValue);
             st.setDouble(4, discountRate);
             st.executeUpdate();
         }
     }
 
-    // Delete all discount tiers for a merchant (to be used before changing disocunt plan)
+    // Delete all discount tiers for a merchant (used before replacing them)
     public static void deleteDiscountTiers(Connection conn, int merchantID) throws SQLException {
         String query = "DELETE FROM merchants_discounts WHERE merchant_ID = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -205,12 +261,23 @@ public class AccountSQL {
         }
     }
 
-    // Get all discount tiers for a merchant
-    public static ResultSet getDiscountTiers(Connection conn, int merchantID) throws SQLException {
-        String query = "SELECT * FROM merchants_discounts WHERE merchant_ID = ?";
-        try (PreparedStatement st = conn.prepareStatement(query)) {
-            st.setInt(1, merchantID);
-            return st.executeQuery();
-        }
+    // =========================================================================
+    // HELPER
+    // =========================================================================
+
+    // Maps a ResultSet row from the merchants table to a MerchantAccount object
+    private static MerchantAccount mapToMerchant(ResultSet rs) throws SQLException {
+        return new MerchantAccount(
+                rs.getInt("merchant_ID"),
+                rs.getString("account_holder_name"),
+                rs.getString("account_number"),
+                rs.getString("contact_name"),
+                rs.getString("address"),
+                rs.getString("phone_number"),
+                rs.getDouble("credit_limit"),
+                rs.getString("agreed_discount"),
+                rs.getString("login"),
+                rs.getString("password"),
+                rs.getString("account_state"));
     }
 }

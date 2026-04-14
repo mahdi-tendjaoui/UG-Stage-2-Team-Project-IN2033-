@@ -1,24 +1,16 @@
 package com.prototype.ipossa.systems.Accounts;
 
-/**
- * This file represents staff's login account --> stored in the logins table
- */
-
+// Represents a staff login account from the logins table
 public class UserAccount {
 
     private String username;
     private String password;
-    private Role role;
+    private String role;
 
-    public UserAccount(String username, String password, Role role) {
+    public UserAccount(String username, String password, String role) {
         this.username = username;
         this.password = password;
-        this.role     = role;
-    }
-    //Convenience constructor
-    //Takes the raw DB role string and converts it to the Role enum automatically
-    public UserAccount(String username, String password, String roleStr) {
-        this(username, password, Role.fromDbValue(roleStr));
+        this.role = role;
     }
 
     public String getUsername() { return username; }
@@ -27,24 +19,32 @@ public class UserAccount {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
-    //Returns role as a raw string stored in the database
-    public String getRoleDbValue() { return role.getDbValue(); }
+    // Simple role checks — used in JavaFX to show/hide buttons
+    public boolean isAdmin() {
+        return role.equals("Administrator");
+    }
 
-    public boolean canManageUserAccounts()      { return role.canManageUserAccounts(); }
-    public boolean canManageMerchantAccounts()  { return role.canManageMerchantAccounts(); }
-    public boolean canSetCreditLimit()          { return role.canSetCreditLimit(); }
-    public boolean canManageDiscountPlans()     { return role.canManageDiscountPlans(); }
-    public boolean canReactivateDefaultAccount(){ return role.canReactivateDefaultAccount(); }
-    public boolean canManageCatalogue()         { return role.canManageCatalogue(); }
-    public boolean canManageOrders()            { return role.canManageOrders(); }
-    public boolean canRecordPayments()          { return role.canRecordPayments(); }
-    public boolean canGenerateReports()         { return role.canGenerateReports(); }
+    public boolean isManager() {
+        return role.equals("Director of Operations") || role.equals("Administrator");
+    }
+
+    public boolean isAccountant() {
+        return role.equals("Senior accountant") || role.equals("Accountant") || role.equals("Administrator");
+    }
+
+    public boolean isWarehouse() {
+        return role.equals("Warehouse employee") || role.equals("Administrator");
+    }
+
+    public boolean isDelivery() {
+        return role.equals("Delivery department employee") || role.equals("Administrator");
+    }
 
     @Override
     public String toString() {
-        return "UserAccount{username='" + username + "', role=" + role + "}";
+        return username + " (" + role + ")";
     }
 }
