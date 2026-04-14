@@ -1,4 +1,4 @@
-package com.prototype.ipossa.systems.Order;
+package com.prototype.ipossa.systems.Orders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +45,8 @@ public class OrderService {
 
         if (
             (currentStatus == Order.OrderStatus.ACCEPTED &&
-            newStatus == Order.OrderStatus.READY_TO_DISPATCH) ||
-            (currentStatus == Order.OrderStatus.READY_TO_DISPATCH &&
+            newStatus == Order.OrderStatus.BEING_PROCESSED) ||
+            (currentStatus == Order.OrderStatus.BEING_PROCESSED &&
             newStatus == Order.OrderStatus.DISPATCHED) ||
             (currentStatus == Order.OrderStatus.DISPATCHED &&
             newStatus == Order.OrderStatus.DELIVERED)

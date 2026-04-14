@@ -1,4 +1,4 @@
-package com.prototype.ipossa.systems.Order;
+package com.prototype.ipossa.systems.Orders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class Order {
         items.add(item);
         totalAmount = calculateTotalAmount();
     }
-    
+
     public List<OrderItem> getItems() {
         return items;
     }

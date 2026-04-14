@@ -1,6 +1,6 @@
 package com.prototype.ipossa.systems;
 
-import com.prototype.ipossa.systems.Order.Order;
+import com.prototype.ipossa.systems.Orders.Order;
 
 import java.util.ArrayList;
 import java.util.List;
