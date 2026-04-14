@@ -41,14 +41,14 @@ public class Order {
         items.add(item);
         totalAmount = calculateTotalAmount();
     }
-
+    
     public List<OrderItem> getItems() {
         return items;
     }
 
     public enum OrderStatus {
         ACCEPTED,
-        READY_TO_DISPATCH,
+        BEING_PROCESSED,
         DISPATCHED,
         DELIVERED
     }
