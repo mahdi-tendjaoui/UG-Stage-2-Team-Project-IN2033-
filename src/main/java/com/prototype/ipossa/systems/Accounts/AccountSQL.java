@@ -1,4 +1,4 @@
-package com.prototype.ipossa.systems;
+package com.prototype.ipossa.systems.Accounts;
 
 import java.sql.*;
 
