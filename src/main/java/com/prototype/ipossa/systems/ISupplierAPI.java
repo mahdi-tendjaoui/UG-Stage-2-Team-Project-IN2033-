@@ -1,5 +1,7 @@
 package com.prototype.ipossa.systems;
 
+import com.prototype.ipossa.systems.Order.Order;
+
 public interface ISupplierAPI {
 
 	//ProductList[] getProductCatalogue();

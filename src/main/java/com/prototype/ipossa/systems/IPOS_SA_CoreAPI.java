@@ -1,5 +1,7 @@
 package com.prototype.ipossa.systems;
 
+import com.prototype.ipossa.systems.Order.Order;
+
 public class IPOS_SA_CoreAPI {
 
 	public IPOS_SA_CoreAPI() {
