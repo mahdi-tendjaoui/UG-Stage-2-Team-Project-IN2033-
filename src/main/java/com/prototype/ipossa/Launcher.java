@@ -24,15 +24,19 @@ public class Launcher extends Application {
         launch(args);
         //Testing the classes
         // ── DB TEST CODE ──────────────────────────────────────────────────────
+        // Uncomment the block below to test DB connectivity and AccountSQL methods
+        // without launching the JavaFX UI. Run main() directly (not as JavaFX app).
         Connection conn = MyJDBC.getConnection();
         System.out.println("=== Connected to DB ===\n");
 
-        // --- STAFF LOGINS ---
+        // --- STAFF ACCOUNTS ---
         System.out.println("--- Staff Accounts ---");
         List<UserAccount> staff = AccountSQL.getAllStaff(conn);
         for (UserAccount u : staff) {
             System.out.println("Username: " + u.getUsername() +
-                    " | Role: "    + u.getRole());
+                    " | Role: "     + u.getRole() +
+                    " | isAdmin: "  + u.isAdmin() +
+                    " | isManager: "+ u.isManager());
         }
 
         // --- STAFF LOGIN TEST ---
@@ -40,32 +44,37 @@ public class Launcher extends Application {
         UserAccount admin = AccountSQL.loginStaff(conn, "Sysdba", "London_weighting");
         if (admin != null) {
             System.out.println("Logged in as: " + admin.getUsername() +
-                    " | Role: "   + admin.getRole() +
+                    " | Role: "    + admin.getRole() +
                     " | isAdmin: " + admin.isAdmin());
         } else {
             System.out.println("Login failed.");
         }
 
-        // --- MERCHANTS ---
+        // --- MERCHANT ACCOUNTS ---
         System.out.println("\n--- Merchant Accounts ---");
         List<MerchantAccount> merchants = AccountSQL.getAllMerchants(conn);
         for (MerchantAccount m : merchants) {
-            System.out.println("Account No: "  + m.getAccountNumber() +
-                    " | Name: "     + m.getAccountHolderName() +
-                    " | Contact: "  + m.getContactName() +
-                    " | Phone: "    + m.getPhoneNumber() +
-                    " | Credit: £"  + m.getCreditLimit() +
-                    " | Discount: " + m.getAgreedDiscount() +
-                    " | Status: "   + m.getAccountState());
+            System.out.println("Account No: "   + m.getAccountNumber() +
+                    " | Name: "       + m.getAccountHolderName() +
+                    " | Contact: "    + m.getContactName() +
+                    " | Phone: "      + m.getPhoneNumber() +
+                    " | Credit: £"    + m.getCreditLimit() +
+                    " | Discount: "   + m.getDiscountType() +
+                    " | State: "      + m.getAccountState() +
+                    " | Can order: "  + m.canPlaceOrders());
         }
 
         // --- MERCHANT LOGIN TEST ---
-        System.out.println("\n--- Merchant Login Test (city) ---");
+        System.out.println("\n--- Merchant Login Test (city / northampton) ---");
         MerchantAccount merchant = AccountSQL.loginMerchant(conn, "city", "northampton");
         if (merchant != null) {
-            System.out.println("Logged in as: " + merchant.getAccountHolderName() +
-                    " | State: "      + merchant.getAccountState() +
-                    " | Can order: "  + merchant.canPlaceOrders());
+            System.out.println("Logged in as: "  + merchant.getAccountHolderName() +
+                    " | Discount type: " + merchant.getDiscountType() +
+                    " | State: "         + merchant.getAccountState() +
+                    " | Can order: "     + merchant.canPlaceOrders() +
+                    " | isNormal: "      + merchant.isNormal() +
+                    " | isSuspended: "   + merchant.isSuspended() +
+                    " | isInDefault: "   + merchant.isInDefault());
         } else {
             System.out.println("Merchant login failed.");
         }
@@ -73,17 +82,17 @@ public class Launcher extends Application {
         // --- MERCHANT DISCOUNT TIERS ---
         System.out.println("\n--- Merchant Discount Tiers ---");
         for (MerchantAccount m : merchants) {
-            System.out.println("Tiers for: " + m.getAccountHolderName());
-            ResultSet discounts = AccountSQL.getDiscountTiers(conn, m.getMerchantID());
-            while (discounts.next()) {
-                System.out.println("  Min: £"   + discounts.getString("min_order_value") +
-                        " | Max: £"  + discounts.getString("max_order_value") +
-                        " | Rate: "  + discounts.getString("discount_rate") + "%");
+            System.out.println("Tiers for: " + m.getAccountHolderName()
+                    + " (" + m.getDiscountType().getDbValue() + " plan)");
+            ResultSet tiers = AccountSQL.getDiscountTiers(conn, m.getMerchantID());
+            while (tiers.next()) {
+                System.out.println("  Min: £"  + tiers.getString("min_order_value") +
+                        " | Max: £" + tiers.getString("max_order_value") +
+                        " | Rate: " + tiers.getString("discount_rate") + "%");
             }
         }
 
         conn.close();
-        System.out.println("\n=== Done ===");
         System.out.println("\n=== Done ===");
     }
     @Override

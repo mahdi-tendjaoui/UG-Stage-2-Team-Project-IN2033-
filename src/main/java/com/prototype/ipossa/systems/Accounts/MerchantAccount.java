@@ -1,71 +1,134 @@
 package com.prototype.ipossa.systems.Accounts;
 
-// Represents a merchant account from the merchants table
 public class MerchantAccount {
 
-    private int    merchantID;
+    // Enums
+
+    // The three account states
+    public enum AccountState {
+        NORMAL("normal"),
+        SUSPENDED("suspended"),
+        IN_DEFAULT("in_default");
+
+        private final String dbValue;
+
+        AccountState(String dbValue) {
+            this.dbValue = dbValue;
+        }
+
+        public String getDbValue() {
+            return dbValue;
+        }
+
+        // Converts the raw db string back to the enum constant
+        public static AccountState fromDbValue(String value) {
+            for (AccountState state : values()) {
+                if (state.dbValue.equals(value)) return state;
+            }
+            return NORMAL;
+        }
+    }
+
+    // The two discount plan types
+    public enum DiscountType {
+        FIXED("Fixed"),
+        VARIABLE("Variable");
+
+        private final String dbValue;
+
+        DiscountType(String dbValue) {
+            this.dbValue = dbValue;
+        }
+
+        public String getDbValue() {
+            return dbValue;
+        }
+
+        // Converts the raw DB string back to the enum constant
+        public static DiscountType fromDbValue(String value) {
+            for (DiscountType type : values()) {
+                if (type.dbValue.equals(value)) return type;
+            }
+            return FIXED; // default if unrecognised
+        }
+    }
+
+    private int merchantID;
     private String accountHolderName;
     private String accountNumber;
     private String contactName;
     private String address;
     private String phoneNumber;
     private double creditLimit;
-    private String agreedDiscount;  // "Fixed" or "Variable"
+    private DiscountType discountType;   // FIXED or VARIABLE
     private String login;
     private String password;
-    private String accountState;    // "normal", "suspended", "in_default"
+    private AccountState accountState;  // NORMAL, SUSPENDED, or IN_DEFAULT
 
-    public MerchantAccount(int merchantID, String accountHolderName, String accountNumber,
-                           String contactName, String address, String phoneNumber,
-                           double creditLimit, String agreedDiscount,
-                           String login, String password, String accountState) {
-        this.merchantID        = merchantID;
+    public MerchantAccount(int merchantID, String accountHolderName, String accountNumber, String contactName, String address, String phoneNumber, double creditLimit, String discountTypeStr, String login, String password, String accountStateStr) {
+        this.merchantID = merchantID;
         this.accountHolderName = accountHolderName;
-        this.accountNumber     = accountNumber;
-        this.contactName       = contactName;
-        this.address           = address;
-        this.phoneNumber       = phoneNumber;
-        this.creditLimit       = creditLimit;
-        this.agreedDiscount    = agreedDiscount;
-        this.login             = login;
-        this.password          = password;
-        this.accountState      = accountState;
+        this.accountNumber = accountNumber;
+        this.contactName = contactName;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.creditLimit = creditLimit;
+        this.discountType = DiscountType.fromDbValue(discountTypeStr);
+        this.login = login;
+        this.password = password;
+        this.accountState = AccountState.fromDbValue(accountStateStr);
     }
 
-    // Simple state checks
-    public boolean isNormal()     { return accountState.equals("normal"); }
-    public boolean isSuspended()  { return accountState.equals("suspended"); }
-    public boolean isInDefault()  { return accountState.equals("in_default"); }
+    // Account state checks
+    // Merchant can only place orders if account is normal
+    public boolean isNormal() { return accountState == AccountState.NORMAL; }
+    public boolean isSuspended() { return accountState == AccountState.SUSPENDED; }
+    public boolean isInDefault() { return accountState == AccountState.IN_DEFAULT; }
     public boolean canPlaceOrders() { return isNormal(); }
 
-    // Getters
-    public int    getMerchantID()        { return merchantID; }
-    public String getAccountHolderName() { return accountHolderName; }
-    public String getAccountNumber()     { return accountNumber; }
-    public String getContactName()       { return contactName; }
-    public String getAddress()           { return address; }
-    public String getPhoneNumber()       { return phoneNumber; }
-    public double getCreditLimit()       { return creditLimit; }
-    public String getAgreedDiscount()    { return agreedDiscount; }
-    public String getLogin()             { return login; }
-    public String getPassword()          { return password; }
-    public String getAccountState()      { return accountState; }
+    // Getters & setters
 
-    // Setters
-    public void setMerchantID(int merchantID)               { this.merchantID = merchantID; }
-    public void setAccountHolderName(String name)           { this.accountHolderName = name; }
-    public void setAccountNumber(String accountNumber)      { this.accountNumber = accountNumber; }
-    public void setContactName(String contactName)          { this.contactName = contactName; }
-    public void setAddress(String address)                  { this.address = address; }
-    public void setPhoneNumber(String phoneNumber)          { this.phoneNumber = phoneNumber; }
-    public void setCreditLimit(double creditLimit)          { this.creditLimit = creditLimit; }
-    public void setAgreedDiscount(String agreedDiscount)    { this.agreedDiscount = agreedDiscount; }
-    public void setLogin(String login)                      { this.login = login; }
-    public void setPassword(String password)                { this.password = password; }
-    public void setAccountState(String accountState)        { this.accountState = accountState; }
+    public int getMerchantID() { return merchantID; }
+    public void setMerchantID(int id)  { this.merchantID = id; }
+
+    public String getAccountHolderName() { return accountHolderName; }
+    public void setAccountHolderName(String name) { this.accountHolderName = name; }
+
+    public String getAccountNumber() { return accountNumber; }
+    public void setAccountNumber(String number) { this.accountNumber = number; }
+
+    public String getContactName() { return contactName; }
+    public void setContactName(String name) { this.contactName = name; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String addr) { this.address = addr; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phone) { this.phoneNumber = phone; }
+
+    public double getCreditLimit() { return creditLimit; }
+    public void setCreditLimit(double limit) { this.creditLimit = limit; }
+
+    public DiscountType getDiscountType() { return discountType; }
+    public void setDiscountType(DiscountType t) { this.discountType = t; }
+
+    // Returns the discount type as a raw DB string e.g. "Fixed" or "Variable"
+    public String getDiscountTypeDbValue() { return discountType.getDbValue(); }
+
+    public String getLogin() { return login; }
+    public void setLogin(String login) { this.login = login; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String pw)  { this.password = pw; }
+
+    public AccountState getAccountState() { return accountState; }
+    public void setAccountState(AccountState s){ this.accountState = s; }
+
+    // Returns the account state as a raw DB string e.g. "normal", "suspended", "in_default"
+    public String getAccountStateDbValue() { return accountState.getDbValue(); }
 
     @Override
     public String toString() {
-        return accountHolderName + " (" + accountNumber + ") - " + accountState;
+        return accountHolderName + " (" + accountNumber + ") - " + accountState.getDbValue();
     }
 }
