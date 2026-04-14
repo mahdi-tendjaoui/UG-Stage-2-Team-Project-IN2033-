@@ -20,8 +20,6 @@ public class Launcher extends Application {
     public static void main(String[] args) throws Exception {
 
         //Testing the classes
-        Connection conn = MyJDBC.getConnection();
-        System.out.println("=== Connected to DB ===\n");
 
 //        // --- LOGINS ---
 //        System.out.println("--- Staff Logins ---");
@@ -69,8 +67,6 @@ public class Launcher extends Application {
 
 
         launch(args);
-        conn.close();
-        System.out.println("\n=== Done ===");
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
