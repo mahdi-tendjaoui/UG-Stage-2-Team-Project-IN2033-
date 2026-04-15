@@ -1,27 +1,34 @@
 package com.prototype.ipossa.systems.Accounts;
-public class UserAccount {
+
+/**
+ * Represents a staff login account — stored in the logins table.
+ * Extends Account for shared credentials.
+ * Role is stored as a plain String matching the DB value so that
+ * new roles can be assigned without any code changes.
+ */
+public class UserAccount extends Account {
 
     private String username;
-    private String password;
     private String role;
 
     public UserAccount(String username, String password, String role) {
+        super(username, password);
         this.username = username;
-        this.password = password;
         this.role     = role;
     }
 
     // Getters and setters
     public String getUsername() { return username; }
-    public void   setUsername(String username) { this.username = username; }
-
-    public String getPassword() { return password; }
-    public void   setPassword(String password) { this.password = password; }
+    public void   setUsername(String username) {
+        this.username = username;
+        setLogin(username);
+    }
 
     public String getRole() { return role; }
     public void   setRole(String role) { this.role = role; }
 
-    // Check roles
+    // Role checks — plain string comparisons against DB values.
+    // No enum needed: changing a user's role is just an UPDATE in the DB.
 
     // Only Administrator can manage staff accounts
     public boolean isAdmin() {
