@@ -1,13 +1,58 @@
 package com.prototype.ipossa.systems.Accounts;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Represents a merchant account stored in the merchants table
- */
-
 public class MerchantAccount {
+
+    // Enums
+
+    // The three account states
+    public enum AccountState {
+        NORMAL("normal"),
+        SUSPENDED("suspended"),
+        IN_DEFAULT("in_default");
+
+        private final String dbValue;
+
+        AccountState(String dbValue) {
+            this.dbValue = dbValue;
+        }
+
+        public String getDbValue() {
+            return dbValue;
+        }
+
+        // Converts the raw db string back to the enum constant
+        public static AccountState fromDbValue(String value) {
+            for (AccountState state : values()) {
+                if (state.dbValue.equals(value)) return state;
+            }
+            return NORMAL;
+        }
+    }
+
+    // The two discount plan types
+    public enum DiscountType {
+        FIXED("Fixed"),
+        VARIABLE("Variable");
+
+        private final String dbValue;
+
+        DiscountType(String dbValue) {
+            this.dbValue = dbValue;
+        }
+
+        public String getDbValue() {
+            return dbValue;
+        }
+
+        // Converts the raw DB string back to the enum constant
+        public static DiscountType fromDbValue(String value) {
+            for (DiscountType type : values()) {
+                if (type.dbValue.equals(value)) return type;
+            }
+            return FIXED; // default if unrecognised
+        }
+    }
+
     private int merchantID;
     private String accountHolderName;
     private String accountNumber;
@@ -15,18 +60,12 @@ public class MerchantAccount {
     private String address;
     private String phoneNumber;
     private double creditLimit;
-    private DiscountType discountType;
+    private DiscountType discountType;   // FIXED or VARIABLE
     private String login;
     private String password;
-    private AccountState accountState;
+    private AccountState accountState;  // NORMAL, SUSPENDED, or IN_DEFAULT
 
-    private List<DiscountTier> discountTiers = new ArrayList<>();
-
-    //constructor used when reading from the database
-    public MerchantAccount(int merchantID, String accountHolderName, String accountNumber,
-                           String contactName, String address, String phoneNumber,
-                           double creditLimit, String discountTypeStr, String login,
-                           String password, String accountStateStr) {
+    public MerchantAccount(int merchantID, String accountHolderName, String accountNumber, String contactName, String address, String phoneNumber, double creditLimit, String discountTypeStr, String login, String password, String accountStateStr) {
         this.merchantID = merchantID;
         this.accountHolderName = accountHolderName;
         this.accountNumber = accountNumber;
@@ -40,121 +79,56 @@ public class MerchantAccount {
         this.accountState = AccountState.fromDbValue(accountStateStr);
     }
 
-    //constructor for creating a new merchant before database insertion
-    public MerchantAccount(String accountHolderName, String accountNumber,
-                           String contactName, String address, String phoneNumber,
-                           double creditLimit, DiscountType discountType,
-                           String login, String password) {
-        this.merchantID = 0; // not yet assigned by DB
-        this.accountHolderName = accountHolderName;
-        this.accountNumber = accountNumber;
-        this.contactName = contactName;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.creditLimit = creditLimit;
-        this.discountType = discountType;
-        this.login = login;
-        this.password = password;
-        this.accountState = AccountState.NORMAL;
-    }
-    public enum AccountState {
-        NORMAL("normal"),
-        SUSPENDED("suspended"),
-        IN_DEFAULT("in_default");
+    // Account state checks
+    // Merchant can only place orders if account is normal
+    public boolean isNormal() { return accountState == AccountState.NORMAL; }
+    public boolean isSuspended() { return accountState == AccountState.SUSPENDED; }
+    public boolean isInDefault() { return accountState == AccountState.IN_DEFAULT; }
+    public boolean canPlaceOrders() { return isNormal(); }
 
-        private final String dbValue;
-        AccountState(String dbValue) { this.dbValue = dbValue; }
-        public String getDbValue() { return dbValue; }
-
-        public static AccountState fromDbValue(String value) {
-            if (value == null) return NORMAL;
-            for (AccountState s : values()) {
-                if (s.dbValue.equalsIgnoreCase(value.trim())) return s;
-            }
-            return NORMAL;
-        }
-    }
-
-    //Discount plan types
-    public enum DiscountType {
-        FIXED("Fixed"),
-        VARIABLE("Variable");
-
-        private final String dbValue;
-        DiscountType(String dbValue) { this.dbValue = dbValue; }
-        public String getDbValue() { return dbValue; }
-
-        public static DiscountType fromDbValue(String value) {
-            if (value != null && value.equalsIgnoreCase("Variable")) return VARIABLE;
-            return FIXED;
-        }
-    }
-
-    //Returns true if the merchant is allowed to place new orders
-    //Suspended and in-default accounts cannot place orders
-    public boolean canPlaceOrders() {
-        return accountState == AccountState.NORMAL;
-    }
-
-    //Calculates the discount amount that applies to the given order subtotal using the merchant's discount tiers.
-    //For fixed plans there's one tier
-    //Dor variable plans the discount is selected based on the order value
-    public double calculateDiscount(double orderSubtotal) {
-        for (DiscountTier tier : discountTiers) {
-            if (tier.appliesTo(orderSubtotal)) {
-                return tier.calculateDiscount(orderSubtotal);
-            }
-        }
-        return 0.0;
-    }
-
-    //Returns true if the merchant exceeded their credit limit
-    //currentOutstandingBalance is the merchant's current unpaid balance
-    //newOrderAmount is the amount of the new order being placed
-    public boolean wouldExceedCreditLimit(double currentOutstandingBalance, double newOrderAmount) {
-        return (currentOutstandingBalance + newOrderAmount) > creditLimit;
-    }
+    // Getters & setters
 
     public int getMerchantID() { return merchantID; }
-    public void setMerchantID(int id) { this.merchantID = id; }
+    public void setMerchantID(int id)  { this.merchantID = id; }
 
     public String getAccountHolderName() { return accountHolderName; }
     public void setAccountHolderName(String name) { this.accountHolderName = name; }
 
     public String getAccountNumber() { return accountNumber; }
-    public void setAccountNumber(String n) { this.accountNumber = n; }
+    public void setAccountNumber(String number) { this.accountNumber = number; }
 
     public String getContactName() { return contactName; }
-    public void setContactName(String n) { this.contactName = n; }
+    public void setContactName(String name) { this.contactName = name; }
 
     public String getAddress() { return address; }
-    public void setAddress(String a)   { this.address = a; }
+    public void setAddress(String addr) { this.address = addr; }
 
     public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String p) { this.phoneNumber = p; }
+    public void setPhoneNumber(String phone) { this.phoneNumber = phone; }
 
     public double getCreditLimit() { return creditLimit; }
-    public void setCreditLimit(double l) { this.creditLimit = l; }
+    public void setCreditLimit(double limit) { this.creditLimit = limit; }
 
     public DiscountType getDiscountType() { return discountType; }
     public void setDiscountType(DiscountType t) { this.discountType = t; }
+
+    // Returns the discount type as a raw DB string e.g. "Fixed" or "Variable"
+    public String getDiscountTypeDbValue() { return discountType.getDbValue(); }
 
     public String getLogin() { return login; }
     public void setLogin(String login) { this.login = login; }
 
     public String getPassword() { return password; }
-    public void setPassword(String pw) { this.password = pw; }
+    public void setPassword(String pw)  { this.password = pw; }
 
     public AccountState getAccountState() { return accountState; }
-    public void setAccountState(AccountState s) { this.accountState = s; }
+    public void setAccountState(AccountState s){ this.accountState = s; }
 
-    public List<DiscountTier> getDiscountTiers() { return discountTiers; }
-    public void setDiscountTiers(List<DiscountTier> tiers) { this.discountTiers = tiers; }
-    public void addDiscountTier(DiscountTier tier) { discountTiers.add(tier); }
+    // Returns the account state as a raw DB string e.g. "normal", "suspended", "in_default"
+    public String getAccountStateDbValue() { return accountState.getDbValue(); }
 
     @Override
     public String toString() {
-        return String.format("MerchantAccount{id=%d, name='%s', account='%s', state=%s}",
-                merchantID, accountHolderName, accountNumber, accountState);
+        return accountHolderName + " (" + accountNumber + ") - " + accountState.getDbValue();
     }
 }
