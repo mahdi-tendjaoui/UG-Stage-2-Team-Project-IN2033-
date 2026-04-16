@@ -96,7 +96,7 @@ public class OrdersPage {
         TableColumn<OrderRow, String> id = strCol("Order #", "orderId", 80);
         TableColumn<OrderRow, String> date = strCol("Date / Time", "date", 150);
         TableColumn<OrderRow, String> merch = strCol("Merchant", "merchantName", 200);
-        TableColumn<OrderRow, Number> total = numCol("Total (£)", "total", 100);
+        TableColumn<OrderRow, Number> total = numCol("Total", "total", 100);
         total.setCellFactory(Formats.moneyCell());
 
         TableColumn<OrderRow, String> status = new TableColumn<>("Status");
@@ -227,10 +227,10 @@ public class OrdersPage {
         c2.setCellValueFactory(new PropertyValueFactory<>("description")); c2.setPrefWidth(220);
         TableColumn<ItemRow, Number> c3 = new TableColumn<>("Qty");
         c3.setCellValueFactory(new PropertyValueFactory<>("quantity")); c3.setPrefWidth(70);
-        TableColumn<ItemRow, Number> c4 = new TableColumn<>("Unit £");
+        TableColumn<ItemRow, Number> c4 = new TableColumn<>("Unit");
         c4.setCellValueFactory(new PropertyValueFactory<>("unitCost")); c4.setPrefWidth(90);
         c4.setCellFactory(Formats.moneyCell());
-        TableColumn<ItemRow, Number> c5 = new TableColumn<>("Line £");
+        TableColumn<ItemRow, Number> c5 = new TableColumn<>("Line");
         c5.setCellValueFactory(cd -> new SimpleDoubleProperty(
                 cd.getValue().quantity.get() * cd.getValue().unitCost.get())); c5.setPrefWidth(100);
         c5.setCellFactory(Formats.moneyCell());
@@ -403,10 +403,10 @@ public class OrdersPage {
         ccDesc.setCellValueFactory(new PropertyValueFactory<>("description")); ccDesc.setPrefWidth(200);
         TableColumn<CartRow, Number> ccQty = new TableColumn<>("Qty");
         ccQty.setCellValueFactory(new PropertyValueFactory<>("quantity")); ccQty.setPrefWidth(70);
-        TableColumn<CartRow, Number> ccCost = new TableColumn<>("Unit £");
+        TableColumn<CartRow, Number> ccCost = new TableColumn<>("Unit");
         ccCost.setCellValueFactory(new PropertyValueFactory<>("unitCost")); ccCost.setPrefWidth(80);
         ccCost.setCellFactory(Formats.moneyCell());
-        TableColumn<CartRow, Number> ccLine = new TableColumn<>("Line £");
+        TableColumn<CartRow, Number> ccLine = new TableColumn<>("Line");
         ccLine.setCellValueFactory(cd -> new SimpleDoubleProperty(
                 cd.getValue().quantity.get() * cd.getValue().unitCost.get())); ccLine.setPrefWidth(90);
         ccLine.setCellFactory(Formats.moneyCell());
@@ -588,7 +588,7 @@ public class OrdersPage {
 
         box.getChildren().addAll(
                 new Label("Merchant:"), merchants, balance,
-                new Label("Amount £:"), amount,
+                new Label("Amount:"), amount,
                 new Label("Method:"), method,
                 new Label("Date:"), date,
                 new Label("Notes:"), notes);

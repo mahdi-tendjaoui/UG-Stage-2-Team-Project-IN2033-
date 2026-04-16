@@ -234,7 +234,7 @@ public class ReportsPage {
         // Headline numbers
         HBox headline = new HBox(20);
         headline.getChildren().addAll(
-                statBlock("Total revenue", Formats.pound(totalRevenue)),
+                statBlock("Total revenue", Formats.money(totalRevenue)),
                 statBlock("Total units sold", String.valueOf(totalQty)),
                 statBlock("Active merchants", String.valueOf(byMerchant.size())));
         visualArea.getChildren().add(headline);
@@ -267,7 +267,7 @@ public class ReportsPage {
         StringBuilder txt = new StringBuilder();
         txt.append("Turnover summary\n");
         txt.append(String.format("Period: %s to %s%n%n", startPicker.getValue(), endPicker.getValue()));
-        txt.append(String.format("%-30s %14s%n", "Merchant", "Revenue £"));
+        txt.append(String.format("%-30s %14s%n", "Merchant", "Revenue"));
         txt.append("-".repeat(50)).append("\n");
         for (var en : byMerchant.entrySet())
             txt.append(String.format("%-30s %14s%n",
@@ -327,7 +327,7 @@ public class ReportsPage {
         HBox headline = new HBox(20,
                 statBlock("Merchant", m.name),
                 statBlock("Orders in period", String.valueOf(count)),
-                statBlock("Total value", Formats.pound(totalValue)),
+                statBlock("Total value", Formats.money(totalValue)),
                 statBlock("Paid / Pending", paid + " / " + (count - paid)));
         visualArea.getChildren().add(headline);
 
@@ -336,7 +336,7 @@ public class ReportsPage {
         table.setPrefHeight(320);
         table.getColumns().add(strCol("Order #",  "orderId",  90));
         table.getColumns().add(strCol("Date",     "date",     110));
-        table.getColumns().add(strCol("Value £",  "amount",   100));
+        table.getColumns().add(strCol("Value",  "amount",   100));
         table.getColumns().add(strCol("Status",   "status",   140));
         table.getColumns().add(strCol("Invoice",  "invoiceId",120));
         table.getColumns().add(strCol("Payment",  "payment",  100));
@@ -361,7 +361,7 @@ public class ReportsPage {
         txt.append("Orders for ").append(m.name).append("\n");
         txt.append("Period: ").append(startPicker.getValue()).append(" to ").append(endPicker.getValue()).append("\n\n");
         txt.append(String.format("%-10s %-12s %12s %-18s %-12s %-10s%n",
-                "Order #", "Date", "Value £", "Status", "Invoice", "Payment"));
+                "Order #", "Date", "Value", "Status", "Invoice", "Payment"));
         txt.append("-".repeat(80)).append("\n");
         for (OrderRow r : rows) {
             txt.append(String.format("%-10s %-12s %12s %-18s %-12s %-10s%n",
@@ -369,7 +369,7 @@ public class ReportsPage {
                     r.status.get(), r.invoiceId.get(), r.payment.get()));
         }
         txt.append("-".repeat(80)).append("\n");
-        txt.append(String.format("Totals: %d orders   Value £%s   Paid: %d   Pending: %d%n",
+        txt.append(String.format("Totals: %d orders   Value %s   Paid: %d   Pending: %d%n",
                 count, Formats.money(totalValue), paid, count - paid));
         textOutput.setText(txt.toString());
     }
@@ -442,8 +442,8 @@ public class ReportsPage {
         table.getColumns().add(strCol("Item ID",     "itemId",      120));
         table.getColumns().add(strCol("Description", "description", 220));
         table.getColumns().add(strCol("Qty",         "qty",         70));
-        table.getColumns().add(strCol("Unit £",      "unit",        90));
-        table.getColumns().add(strCol("Line £",      "lineTotal",   100));
+        table.getColumns().add(strCol("Unit",      "unit",        90));
+        table.getColumns().add(strCol("Line",      "lineTotal",   100));
         visualArea.getChildren().add(table);
 
         // Bar chart of item revenue
@@ -462,7 +462,7 @@ public class ReportsPage {
         txt.append("Activity report — ").append(m.name).append("\n");
         txt.append("Period: ").append(startPicker.getValue()).append(" to ").append(endPicker.getValue()).append("\n\n");
         txt.append(String.format("%-12s %-30s %6s %10s %12s%n",
-                "Item ID", "Description", "Qty", "Unit £", "Line £"));
+                "Item ID", "Description", "Qty", "Unit", "Line"));
         txt.append("-".repeat(75)).append("\n");
         for (ItemRow r : rows) {
             txt.append(String.format("%-12s %-30s %6s %10s %12s%n",
@@ -470,7 +470,7 @@ public class ReportsPage {
                     r.qty.get(), r.unit.get(), r.lineTotal.get()));
         }
         txt.append("-".repeat(75)).append("\n");
-        txt.append(String.format("Grand total: £%s%n", Formats.money(grandTotal)));
+        txt.append(String.format("Grand total: %s%n", Formats.money(grandTotal)));
         textOutput.setText(txt.toString());
     }
 
@@ -526,7 +526,7 @@ public class ReportsPage {
         HBox head = new HBox(20,
                 statBlock(headline, ""),
                 statBlock("Invoices", String.valueOf(rows.size())),
-                statBlock("Total value", Formats.pound(total)));
+                statBlock("Total value", Formats.money(total)));
         visualArea.getChildren().add(head);
 
         TableView<InvoiceRow> table = new TableView<>(rows);
@@ -535,7 +535,7 @@ public class ReportsPage {
         table.getColumns().add(strCol("Order #",   "orderId",    80));
         table.getColumns().add(strCol("Date",      "date",       110));
         table.getColumns().add(strCol("Merchant",  "merchant",   200));
-        table.getColumns().add(strCol("Amount £",  "amount",     110));
+        table.getColumns().add(strCol("Amount",  "amount",     110));
         table.getColumns().add(strCol("Status",    "status",     140));
         visualArea.getChildren().add(table);
 
@@ -554,7 +554,7 @@ public class ReportsPage {
         txt.append(headline).append("\n");
         txt.append("Period: ").append(startPicker.getValue()).append(" to ").append(endPicker.getValue()).append("\n\n");
         txt.append(String.format("%-14s %-8s %-12s %-25s %12s %-14s%n",
-                "Invoice", "Order #", "Date", "Merchant", "Amount £", "Status"));
+                "Invoice", "Order #", "Date", "Merchant", "Amount", "Status"));
         txt.append("-".repeat(90)).append("\n");
         for (InvoiceRow r : rows) {
             txt.append(String.format("%-14s %-8s %-12s %-25s %12s %-14s%n",
@@ -562,7 +562,7 @@ public class ReportsPage {
                     trunc(r.merchant.get(), 25), r.amount.get(), r.status.get()));
         }
         txt.append("-".repeat(90)).append("\n");
-        txt.append(String.format("Total: £%s%n", Formats.money(total)));
+        txt.append(String.format("Total: %s%n", Formats.money(total)));
         textOutput.setText(txt.toString());
     }
 
@@ -671,7 +671,7 @@ public class ReportsPage {
             Dear %s,
 
             Our records show that your account (%s) currently has an outstanding
-            balance of £%s.
+            balance of %s.
 
             Please arrange for payment at your earliest convenience to avoid your
             account being suspended.

@@ -56,7 +56,7 @@ public class MerchantManagementPanel {
 
         table.getColumns().add(strCol("Name", "name", 180));
         table.getColumns().add(strCol("Account #", "accountNo", 110));
-        var creditCol = numCol("Credit £", "creditLimit", 110);
+        var creditCol = numCol("Credit", "creditLimit", 110);
         creditCol.setCellFactory(com.prototype.ipossa.ui.Formats.moneyCell());
         table.getColumns().add(creditCol);
         table.getColumns().add(strCol("Discount", "discountType", 100));
@@ -174,7 +174,7 @@ public class MerchantManagementPanel {
         g.add(new Label("Contact:"), 0, r); g.add(contact, 1, r++);
         g.add(new Label("Address:"), 0, r); g.add(addr, 1, r++);
         g.add(new Label("Phone:"), 0, r); g.add(phone, 1, r++);
-        g.add(new Label("Credit limit £:"), 0, r); g.add(credit, 1, r++);
+        g.add(new Label("Credit limit:"), 0, r); g.add(credit, 1, r++);
         g.add(new Label("Discount type:"), 0, r); g.add(discType, 1, r++);
         g.add(new Label("Login:"), 0, r); g.add(login, 1, r++);
         g.add(new Label("Password:"), 0, r); g.add(pw, 1, r++);
@@ -210,7 +210,7 @@ public class MerchantManagementPanel {
         TextInputDialog d = new TextInputDialog(String.format("%.2f", r.creditLimit.get()));
         d.setTitle("Credit limit");
         d.setHeaderText("Set credit limit for " + r.name.get());
-        d.setContentText("Amount £:");
+        d.setContentText("Amount:");
         DialogStyle.apply(d);
         d.showAndWait().ifPresent(v -> {
             try {
@@ -237,10 +237,10 @@ public class MerchantManagementPanel {
         tbl.setPrefHeight(220);
         tbl.setPlaceholder(UIUtil.dim("No tiers — click 'Add tier'."));
 
-        TableColumn<TierRow, String> c1 = new TableColumn<>("Min £");
+        TableColumn<TierRow, String> c1 = new TableColumn<>("Min");
         c1.setCellValueFactory(cd -> new SimpleStringProperty(
                 cd.getValue().min == null ? "0" : String.valueOf(cd.getValue().min)));
-        TableColumn<TierRow, String> c2 = new TableColumn<>("Max £ (blank=∞)");
+        TableColumn<TierRow, String> c2 = new TableColumn<>("Max (blank=unlimited)");
         c2.setCellValueFactory(cd -> new SimpleStringProperty(
                 cd.getValue().max == null ? "" : String.valueOf(cd.getValue().max)));
         TableColumn<TierRow, String> c3 = new TableColumn<>("Rate %");
@@ -251,9 +251,9 @@ public class MerchantManagementPanel {
         Button addTier = new Button("+ Add tier");
         addTier.getStyleClass().add("button");
         addTier.setOnAction(e -> {
-            TextInputDialog d1 = inputDialog("New tier", "Min £ (blank = 0):");
+            TextInputDialog d1 = inputDialog("New tier", "Min (blank = 0):");
             d1.showAndWait().ifPresent(minV -> {
-                TextInputDialog d2 = inputDialog("New tier", "Max £ (blank = unlimited):");
+                TextInputDialog d2 = inputDialog("New tier", "Max (blank = unlimited):");
                 d2.showAndWait().ifPresent(maxV -> {
                     TextInputDialog d3 = inputDialog("New tier", "Rate %:");
                     d3.showAndWait().ifPresent(rateV -> {

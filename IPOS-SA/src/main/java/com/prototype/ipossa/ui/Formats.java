@@ -14,13 +14,8 @@ import javafx.util.Callback;
 public final class Formats {
     private Formats() {}
 
-    /** "1234.50" → "1234.50" (always 2 decimal places). */
-    public static String money(double v) {
-        return String.format("%.2f", v);
-    }
-
     /** "1234.50" → "£1234.50". */
-    public static String pound(double v) {
+    public static String money(double v) {
         return String.format("£%.2f", v);
     }
 
@@ -30,16 +25,6 @@ public final class Formats {
             @Override protected void updateItem(Number n, boolean empty) {
                 super.updateItem(n, empty);
                 setText(empty || n == null ? null : money(n.doubleValue()));
-            }
-        };
-    }
-
-    /** Cell factory that formats a Number column to "£X.XX". */
-    public static <S> Callback<TableColumn<S, Number>, TableCell<S, Number>> poundCell() {
-        return col -> new TableCell<>() {
-            @Override protected void updateItem(Number n, boolean empty) {
-                super.updateItem(n, empty);
-                setText(empty || n == null ? null : pound(n.doubleValue()));
             }
         };
     }

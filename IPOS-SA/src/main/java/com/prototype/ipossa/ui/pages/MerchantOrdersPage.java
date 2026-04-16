@@ -58,7 +58,7 @@ public class MerchantOrdersPage {
         table.setPlaceholder(UIUtil.dim("You haven't placed any orders yet."));
         TableColumn<Row, String> id = strCol("Order #", "orderId", 90);
         TableColumn<Row, String> date = strCol("Date", "date", 120);
-        TableColumn<Row, Number> amt = numCol("Total £", "total", 100);
+        TableColumn<Row, Number> amt = numCol("Total", "total", 100);
         amt.setCellFactory(com.prototype.ipossa.ui.Formats.moneyCell());
 
         TableColumn<Row, String> status = new TableColumn<>("Status");
@@ -151,10 +151,10 @@ public class MerchantOrdersPage {
         c2.setCellValueFactory(new PropertyValueFactory<>("description")); c2.setPrefWidth(220);
         TableColumn<ItemRow, Number> c3 = new TableColumn<>("Qty");
         c3.setCellValueFactory(new PropertyValueFactory<>("quantity")); c3.setPrefWidth(60);
-        TableColumn<ItemRow, Number> c4 = new TableColumn<>("Unit £");
+        TableColumn<ItemRow, Number> c4 = new TableColumn<>("Unit");
         c4.setCellValueFactory(new PropertyValueFactory<>("unitCost")); c4.setPrefWidth(80);
         c4.setCellFactory(com.prototype.ipossa.ui.Formats.moneyCell());
-        TableColumn<ItemRow, Number> c5 = new TableColumn<>("Line £");
+        TableColumn<ItemRow, Number> c5 = new TableColumn<>("Line");
         c5.setCellValueFactory(cd -> new SimpleDoubleProperty(
                 cd.getValue().quantity.get() * cd.getValue().unitCost.get())); c5.setPrefWidth(90);
         c5.setCellFactory(com.prototype.ipossa.ui.Formats.moneyCell());
@@ -202,10 +202,10 @@ public class MerchantOrdersPage {
         c2.setCellValueFactory(new PropertyValueFactory<>("description")); c2.setPrefWidth(200);
         TableColumn<CartRow, Number> c3 = new TableColumn<>("Qty");
         c3.setCellValueFactory(new PropertyValueFactory<>("quantity")); c3.setPrefWidth(60);
-        TableColumn<CartRow, Number> c4 = new TableColumn<>("Unit £");
+        TableColumn<CartRow, Number> c4 = new TableColumn<>("Unit");
         c4.setCellValueFactory(new PropertyValueFactory<>("unitCost")); c4.setPrefWidth(80);
         c4.setCellFactory(com.prototype.ipossa.ui.Formats.moneyCell());
-        TableColumn<CartRow, Number> c5 = new TableColumn<>("Line £");
+        TableColumn<CartRow, Number> c5 = new TableColumn<>("Line");
         c5.setCellValueFactory(cd -> new SimpleDoubleProperty(
                 cd.getValue().quantity.get() * cd.getValue().unitCost.get())); c5.setPrefWidth(90);
         c5.setCellFactory(com.prototype.ipossa.ui.Formats.moneyCell());

@@ -114,7 +114,7 @@ public class CataloguePage {
         TableColumn<Row, String> pt = col("Package", "packageType", 90);
         TableColumn<Row, String> unit = col("Unit", "unit", 70);
         TableColumn<Row, Number> uip = numCol("Units/pack", "unitsInPack", 90);
-        TableColumn<Row, Number> cost = numCol("Cost (£)", "packageCost", 90);
+        TableColumn<Row, Number> cost = numCol("Cost", "packageCost", 90);
         cost.setCellFactory(com.prototype.ipossa.ui.Formats.moneyCell());
         TableColumn<Row, Number> avail = numCol("Stock", "availability", 90);
         TableColumn<Row, Number> limit = numCol("Min", "stockLimit", 80);
