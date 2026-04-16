@@ -15,6 +15,7 @@ public class MerchantAccount {
     private String login;
     private String password;
     private AccountState accountState;
+    private Role role;
 
     private List<DiscountTier> discountTiers = new ArrayList<>();
 
@@ -33,6 +34,7 @@ public class MerchantAccount {
         this.login = login;
         this.password = password;
         this.accountState = AccountState.fromDbValue(accountStateStr);
+        this.role = Role.MERCHANT;
     }
 
     public MerchantAccount(String accountHolderName, String accountNumber,
@@ -136,6 +138,9 @@ public class MerchantAccount {
     public List<DiscountTier> getDiscountTiers() { return discountTiers; }
     public void setDiscountTiers(List<DiscountTier> tiers) { this.discountTiers = tiers; }
     public void addDiscountTier(DiscountTier tier) { discountTiers.add(tier); }
+
+    public boolean canRecordPayments()          { return role.canRecordPayments(); }
+    public boolean canGenerateReports()         { return role.canGenerateReports(); }
 
     @Override
     public String toString() {
