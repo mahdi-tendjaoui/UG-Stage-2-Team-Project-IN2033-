@@ -153,8 +153,9 @@ public class OrdersPage {
                         || user.getRole() == com.prototype.ipossa.systems.ACC.Role.DELIVERY_EMPLOYEE;
                 statusBox.setValue(r.status.get());
                 statusBox.setDisable(!canStatus);
-                // Invoice is always usable for staff with order privileges
-                invoice.setDisable(!user.canManageOrders());
+                // Invoice is restricted to roles with invoicing privilege —
+                // warehouse/delivery staff explicitly cannot generate invoices.
+                invoice.setDisable(!user.canGenerateInvoice());
                 delete.setDisable(!user.canManageUserAccounts());
                 setGraphic(box);
             }

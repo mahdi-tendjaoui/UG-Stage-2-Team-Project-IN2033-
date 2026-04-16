@@ -67,13 +67,28 @@ public enum Role {
     public boolean canManageCatalogue() {
         return this == ADMINISTRATOR || this == DIRECTOR_OF_OPERATIONS || this == WAREHOUSE_EMPLOYEE;
     }
-    //view, update status, generate invoice
+    //view, update status — warehouse/delivery staff can still progress orders
     public boolean canManageOrders() {
         return this == ADMINISTRATOR || this == DIRECTOR_OF_OPERATIONS  || this == WAREHOUSE_EMPLOYEE  || this == DELIVERY_EMPLOYEE;
     }
-    //record payments made by merchants
+    //generate an invoice for an order. Note: this is intentionally NOT granted
+    //to warehouse or delivery staff (invoicing is an accounts/admin function).
+    //Merchants CAN generate invoices for their own orders (downloadable PDF).
+    public boolean canGenerateInvoice() {
+        return this == ADMINISTRATOR
+                || this == DIRECTOR_OF_OPERATIONS
+                || this == SENIOR_ACCOUNTANT
+                || this == ACCOUNTANT
+                || this == MANAGER
+                || this == MERCHANT;
+    }
+    //record payments made by merchants. Merchants can record their own payments
+    //(e.g. confirming a bank transfer they have made to InfoPharma).
     public boolean canRecordPayments() {
-        return this == ADMINISTRATOR || this == SENIOR_ACCOUNTANT || this == ACCOUNTANT;
+        return this == ADMINISTRATOR
+                || this == SENIOR_ACCOUNTANT
+                || this == ACCOUNTANT
+                || this == MERCHANT;
     }
     //generate reports
     public boolean canGenerateReports() {

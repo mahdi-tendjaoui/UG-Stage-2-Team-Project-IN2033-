@@ -40,6 +40,7 @@ public class UserAccount {
     public boolean canReactivateDefaultAccount(){ return role.canReactivateDefaultAccount(); }
     public boolean canManageCatalogue()         { return role.canManageCatalogue(); }
     public boolean canManageOrders()            { return role.canManageOrders(); }
+    public boolean canGenerateInvoice()         { return role.canGenerateInvoice(); }
     public boolean canRecordPayments()          { return role.canRecordPayments(); }
     public boolean canGenerateReports()         { return role.canGenerateReports(); }
 

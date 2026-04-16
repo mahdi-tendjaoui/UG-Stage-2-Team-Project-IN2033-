@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ipos-sa (1)" />
-        <module name="IPOS-SA" />
         <module name="IPOS-SA (1)" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="IPOS-SA" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>

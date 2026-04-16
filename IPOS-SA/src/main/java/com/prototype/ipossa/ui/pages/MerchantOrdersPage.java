@@ -47,11 +47,15 @@ public class MerchantOrdersPage {
         }
         place.setOnAction(e -> placeOrderDialog());
 
+        Button payment = new Button("Record payment");
+        payment.getStyleClass().add("button");
+        payment.setOnAction(e -> paymentDialog());
+
         Button refresh = new Button("↻");
         refresh.getStyleClass().add("button");
         refresh.setOnAction(e -> reload());
 
-        header.getChildren().addAll(sp, place, refresh);
+        header.getChildren().addAll(sp, payment, place, refresh);
         root.getChildren().add(header);
 
         table = new TableView<>();
@@ -81,15 +85,21 @@ public class MerchantOrdersPage {
         TableColumn<Row, String> inv = strCol("Invoice", "invoiceId", 130);
 
         TableColumn<Row, Void> actions = new TableColumn<>("Actions");
-        actions.setPrefWidth(100);
+        actions.setPrefWidth(200);
         actions.setCellFactory(c -> new TableCell<>() {
             final Button view = new Button("View");
-            { view.getStyleClass().add("button");
-              view.setOnAction(e -> viewOrder(getTableRow().getItem())); }
+            final Button invoice = new Button("Invoice");
+            final HBox box = new HBox(6, view, invoice);
+            {
+                view.getStyleClass().add("button");
+                invoice.getStyleClass().addAll("button", "button-primary");
+                view.setOnAction(e -> viewOrder(getTableRow().getItem()));
+                invoice.setOnAction(e -> generateInvoice(getTableRow().getItem()));
+            }
             @Override protected void updateItem(Void v, boolean empty) {
                 super.updateItem(v, empty);
                 Row r = getTableRow() == null ? null : getTableRow().getItem();
-                if (empty || r == null) setGraphic(null); else setGraphic(view);
+                if (empty || r == null) setGraphic(null); else setGraphic(box);
             }
         });
 
@@ -339,6 +349,177 @@ public class MerchantOrdersPage {
             UIUtil.info("Order placed", "Order #" + orderId + " has been submitted to InfoPharma.");
             reload();
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
+    }
+
+    // ─── Invoice generation (merchant self-service) ─────────────────
+    // Merchants can download a PDF invoice for any of their orders.
+    // Mirrors the staff-side flow in OrdersPage.generateInvoice.
+    private void generateInvoice(Row r) {
+        if (r == null) return;
+        String invId = (r.invoiceId.get() == null || r.invoiceId.get().isBlank())
+                ? "INV-" + (System.currentTimeMillis() % 10_000_000) + "-" + r.orderId.get()
+                : r.invoiceId.get();
+
+        java.util.List<com.prototype.ipossa.ui.InvoicePdfWriter.LineItem> items = new java.util.ArrayList<>();
+        try (Connection conn = MyJDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT item_ID, description, quantity, unit_cost FROM order_items WHERE order_ID=?")) {
+            ps.setString(1, r.orderId.get());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+                items.add(new com.prototype.ipossa.ui.InvoicePdfWriter.LineItem(
+                        rs.getString("item_ID"), rs.getString("description"),
+                        rs.getInt("quantity"), rs.getDouble("unit_cost")));
+        } catch (Exception e) {
+            UIUtil.error("Error loading order", e.getMessage());
+            return;
+        }
+
+        javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
+        fc.setTitle("Save invoice PDF");
+        fc.setInitialFileName(invId + ".pdf");
+        fc.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("PDF", "*.pdf"));
+        java.io.File f = fc.showSaveDialog(null);
+        if (f == null) return;
+
+        try {
+            com.prototype.ipossa.ui.InvoicePdfWriter.write(
+                    f, invId, r.orderId.get(), r.date.get(),
+                    merchant.getAccountHolderName(),
+                    merchant.getAddress() == null ? "" : merchant.getAddress(),
+                    items, r.total.get());
+        } catch (Exception e) {
+            UIUtil.error("PDF error", e.getMessage());
+            return;
+        }
+
+        // Persist the invoice ID against the order if not already set
+        if (r.invoiceId.get() == null || r.invoiceId.get().isBlank()) {
+            try (Connection conn = MyJDBC.getConnection();
+                 PreparedStatement st = conn.prepareStatement(
+                         "UPDATE orders SET invoice_ID=? WHERE order_ID=?")) {
+                st.setString(1, invId);
+                st.setString(2, r.orderId.get());
+                st.executeUpdate();
+            } catch (Exception ignored) {}
+        }
+        UIUtil.info("Invoice saved",
+                "Invoice " + invId + " written to:\n" + f.getAbsolutePath());
+        reload();
+    }
+
+    // ─── Payment recording (merchant self-service) ──────────────────
+    // Merchants can now confirm payments they have made to InfoPharma
+    // (e.g. a bank transfer). Uses the same DB flow as staff-side payment
+    // recording so balances and account states update consistently.
+    private void paymentDialog() {
+        Dialog<Void> d = new Dialog<>();
+        d.setTitle("Record payment");
+        d.setHeaderText("Record a payment you have made to InfoPharma");
+
+        VBox box = new VBox(10); box.setPadding(new Insets(4));
+
+        double currentBalance = outstandingBalance();
+        Label balance = new Label(String.format("Outstanding balance: £%.2f", currentBalance));
+        balance.getStyleClass().add("dim");
+
+        TextField amount = new TextField(String.format("%.2f", Math.max(0, currentBalance)));
+        amount.setPromptText("0.00");
+
+        ComboBox<String> method = new ComboBox<>(FXCollections.observableArrayList(
+                "Bank transfer", "Credit card", "Debit card", "Cheque"));
+        method.setValue("Bank transfer");
+
+        DatePicker date = new DatePicker(LocalDate.now());
+        TextField notes = new TextField();
+        notes.setPromptText("Optional reference / bank transfer ID");
+
+        box.getChildren().addAll(
+                new Label("Merchant: " + merchant.getAccountHolderName()),
+                balance,
+                new Label("Amount £:"), amount,
+                new Label("Method:"), method,
+                new Label("Date:"), date,
+                new Label("Notes:"), notes);
+
+        d.getDialogPane().setContent(box);
+        d.getDialogPane().setPrefWidth(440);
+        ButtonType rec = new ButtonType("Record", ButtonBar.ButtonData.OK_DONE);
+        d.getDialogPane().getButtonTypes().addAll(rec, ButtonType.CANCEL);
+        DialogStyle.apply(d);
+
+        d.setResultConverter(b -> {
+            if (b != rec) return null;
+            try {
+                double amt = Double.parseDouble(amount.getText().trim());
+                if (amt <= 0) {
+                    UIUtil.warn("Invalid amount", "Amount must be greater than zero.");
+                    return null;
+                }
+                savePayment(amt, method.getValue(), date.getValue(), notes.getText());
+            } catch (NumberFormatException ex) {
+                UIUtil.error("Invalid amount", "Please enter a valid number.");
+            }
+            return null;
+        });
+        d.showAndWait();
+    }
+
+    private double outstandingBalance() {
+        double o = 0, p = 0;
+        try (Connection conn = MyJDBC.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE merchant_ID=?")) {
+                ps.setInt(1, merchant.getMerchantID());
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) o = rs.getDouble(1);
+            }
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COALESCE(SUM(amount),0) FROM payments WHERE merchant_ID=?")) {
+                ps.setInt(1, merchant.getMerchantID());
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) p = rs.getDouble(1);
+            }
+        } catch (Exception ignored) {}
+        return o - p;
+    }
+
+    private void savePayment(double amount, String method, LocalDate date, String notes) {
+        int merchantId = merchant.getMerchantID();
+        try (Connection conn = MyJDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "INSERT INTO payments (merchant_ID, amount, payment_date, method, payment_method, notes) " +
+                     "VALUES (?,?,?,?,?,?)")) {
+            ps.setInt(1, merchantId);
+            ps.setDouble(2, amount);
+            ps.setDate(3, java.sql.Date.valueOf(date));
+            ps.setString(4, method);
+            ps.setString(5, method);    // legacy NOT NULL column
+            ps.setString(6, notes);
+            ps.executeUpdate();
+
+            double bal = outstandingBalance();
+            // Balance cleared → restore suspended account to normal (per §8.1)
+            if (bal <= 0) {
+                try (PreparedStatement up = conn.prepareStatement(
+                        "UPDATE merchants SET account_state='normal' " +
+                        "WHERE merchant_ID=? AND account_state='suspended'")) {
+                    up.setInt(1, merchantId); up.executeUpdate();
+                }
+                try (PreparedStatement up = conn.prepareStatement(
+                        "UPDATE merchants SET last_payment_due=NULL WHERE merchant_ID=?")) {
+                    up.setInt(1, merchantId); up.executeUpdate();
+                }
+            }
+            // Re-evaluate merchant state (§8.1 — won't auto-clear in_default)
+            com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(merchantId);
+
+            UIUtil.info("Payment recorded",
+                    String.format("Payment of £%.2f recorded. New balance: £%.2f", amount, bal));
+            reload();
+        } catch (Exception e) {
+            UIUtil.error("Error", e.getMessage());
+        }
     }
 
     public static class Row {
