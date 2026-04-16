@@ -37,8 +37,8 @@ public class CataloguePage {
         if (readOnly || user == null) return false;
         var r = user.getRole();
         return r == com.prototype.ipossa.systems.ACC.Role.ADMINISTRATOR
-            || r == com.prototype.ipossa.systems.ACC.Role.DIRECTOR_OF_OPERATIONS
-            || r == com.prototype.ipossa.systems.ACC.Role.WAREHOUSE_EMPLOYEE;
+                || r == com.prototype.ipossa.systems.ACC.Role.DIRECTOR_OF_OPERATIONS
+                || r == com.prototype.ipossa.systems.ACC.Role.WAREHOUSE_EMPLOYEE;
     }
 
     public Node build() {
@@ -79,6 +79,7 @@ public class CataloguePage {
         });
         table.setItems(filtered);
 
+        // Low stock summary
         Label lowLabel = new Label();
         lowLabel.getStyleClass().add("warning-banner");
         lowLabel.setMaxWidth(Double.MAX_VALUE);
@@ -113,7 +114,7 @@ public class CataloguePage {
         TableColumn<Row, String> pt = col("Package", "packageType", 90);
         TableColumn<Row, String> unit = col("Unit", "unit", 70);
         TableColumn<Row, Number> uip = numCol("Units/pack", "unitsInPack", 90);
-        TableColumn<Row, Number> cost = numCol("Cost", "packageCost", 90);
+        TableColumn<Row, Number> cost = numCol("Cost (£)", "packageCost", 90);
         cost.setCellFactory(com.prototype.ipossa.ui.Formats.moneyCell());
         TableColumn<Row, Number> avail = numCol("Stock", "availability", 90);
         TableColumn<Row, Number> limit = numCol("Min", "stockLimit", 80);
