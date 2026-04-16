@@ -19,7 +19,6 @@ public class MerchantAccountPage {
     public Node build() {
         VBox root = new VBox(14);
 
-        // Account details (editable)
         VBox info = new VBox(10);
         info.getStyleClass().add("card");
         info.getChildren().add(UIUtil.h2("Contact details"));
@@ -57,7 +56,6 @@ public class MerchantAccountPage {
         });
         info.getChildren().addAll(g, save);
 
-        // Password change
         VBox pw = new VBox(10);
         pw.getStyleClass().add("card");
         pw.getChildren().add(UIUtil.h2("Change password"));

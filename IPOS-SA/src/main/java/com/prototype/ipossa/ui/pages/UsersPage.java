@@ -33,7 +33,7 @@ public class UsersPage {
     }
 
     public Node build() {
-        // Tab pane with: Staff users  ·  Merchants (admin only)
+
         TabPane tabs = new TabPane();
         tabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -56,7 +56,6 @@ public class UsersPage {
         return root;
     }
 
-    // ─── Staff pane ──────────────────────────────────────────────────
     private Node staffPane() {
         VBox root = new VBox(12); root.setPadding(new Insets(12));
 

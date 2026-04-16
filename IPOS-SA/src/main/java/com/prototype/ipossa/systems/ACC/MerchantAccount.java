@@ -3,10 +3,6 @@ package com.prototype.ipossa.systems.ACC;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a merchant account stored in the merchants table
- */
-
 public class MerchantAccount {
     private int merchantID;
     private String accountHolderName;
@@ -22,7 +18,6 @@ public class MerchantAccount {
 
     private List<DiscountTier> discountTiers = new ArrayList<>();
 
-    //constructor used when reading from the database
     public MerchantAccount(int merchantID, String accountHolderName, String accountNumber,
                            String contactName, String address, String phoneNumber,
                            double creditLimit, String discountTypeStr, String login,
@@ -40,12 +35,11 @@ public class MerchantAccount {
         this.accountState = AccountState.fromDbValue(accountStateStr);
     }
 
-    //constructor for creating a new merchant before database insertion
     public MerchantAccount(String accountHolderName, String accountNumber,
                            String contactName, String address, String phoneNumber,
                            double creditLimit, DiscountType discountType,
                            String login, String password) {
-        this.merchantID = 0; // not yet assigned by DB
+        this.merchantID = 0;
         this.accountHolderName = accountHolderName;
         this.accountNumber = accountNumber;
         this.contactName = contactName;
@@ -75,7 +69,6 @@ public class MerchantAccount {
         }
     }
 
-    //Discount plan types
     public enum DiscountType {
         FIXED("Fixed"),
         VARIABLE("Variable");
@@ -90,15 +83,10 @@ public class MerchantAccount {
         }
     }
 
-    //Returns true if the merchant is allowed to place new orders
-    //Suspended and in-default accounts cannot place orders
     public boolean canPlaceOrders() {
         return accountState == AccountState.NORMAL;
     }
 
-    //Calculates the discount amount that applies to the given order subtotal using the merchant's discount tiers.
-    //For fixed plans there's one tier
-    //Dor variable plans the discount is selected based on the order value
     public double calculateDiscount(double orderSubtotal) {
         for (DiscountTier tier : discountTiers) {
             if (tier.appliesTo(orderSubtotal)) {
@@ -108,9 +96,6 @@ public class MerchantAccount {
         return 0.0;
     }
 
-    //Returns true if the merchant exceeded their credit limit
-    //currentOutstandingBalance is the merchant's current unpaid balance
-    //newOrderAmount is the amount of the new order being placed
     public boolean wouldExceedCreditLimit(double currentOutstandingBalance, double newOrderAmount) {
         return (currentOutstandingBalance + newOrderAmount) > creditLimit;
     }

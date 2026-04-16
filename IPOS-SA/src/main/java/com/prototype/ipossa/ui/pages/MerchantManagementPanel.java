@@ -19,11 +19,6 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Reusable merchant-management UI. Used from the Users page (under the Admin
- * section) — moved here from SettingsPage so admin-only merchant ops live in
- * one place alongside user management.
- */
 public class MerchantManagementPanel {
 
     private final UserAccount user;
@@ -229,8 +224,7 @@ public class MerchantManagementPanel {
 
         ObservableList<TierRow> tierData = FXCollections.observableArrayList();
         try (Connection conn = MyJDBC.getConnection()) {
-//            for (DiscountTier t : new AccountService().getDiscountTiers(conn, r.id))
-//                tierData.add(new TierRow(t.getMinOrderValue(), t.getMaxOrderValue(), t.getDiscountRate()));
+
         } catch (Exception ignored) {}
 
         TableView<TierRow> tbl = new TableView<>(tierData);

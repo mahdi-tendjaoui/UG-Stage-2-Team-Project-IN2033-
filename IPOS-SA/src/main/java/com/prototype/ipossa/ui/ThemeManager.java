@@ -6,10 +6,6 @@ import javafx.scene.Scene;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Central theme manager. Light/dark toggle. Lime accent. Sidebar is
- * always black regardless of theme.
- */
 public class ThemeManager {
 
     private static final ThemeManager INSTANCE = new ThemeManager();
@@ -47,8 +43,7 @@ public class ThemeManager {
     }
 
     private String css() {
-        // ── Tokens ───────────────────────────────────────────────────
-        // Sidebar is ALWAYS black with white text (both modes)
+
         String light = """
             .root.theme-light {
               -bg: #f4f6f9; -panel: #ffffff; -panel-2: #f3f5f8;

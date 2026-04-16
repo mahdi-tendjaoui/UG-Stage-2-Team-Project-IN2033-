@@ -6,18 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
-/**
- * Ensures auxiliary tables used by the UI exist and patches legacy schemas.
- *
- * Bug fixes applied here:
- *   - "Duplicate entry '1' for key 'orders.PRIMARY'": forces order_ID to be
- *     AUTO_INCREMENT even when the table pre-existed.
- *   - "Field payment_method doesn't have a default value": adds a default
- *     to the legacy payment_method column AND ensures it is populated by
- *     the new code as well.
- *   - "Invalid merchant credentials": re-seeds merchant logins using a
- *     TRIM-based name comparison so trailing-whitespace rows still match.
- */
 public class SchemaInit {
 
     public static void ensureTables() {
@@ -78,7 +66,7 @@ public class SchemaInit {
             addColumnIfMissing(conn, "payments", "payment_method", "VARCHAR(32) NOT NULL DEFAULT 'Bank transfer'");
             addColumnIfMissing(conn, "payments", "notes",          "VARCHAR(255) NULL");
             addColumnIfMissing(conn, "payments", "payment_date",   "DATE NULL");
-            // Backfill defaults onto pre-existing legacy NOT-NULL columns
+
             forceColumnDefault(conn, "payments", "payment_method");
             forceColumnDefault(conn, "payments", "method");
 
@@ -127,18 +115,13 @@ public class SchemaInit {
         }
     }
 
-    /**
-     * Force a default value on a column so legacy "no default" NOT-NULL
-     * columns stop blocking inserts. Idempotent: silently no-ops if the
-     * column already has a usable default or doesn't exist.
-     */
     private static void forceColumnDefault(Connection conn, String table, String column) {
         try (Statement st = conn.createStatement()) {
             st.executeUpdate("ALTER TABLE " + table + " MODIFY COLUMN " + column +
                     " VARCHAR(64) NOT NULL DEFAULT 'Bank transfer'");
             System.out.println("[SchemaInit] forced default on " + table + "." + column);
         } catch (Exception ignored) {
-            // column may not exist or DB engine may not allow MODIFY here
+
         }
     }
 
@@ -158,10 +141,6 @@ public class SchemaInit {
         }
     }
 
-    /**
-     * Populate login/password for merchants where they are missing.
-     * TRIM and strip dots so "Cosymed Ltd." matches the brief's "Cosymed Ltd".
-     */
     private static void seedMerchantLogins(Connection conn) {
         String[][] seeds = {
                 {"CityPharmacy",  "city",    "northampton"},

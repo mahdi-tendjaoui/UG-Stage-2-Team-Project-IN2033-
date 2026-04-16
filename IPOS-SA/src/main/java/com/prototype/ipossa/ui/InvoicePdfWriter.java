@@ -8,11 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Minimal pure-Java PDF writer — produces a single-page PDF with the
- * invoice details. Uses the built-in Helvetica font so no fonts need to
- * be embedded. Avoids adding any external library.
- */
 public class InvoicePdfWriter {
 
     public static class LineItem {
@@ -30,11 +25,10 @@ public class InvoicePdfWriter {
                              String merchantName, String merchantAddress,
                              List<LineItem> items, double total) throws Exception {
 
-        // Build the page content stream
         StringBuilder cs = new StringBuilder();
-        // Header
+
         cs.append("BT\n");
-        cs.append("/F2 22 Tf\n");          // Helvetica-Bold 22
+        cs.append("/F2 22 Tf\n");
         cs.append("72 770 Td\n");
         cs.append("(InfoPharma Ltd) Tj\n");
         cs.append("/F1 10 Tf\n");
@@ -42,18 +36,15 @@ public class InvoicePdfWriter {
         cs.append("(Wholesale Pharmaceutical Supplier) Tj\n");
         cs.append("ET\n");
 
-        // Invoice title
         cs.append("BT\n/F2 18 Tf\n400 770 Td\n(INVOICE) Tj\nET\n");
 
-        // Invoice metadata block
         cs.append("BT\n/F1 10 Tf\n400 745 Td\n(Invoice #: ").append(esc(invoiceId)).append(") Tj\n");
         cs.append("0 -14 Td\n(Order #:   ").append(esc(orderId)).append(") Tj\n");
         cs.append("0 -14 Td\n(Date:      ").append(esc(orderDate)).append(") Tj\nET\n");
 
-        // Bill-to
         cs.append("BT\n/F2 11 Tf\n72 700 Td\n(BILL TO) Tj\n");
         cs.append("/F1 11 Tf\n0 -16 Td\n(").append(esc(merchantName)).append(") Tj\n");
-        // Address can be multi-line — split on commas and newlines
+
         String[] addrLines = (merchantAddress == null ? "" : merchantAddress).split("[,\\n]");
         for (String l : addrLines) {
             String t = l.trim();
@@ -62,7 +53,6 @@ public class InvoicePdfWriter {
         }
         cs.append("ET\n");
 
-        // Items table header (rule + headings)
         float yTop = 600;
         cs.append("0.85 0.85 0.85 rg\n");
         cs.append("72 ").append(yTop).append(" 468 20 re f\n");
@@ -75,7 +65,6 @@ public class InvoicePdfWriter {
         cs.append("60 0 Td\n(Line GBP) Tj\n");
         cs.append("ET\n");
 
-        // Items rows
         float y = yTop - 16;
         for (LineItem it : items) {
             cs.append("BT\n/F1 10 Tf\n");
@@ -86,10 +75,9 @@ public class InvoicePdfWriter {
             cs.append("60 0 Td\n(").append(String.format("%.2f", it.lineTotal())).append(") Tj\n");
             cs.append("ET\n");
             y -= 14;
-            if (y < 120) break; // simple single-page guard
+            if (y < 120) break;
         }
 
-        // Total
         y -= 6;
         cs.append("0 0 0 RG\n0.5 w\n");
         cs.append("72 ").append(y).append(" m 540 ").append(y).append(" l S\n");
@@ -97,19 +85,17 @@ public class InvoicePdfWriter {
         cs.append("BT\n/F2 12 Tf\n");
         cs.append("380 ").append(y).append(" Td\n(TOTAL DUE: GBP ").append(String.format("%.2f", total)).append(") Tj\nET\n");
 
-        // Footer
         cs.append("BT\n/F1 9 Tf\n72 80 Td\n(Payment terms: net 30 days from invoice date.) Tj\n");
         cs.append("0 -12 Td\n(Please reference the invoice number when making payment.) Tj\nET\n");
 
         byte[] csBytes = cs.toString().getBytes(StandardCharsets.ISO_8859_1);
 
-        // Build PDF objects
         List<byte[]> objects = new ArrayList<>();
         objects.add(bytes("<< /Type /Catalog /Pages 2 0 R >>"));
         objects.add(bytes("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"));
         objects.add(bytes("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] " +
                 "/Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>"));
-        // Stream object
+
         ByteArrayOutputStream streamObj = new ByteArrayOutputStream();
         streamObj.writeBytes(("<< /Length " + csBytes.length + " >>\nstream\n").getBytes(StandardCharsets.ISO_8859_1));
         streamObj.writeBytes(csBytes);
@@ -118,7 +104,6 @@ public class InvoicePdfWriter {
         objects.add(bytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"));
         objects.add(bytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>"));
 
-        // Write the PDF
         try (OutputStream os = new FileOutputStream(out)) {
             ByteArrayOutputStream buf = new ByteArrayOutputStream();
             buf.writeBytes("%PDF-1.4\n%\u00E2\u00E3\u00CF\u00D3\n".getBytes(StandardCharsets.ISO_8859_1));

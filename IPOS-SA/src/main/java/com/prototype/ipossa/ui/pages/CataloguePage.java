@@ -79,7 +79,6 @@ public class CataloguePage {
         });
         table.setItems(filtered);
 
-        // Low stock summary
         Label lowLabel = new Label();
         lowLabel.getStyleClass().add("warning-banner");
         lowLabel.setMaxWidth(Double.MAX_VALUE);

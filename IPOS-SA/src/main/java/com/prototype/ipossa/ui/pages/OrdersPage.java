@@ -153,8 +153,7 @@ public class OrdersPage {
                         || user.getRole() == com.prototype.ipossa.systems.ACC.Role.DELIVERY_EMPLOYEE;
                 statusBox.setValue(r.status.get());
                 statusBox.setDisable(!canStatus);
-                // Invoice is restricted to roles with invoicing privilege —
-                // warehouse/delivery staff explicitly cannot generate invoices.
+
                 invoice.setDisable(!user.canGenerateInvoice());
                 delete.setDisable(!user.canManageUserAccounts());
                 setGraphic(box);
@@ -324,12 +323,11 @@ public class OrdersPage {
 
     private void generateInvoice(OrderRow r) {
         if (r == null) return;
-        // Re-use existing invoice ID if there is one, otherwise mint a new one
+
         String invId = (r.invoiceId.get() == null || r.invoiceId.get().isBlank())
                 ? "INV-" + (System.currentTimeMillis() % 10_000_000) + "-" + r.orderId.get()
                 : r.invoiceId.get();
 
-        // Load order line items + merchant address
         java.util.List<com.prototype.ipossa.ui.InvoicePdfWriter.LineItem> items = new java.util.ArrayList<>();
         String address = "";
         try (Connection conn = MyJDBC.getConnection()) {
@@ -349,7 +347,6 @@ public class OrdersPage {
             }
         } catch (Exception e) { UIUtil.error("Error loading order", e.getMessage()); return; }
 
-        // Ask the user where to save the PDF
         javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
         fc.setTitle("Save invoice PDF");
         fc.setInitialFileName(invId + ".pdf");
@@ -363,7 +360,6 @@ public class OrdersPage {
                     r.merchantName.get(), address, items, r.total.get());
         } catch (Exception e) { UIUtil.error("PDF error", e.getMessage()); return; }
 
-        // Save the invoice ID to the DB if it wasn't already
         if (r.invoiceId.get() == null || r.invoiceId.get().isBlank()) {
             try (Connection conn = MyJDBC.getConnection();
                  PreparedStatement st = conn.prepareStatement(
@@ -376,7 +372,6 @@ public class OrdersPage {
         reload();
     }
 
-    // ─── New order dialog ───────────────────────────────────────────────
     private void newOrderDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("New order");
@@ -486,10 +481,6 @@ public class OrdersPage {
         try (Connection conn = MyJDBC.getConnection()) {
             conn.setAutoCommit(false);
 
-            // Use AUTO_INCREMENT and ask the driver for the generated key.
-            // SchemaInit ensures orders.order_ID is AUTO_INCREMENT, so the
-            // legacy "Duplicate entry '1' for key 'orders.PRIMARY'" error
-            // (caused by a manual MAX()+1 fallback resetting to 1) is gone.
             long orderId;
             try (PreparedStatement st = conn.prepareStatement(
                     "INSERT INTO orders (merchant_ID, order_date, status, subtotal, discount, total_amount) " +
@@ -522,7 +513,7 @@ public class OrdersPage {
                 }
                 ps.executeBatch();
             }
-            // Deduct stock
+
             try (PreparedStatement ps = conn.prepareStatement(
                     "UPDATE catalogue SET availability = availability - ? WHERE item_ID = ?")) {
                 for (CartRow r : items) {
@@ -530,8 +521,7 @@ public class OrdersPage {
                 }
                 ps.executeBatch();
             }
-            // Set the payment-due date on the merchant if they don't already have one.
-            // Per §8.1, payment is due by the end of the calendar month following the order.
+
             try (PreparedStatement ps = conn.prepareStatement(
                     "UPDATE merchants SET last_payment_due=? WHERE merchant_ID=? AND last_payment_due IS NULL")) {
                 ps.setDate(1, java.sql.Date.valueOf(endOfNextMonth(date)));
@@ -539,7 +529,7 @@ public class OrdersPage {
                 ps.executeUpdate();
             }
             conn.commit();
-            // Re-evaluate merchant state (suspended/in_default) immediately after order
+
             com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(m.id);
             UIUtil.info("Order created", "Order #" + orderId + " created for " + m.name + ".");
             reload();
@@ -547,15 +537,11 @@ public class OrdersPage {
     }
 
     private static LocalDate endOfNextMonth(LocalDate orderDate) {
-        // Per §8.1: "merchants ... can make payments for the goods they have
-        // ordered by the end of the calendar month". Use end of the month
-        // FOLLOWING the order so a typical order placed mid-month gives the
-        // merchant ~30-60 days to pay.
+
         LocalDate firstOfNextMonth = orderDate.plusMonths(1).withDayOfMonth(1);
         return firstOfNextMonth.withDayOfMonth(firstOfNextMonth.lengthOfMonth());
     }
 
-    // ─── Payment dialog ─────────────────────────────────────────────────
     private void paymentDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Record payment");
@@ -625,7 +611,7 @@ public class OrdersPage {
                 ps.setInt(1, merchantId);
                 ResultSet rs = ps.executeQuery(); if (rs.next()) paid = rs.getDouble(1);
             }
-        } catch (Exception e) { /* ignore */ }
+        } catch (Exception e) {  }
         return orders - paid;
     }
 
@@ -637,31 +623,30 @@ public class OrdersPage {
             ps.setInt(1, merchantId); ps.setDouble(2, amount);
             ps.setDate(3, java.sql.Date.valueOf(date));
             ps.setString(4, method);
-            ps.setString(5, method);    // legacy column with NOT NULL constraint
+            ps.setString(5, method);
             ps.setString(6, notes);
             ps.executeUpdate();
 
             double bal = outstandingBalance(merchantId);
-            // If balance cleared & account suspended → restore to normal (per §8.1)
+
             if (bal <= 0) {
                 try (PreparedStatement up = conn.prepareStatement(
                         "UPDATE merchants SET account_state='normal' WHERE merchant_ID=? AND account_state='suspended'")) {
                     up.setInt(1, merchantId); up.executeUpdate();
                 }
-                // Clear the late-payment due date now that they've cleared the balance
+
                 try (PreparedStatement up = conn.prepareStatement(
                         "UPDATE merchants SET last_payment_due=NULL WHERE merchant_ID=?")) {
                     up.setInt(1, merchantId); up.executeUpdate();
                 }
             }
-            // Re-evaluate state per the §8.1 rules (will not auto-clear in_default)
+
             com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(merchantId);
             UIUtil.info("Payment recorded",
                     String.format("Payment of £%.2f recorded. New balance: £%.2f", amount, bal));
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
-    // ─── Rows ──────────────────────────────────────────────────────────
     public static class OrderRow {
         public final SimpleStringProperty orderId, merchantId;
         public final SimpleStringProperty merchantName, date, status, invoiceId;

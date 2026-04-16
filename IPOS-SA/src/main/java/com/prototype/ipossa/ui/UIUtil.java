@@ -40,7 +40,7 @@ public class UIUtil {
     }
 
     private static String dialogCss() {
-        // Reuse: just pull the same tokens — simpler to paste minimal
+
         return """
             .root.theme-light { -bg:#f4f6f9; -panel:#ffffff; -panel-2:#f9fafb; -text:#1a1d21; -text-dim:#5c6470; -border:#e3e7ec; -accent:#bbfa34; -accent-text:#000000; }
             .root.theme-dark  { -bg:#000000; -panel:#000000; -panel-2:#22262e; -text:#e7eaf0; -text-dim:#9aa3b2; -border:#2d323b; -accent:#bbfa34; -accent-text:#000000; }

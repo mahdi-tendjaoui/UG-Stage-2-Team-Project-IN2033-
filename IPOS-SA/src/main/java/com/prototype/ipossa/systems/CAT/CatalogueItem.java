@@ -1,8 +1,5 @@
 package com.prototype.ipossa.systems.CAT;
 
-/**
- * Matches the database structure named varibles.
- */
 public class CatalogueItem {
 
     private String categoryId;

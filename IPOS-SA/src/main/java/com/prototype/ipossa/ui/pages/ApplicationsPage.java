@@ -205,13 +205,13 @@ public class ApplicationsPage {
         String subject = "Your InfoPharma application: " + outcome;
         String body = String.format("""
             Dear %s,
-            
+
             Thank you for your application for a %s account with InfoPharma.
-            
+
             We are pleased to inform you that your application has been %s.
-            
+
             %s
-            
+
             Kind regards,
             InfoPharma Membership Team
             """,
@@ -222,8 +222,6 @@ public class ApplicationsPage {
                         ? "You can now log in to the PU portal using the credentials provided separately."
                         : "If you have any questions, please contact us.");
 
-        // In this demo we show the email rather than actually send via SMTP.
-        // A real SMTP implementation would use jakarta.mail or similar.
         TextArea preview = new TextArea("To: " + r.email.get() + "\nSubject: " + subject + "\n\n" + body);
         preview.setEditable(false);
         preview.setWrapText(true);

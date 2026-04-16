@@ -1,9 +1,5 @@
 package com.prototype.ipossa.systems.ACC;
 
-/**
- * This file represents staff's login account --> stored in the logins table
- */
-
 public class UserAccount {
 
     private String username;
@@ -15,8 +11,7 @@ public class UserAccount {
         this.password = password;
         this.role     = role;
     }
-    //Convenience constructor
-    //Takes the raw DB role string and converts it to the Role enum automatically
+
     public UserAccount(String username, String password, String roleStr) {
         this(username, password, Role.fromDbValue(roleStr));
     }
@@ -30,7 +25,6 @@ public class UserAccount {
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
-    //Returns role as a raw string stored in the database
     public String getRoleDbValue() { return role.getDbValue(); }
 
     public boolean canManageUserAccounts()      { return role.canManageUserAccounts(); }

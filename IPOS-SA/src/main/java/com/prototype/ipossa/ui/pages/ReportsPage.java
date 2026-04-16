@@ -28,22 +28,6 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Reports page implementing the six §8.1 / IPOS-SA-RPT reports:
- *
- *   (i)   Turnover for a given period (line chart by month + bar by item)
- *   (ii)  List of orders received from a particular merchant for a period
- *   (iii) Activity report for an individual merchant for a period
- *   (iv)  List of invoices raised against a merchant for a period
- *   (v)   List of all invoices raised by InfoPharma for a period
- *   (vi)  Stock turnover within a given period (bar chart, in vs out)
- *
- * Each report has appropriate visual representations:
- *   - Line graph for turnover over time
- *   - Pie chart for revenue share by merchant
- *   - Bar charts for item-level breakdowns and stock movement
- *   - Tables for invoice/order listings
- */
 public class ReportsPage {
 
     private final UserAccount user;
@@ -69,7 +53,6 @@ public class ReportsPage {
             return root;
         }
 
-        // ── Report picker + date range + merchant picker ─────────────────
         ComboBox<String> picker = new ComboBox<>();
         picker.getItems().addAll(
                 "(i) Turnover for period",
@@ -109,7 +92,6 @@ public class ReportsPage {
         remindersBtn.getStyleClass().add("button");
         remindersBtn.setOnAction(e -> generateReminders());
 
-        // Two control rows
         HBox row1 = new HBox(10, picker, generate, printBtn, saveBtn, remindersBtn);
         row1.setAlignment(Pos.CENTER_LEFT);
         HBox row2 = new HBox(10,
@@ -178,16 +160,12 @@ public class ReportsPage {
         else if (name.startsWith("(vi)"))  reportStockTurnover();
     }
 
-    // ─── (i) Turnover for given period ──────────────────────────────
-    // Quantity sold + revenue: line chart of revenue by month + pie of
-    // revenue share by merchant + raw text data table.
     private void reportTurnover() {
         java.sql.Date s = java.sql.Date.valueOf(startPicker.getValue());
         java.sql.Date e = java.sql.Date.valueOf(endPicker.getValue());
 
-        // Revenue by month (line)
         Map<String, Double> byMonth = new LinkedHashMap<>();
-        // Revenue by merchant (pie)
+
         Map<String, Double> byMerchant = new LinkedHashMap<>();
         double totalRevenue = 0;
         long totalQty = 0;
@@ -231,7 +209,6 @@ public class ReportsPage {
 
         if (byMerchant.isEmpty()) { visualArea.getChildren().add(emptyMsg()); return; }
 
-        // Headline numbers
         HBox headline = new HBox(20);
         headline.getChildren().addAll(
                 statBlock("Total revenue", Formats.money(totalRevenue)),
@@ -239,7 +216,6 @@ public class ReportsPage {
                 statBlock("Active merchants", String.valueOf(byMerchant.size())));
         visualArea.getChildren().add(headline);
 
-        // Line chart: revenue over time
         if (!byMonth.isEmpty()) {
             CategoryAxis x = new CategoryAxis(); x.setLabel("Month");
             NumberAxis y = new NumberAxis(); y.setLabel("Revenue (£)");
@@ -254,7 +230,6 @@ public class ReportsPage {
             visualArea.getChildren().add(line);
         }
 
-        // Pie: revenue share by merchant
         ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
         for (var en : byMerchant.entrySet())
             pieData.add(new PieChart.Data(en.getKey(), en.getValue()));
@@ -263,7 +238,6 @@ public class ReportsPage {
         pie.setPrefHeight(320);
         visualArea.getChildren().add(pie);
 
-        // Text data
         StringBuilder txt = new StringBuilder();
         txt.append("Turnover summary\n");
         txt.append(String.format("Period: %s to %s%n%n", startPicker.getValue(), endPicker.getValue()));
@@ -277,7 +251,6 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
-    // ─── (ii) Orders received from a particular merchant for period ──
     private void reportOrdersByMerchant() {
         MerchantRef m = merchantPicker.getValue();
         if (m == null) { visualArea.getChildren().add(warnMsg("Select a merchant.")); return; }
@@ -323,7 +296,6 @@ public class ReportsPage {
 
         if (rows.isEmpty()) { visualArea.getChildren().add(emptyMsg()); return; }
 
-        // Headline
         HBox headline = new HBox(20,
                 statBlock("Merchant", m.name),
                 statBlock("Orders in period", String.valueOf(count)),
@@ -331,7 +303,6 @@ public class ReportsPage {
                 statBlock("Paid / Pending", paid + " / " + (count - paid)));
         visualArea.getChildren().add(headline);
 
-        // Table
         TableView<OrderRow> table = new TableView<>(rows);
         table.setPrefHeight(320);
         table.getColumns().add(strCol("Order #",  "orderId",  90));
@@ -342,7 +313,6 @@ public class ReportsPage {
         table.getColumns().add(strCol("Payment",  "payment",  100));
         visualArea.getChildren().add(table);
 
-        // Bar chart: order values
         CategoryAxis x = new CategoryAxis(); x.setLabel("Order #");
         NumberAxis y = new NumberAxis(); y.setLabel("Value (£)");
         BarChart<String, Number> bar = new BarChart<>(x, y);
@@ -356,7 +326,6 @@ public class ReportsPage {
         bar.getData().add(series);
         visualArea.getChildren().add(bar);
 
-        // Text
         StringBuilder txt = new StringBuilder();
         txt.append("Orders for ").append(m.name).append("\n");
         txt.append("Period: ").append(startPicker.getValue()).append(" to ").append(endPicker.getValue()).append("\n\n");
@@ -374,7 +343,6 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
-    // ─── (iii) Activity report for a merchant ────────────────────────
     private void reportMerchantActivity() {
         MerchantRef m = merchantPicker.getValue();
         if (m == null) { visualArea.getChildren().add(warnMsg("Select a merchant.")); return; }
@@ -382,7 +350,6 @@ public class ReportsPage {
         java.sql.Date s = java.sql.Date.valueOf(startPicker.getValue());
         java.sql.Date e = java.sql.Date.valueOf(endPicker.getValue());
 
-        // Header card with merchant contact info
         try (Connection conn = MyJDBC.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT contact_name, address, phone_number, agreed_discount, account_state " +
@@ -404,7 +371,6 @@ public class ReportsPage {
             }
         } catch (Exception ex) { showError(ex); return; }
 
-        // Items sold breakdown
         ObservableList<ItemRow> rows = FXCollections.observableArrayList();
         Map<String, Double> revByItem = new LinkedHashMap<>();
         double grandTotal = 0;
@@ -446,7 +412,6 @@ public class ReportsPage {
         table.getColumns().add(strCol("Line",      "lineTotal",   100));
         visualArea.getChildren().add(table);
 
-        // Bar chart of item revenue
         CategoryAxis x = new CategoryAxis();
         NumberAxis y = new NumberAxis(); y.setLabel("Revenue (£)");
         BarChart<String, Number> bar = new BarChart<>(x, y);
@@ -474,14 +439,12 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
-    // ─── (iv) Invoices raised against a merchant ─────────────────────
     private void reportInvoicesForMerchant() {
         MerchantRef m = merchantPicker.getValue();
         if (m == null) { visualArea.getChildren().add(warnMsg("Select a merchant.")); return; }
         renderInvoiceList(m, "Invoices for " + m.name);
     }
 
-    // ─── (v) All invoices for period ─────────────────────────────────
     private void reportAllInvoices() {
         renderInvoiceList(null, "All invoices");
     }
@@ -539,7 +502,6 @@ public class ReportsPage {
         table.getColumns().add(strCol("Status",    "status",     140));
         visualArea.getChildren().add(table);
 
-        // For "all invoices" add a pie of value share
         if (m == null && !byMerchant.isEmpty()) {
             ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
             for (var en : byMerchant.entrySet())
@@ -566,16 +528,11 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
-    // ─── (vi) Stock turnover ─────────────────────────────────────────
-    // Goods sold (out) vs new stock added (in) per item — bar chart.
-    // "New stock" is approximated by the gap between current availability
-    // and (initial availability - sold), assuming any positive delta is
-    // restocking. For simplicity we report sold quantities and current stock.
     private void reportStockTurnover() {
         java.sql.Date s = java.sql.Date.valueOf(startPicker.getValue());
         java.sql.Date e = java.sql.Date.valueOf(endPicker.getValue());
 
-        Map<String, long[]> data = new LinkedHashMap<>(); // desc -> [sold, currentStock]
+        Map<String, long[]> data = new LinkedHashMap<>();
         try (Connection conn = MyJDBC.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement("""
                 SELECT c.description,
@@ -633,7 +590,6 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
-    // ─── DEBTOR REMINDERS (per IPOS-SA-RPT requirement) ──────────────
     private void generateReminders() {
         StringBuilder all = new StringBuilder();
         try (Connection conn = MyJDBC.getConnection()) {
@@ -684,7 +640,6 @@ public class ReportsPage {
                 "Address on file: " + (addr == null ? "(not recorded)" : addr) + "\n";
     }
 
-    // ─── PRINT / SAVE ────────────────────────────────────────────────
     private void printReport() {
         if (visualArea.getChildren().isEmpty() && textOutput.getText().isEmpty()) {
             UIUtil.warn("Nothing to print", "Generate a report first."); return;
@@ -714,7 +669,6 @@ public class ReportsPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
-    // ─── HELPERS ─────────────────────────────────────────────────────
     private static <T> TableColumn<T, String> strCol(String title, String prop, double w) {
         TableColumn<T, String> c = new TableColumn<>(title);
         c.setCellValueFactory(new PropertyValueFactory<>(prop)); c.setPrefWidth(w); return c;
@@ -742,7 +696,6 @@ public class ReportsPage {
     }
     private String nz(String s) { return s == null ? "—" : s; }
 
-    // ─── ROW DTOs ────────────────────────────────────────────────────
     public static class OrderRow {
         public final SimpleStringProperty orderId, date, amount, status, invoiceId, payment;
         public OrderRow(String o, String d, String a, String s, String i, String p) {

@@ -2,14 +2,14 @@ package com.prototype.ipossa.systems.RPRT;
 
 public class Report {
     public void generateReport() {
-        // Implement logic to generate report here
+
     }
 
     public void visualiseReport() {
-        // Implement logic to visualise report here
+
     }
 
     public void generateInvoice() {
-        // Implement logic to generate invoice here
+
     }
 }

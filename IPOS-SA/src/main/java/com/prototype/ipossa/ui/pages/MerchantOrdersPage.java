@@ -284,7 +284,7 @@ public class MerchantOrdersPage {
 
     private void saveOrder(LocalDate date, List<CartRow> items) {
         double total = items.stream().mapToDouble(r -> r.quantity.get() * r.unitCost.get()).sum();
-        // credit-limit check
+
         double bal = 0;
         try (Connection conn = MyJDBC.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(
@@ -312,9 +312,9 @@ public class MerchantOrdersPage {
                 st.setString(1, orderId); st.setInt(2, merchant.getMerchantID());
                 st.setDate(3, java.sql.Date.valueOf(date));
                 st.setString(4, "accepted");
-                st.setDouble(5, total);   // subtotal
-                st.setDouble(6, 0);       // discount
-                st.setDouble(7, total);   // total_amount
+                st.setDouble(5, total);
+                st.setDouble(6, 0);
+                st.setDouble(7, total);
                 st.executeUpdate();
             }
             try (PreparedStatement ps = conn.prepareStatement(
@@ -323,11 +323,11 @@ public class MerchantOrdersPage {
                     ps.setString(1, orderId); ps.setString(2, r.itemId.get());
                     ps.setString(3, r.description.get()); ps.setInt(4, r.quantity.get());
                     ps.setDouble(5, r.unitCost.get());
-                    ps.setDouble(6, r.unitCost.get());                              // unit_price (legacy column)
+                    ps.setDouble(6, r.unitCost.get());
                     double __line = r.unitCost.get() * r.quantity.get();
-                    ps.setDouble(7, __line);   // subtotal
-                    ps.setDouble(8, __line);   // line_total (legacy)
-                    ps.setDouble(9, __line);   // total (legacy)
+                    ps.setDouble(7, __line);
+                    ps.setDouble(8, __line);
+                    ps.setDouble(9, __line);
                     ps.addBatch();
                 }
                 ps.executeBatch();
@@ -351,9 +351,6 @@ public class MerchantOrdersPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
-    // ─── Invoice generation (merchant self-service) ─────────────────
-    // Merchants can download a PDF invoice for any of their orders.
-    // Mirrors the staff-side flow in OrdersPage.generateInvoice.
     private void generateInvoice(Row r) {
         if (r == null) return;
         String invId = (r.invoiceId.get() == null || r.invoiceId.get().isBlank())
@@ -393,7 +390,6 @@ public class MerchantOrdersPage {
             return;
         }
 
-        // Persist the invoice ID against the order if not already set
         if (r.invoiceId.get() == null || r.invoiceId.get().isBlank()) {
             try (Connection conn = MyJDBC.getConnection();
                  PreparedStatement st = conn.prepareStatement(
@@ -408,10 +404,6 @@ public class MerchantOrdersPage {
         reload();
     }
 
-    // ─── Payment recording (merchant self-service) ──────────────────
-    // Merchants can now confirm payments they have made to InfoPharma
-    // (e.g. a bank transfer). Uses the same DB flow as staff-side payment
-    // recording so balances and account states update consistently.
     private void paymentDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Record payment");
@@ -494,12 +486,12 @@ public class MerchantOrdersPage {
             ps.setDouble(2, amount);
             ps.setDate(3, java.sql.Date.valueOf(date));
             ps.setString(4, method);
-            ps.setString(5, method);    // legacy NOT NULL column
+            ps.setString(5, method);
             ps.setString(6, notes);
             ps.executeUpdate();
 
             double bal = outstandingBalance();
-            // Balance cleared → restore suspended account to normal (per §8.1)
+
             if (bal <= 0) {
                 try (PreparedStatement up = conn.prepareStatement(
                         "UPDATE merchants SET account_state='normal' " +
@@ -511,7 +503,7 @@ public class MerchantOrdersPage {
                     up.setInt(1, merchantId); up.executeUpdate();
                 }
             }
-            // Re-evaluate merchant state (§8.1 — won't auto-clear in_default)
+
             com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(merchantId);
 
             UIUtil.info("Payment recorded",
