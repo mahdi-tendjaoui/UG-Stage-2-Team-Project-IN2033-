@@ -4,10 +4,7 @@ import java.sql.*;
 
 public class AccountSQL {
 
-    /*
-    User Accounts
-    Table used: logins
-     */
+
     //Validate staff login
     public static boolean validateUser(Connection conn, String username, String password) throws SQLException {
         String query = "SELECT * FROM logins WHERE username = ? AND password = ?";
@@ -65,15 +62,10 @@ public class AccountSQL {
         return conn.prepareStatement(query).executeQuery();
     }
 
-    /*
-    Merchant accounts
-    Tables used: merchants, merchants_discounts
-     */
+
 
     //Validate merchant login.
-    // Trims & case-insensitively compares username so leading/trailing whitespace
-    // in either the user input or the seeded DB value doesn't cause spurious
-    // "Invalid credentials" failures (the previous bug).
+
     public static boolean authenticateMerchant(Connection conn, String login, String password) throws SQLException {
         String query = "SELECT 1 FROM merchants " +
                        "WHERE LOWER(TRIM(login)) = LOWER(TRIM(?)) AND password = ?";
@@ -168,7 +160,7 @@ public class AccountSQL {
         return null;
     }
 
-    // Get merchant ID. TRIM/case-insensitive to match authenticateMerchant.
+    // Get merchant ID.
     public static int getMerchantID(Connection conn, String login) throws SQLException {
         String query = "SELECT merchant_ID FROM merchants " +
                        "WHERE LOWER(TRIM(login)) = LOWER(TRIM(?))";
@@ -186,10 +178,7 @@ public class AccountSQL {
         return conn.prepareStatement(query).executeQuery();
     }
 
-    /*
-    Discount methods
-    Tables used: merchants_discounts
-     */
+
 
     //Add discount tier for a merchant
     public static void addDiscountTier(Connection conn, int merchantID, Double minOrderValue,

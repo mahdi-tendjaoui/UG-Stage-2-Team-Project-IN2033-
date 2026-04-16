@@ -19,11 +19,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Reusable merchant-management UI. Used from the Users page (under the Admin
- * section) — moved here from SettingsPage so admin-only merchant ops live in
- * one place alongside user management.
- */
+
 public class MerchantManagementPanel {
 
     private final UserAccount user;

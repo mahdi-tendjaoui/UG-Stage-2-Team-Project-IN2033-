@@ -35,7 +35,6 @@ public class DashboardPage {
         for (Node n : stats.getChildren()) HBox.setHgrow(n, Priority.ALWAYS);
         root.getChildren().add(stats);
 
-        // Two columns: recent orders + merchant statuses
         HBox cols = new HBox(14);
         HBox.setHgrow(cols, Priority.ALWAYS);
         VBox.setVgrow(cols, Priority.ALWAYS);

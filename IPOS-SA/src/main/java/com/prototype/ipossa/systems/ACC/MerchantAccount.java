@@ -3,9 +3,6 @@ package com.prototype.ipossa.systems.ACC;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a merchant account stored in the merchants table
- */
 
 public class MerchantAccount {
     private int merchantID;
@@ -90,15 +87,13 @@ public class MerchantAccount {
         }
     }
 
-    //Returns true if the merchant is allowed to place new orders
-    //Suspended and in-default accounts cannot place orders
+
+    //checks if merchant canplaceorders
     public boolean canPlaceOrders() {
         return accountState == AccountState.NORMAL;
     }
 
-    //Calculates the discount amount that applies to the given order subtotal using the merchant's discount tiers.
-    //For fixed plans there's one tier
-    //Dor variable plans the discount is selected based on the order value
+    //Calculates the discount amount
     public double calculateDiscount(double orderSubtotal) {
         for (DiscountTier tier : discountTiers) {
             if (tier.appliesTo(orderSubtotal)) {
@@ -108,9 +103,8 @@ public class MerchantAccount {
         return 0.0;
     }
 
-    //Returns true if the merchant exceeded their credit limit
-    //currentOutstandingBalance is the merchant's current unpaid balance
-    //newOrderAmount is the amount of the new order being placed
+
+    //checks if it exceeded merchants credit limit
     public boolean wouldExceedCreditLimit(double currentOutstandingBalance, double newOrderAmount) {
         return (currentOutstandingBalance + newOrderAmount) > creditLimit;
     }

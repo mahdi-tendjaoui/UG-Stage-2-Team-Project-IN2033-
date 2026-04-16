@@ -8,19 +8,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-/**
- * Implements the §8.1 payment-state rules:
- *
- *  - End of calendar month after order placement → payment due
- *  - 1–15 days late → still 'normal', show reminder on login
- *  - 15–30 days late → 'suspended' (no new orders)
- *  - >30 days late  → 'in_default' (Director must reactivate)
- *  - Payment that fully clears the balance restores 'suspended' → 'normal'
- *
- * Days-late is computed from the OLDEST unpaid order's payment-due date,
- * not from a single static field. New orders correctly trigger transitions
- * even after old balances have been cleared.
- */
+
 public class MerchantStateUpdater {
 
     public static void refreshAll() {
@@ -50,9 +38,7 @@ public class MerchantStateUpdater {
         String desired;
 
         if (daysLate <= 0) {
-            // No outstanding overdue debt
-            // Restore from 'suspended' but never auto-clear 'in_default'
-            // (per §8.1 that requires explicit Director of Operations action)
+            // No outstanding overdue debt and Restore from 'suspended'
             if ("suspended".equalsIgnoreCase(currentState)) desired = "normal";
             else return;
         } else if (daysLate <= 15) {
@@ -82,11 +68,7 @@ public class MerchantStateUpdater {
         } catch (Exception e) { return 0; }
     }
 
-    /**
-     * Walk orders oldest-first allocating cumulative payments. The first order
-     * whose cumulative total exceeds cumulative paid is the oldest unpaid
-     * order, and its end-of-next-month due date drives the days-late count.
-     */
+
     private static long daysLate(Connection conn, int merchantId) {
         double totalPaid = 0;
         try (PreparedStatement ps = conn.prepareStatement(

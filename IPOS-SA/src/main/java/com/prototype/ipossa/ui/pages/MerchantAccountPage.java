@@ -19,7 +19,7 @@ public class MerchantAccountPage {
     public Node build() {
         VBox root = new VBox(14);
 
-        // Account details (editable)
+        // Account details
         VBox info = new VBox(10);
         info.getStyleClass().add("card");
         info.getChildren().add(UIUtil.h2("Contact details"));

@@ -10,7 +10,6 @@ public class DialogStyle {
                 java.util.Base64.getEncoder().encodeToString(css().getBytes()));
         dp.getScene().getRoot().getStyleClass().add(
                 ThemeManager.get().isDark() ? "theme-dark" : "theme-light");
-        // Remove the default "?" / info icon shown in TextInputDialog and ChoiceDialog
         dp.setGraphic(null);
     }
 

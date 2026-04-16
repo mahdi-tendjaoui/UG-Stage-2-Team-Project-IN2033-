@@ -55,7 +55,7 @@ public class MerchantDashboardPage {
                 ? "—" : merchant.getDiscountType().getDbValue()));
         root.getChildren().add(info);
 
-        // §8.1 — show overdue payment reminder every time merchant accesses their account
+        // show overdue payment reminder every time merchant accesses their account
         com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(merchant.getMerchantID());
         if (com.prototype.ipossa.ui.MerchantStateUpdater.shouldShowReminder(merchant.getMerchantID())) {
             long late = com.prototype.ipossa.ui.MerchantStateUpdater.daysLate(merchant.getMerchantID());

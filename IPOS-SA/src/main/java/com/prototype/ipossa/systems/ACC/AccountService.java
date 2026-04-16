@@ -8,31 +8,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Business-logic layer for the IPOS-SA-ACC package.
- *
- * This class sits between the UI/controllers and the raw SQL methods in
- * AccountSQL. It enforces:
- *   - Role-based access control (via SessionManager)
- *   - Business rules (e.g. account-state transitions, payment deadlines)
- *   - Data validation before any DB write
- *
- * All methods that mutate data first call SessionManager to verify the caller
- * has the required privilege, then delegate to AccountSQL for the actual query.
- */
+
+
+//class will sit inbertween sql methods and ui
+
 public class AccountService {
 
-    // =========================================================================
-    // ── STAFF LOGIN ACCOUNTS ─────────────────────────────────────────────────
-    // =========================================================================
 
-    /**
-     * Attempts to authenticate a staff member.
-     * Returns the logged-in UserAccount on success, null on failure.
-     *
-     * Also warms the SessionManager so the rest of the application knows who
-     * is logged in and what they are allowed to do.
-     */
+
+    //authenticate a staff member.
     public UserAccount loginStaff(Connection conn, String username, String password)
             throws SQLException {
         boolean valid = AccountSQL.validateUser(conn, username, password);
@@ -44,14 +28,8 @@ public class AccountService {
         return user;
     }
 
-    /**
-     * Attempts to authenticate a merchant.
-     * Returns the logged-in MerchantAccount on success, null on failure.
-     *
-     * After a successful login the merchant's account state is checked:
-     *   - SUSPENDED / IN_DEFAULT → login still succeeds but a reminder flag is
-     *     returned so the UI can display the appropriate warning message.
-     */
+
+    //authenticate a merchant
     public MerchantAccount loginMerchant(Connection conn, String login, String password)
             throws SQLException {
         boolean valid = AccountSQL.authenticateMerchant(conn, login, password);
@@ -68,12 +46,10 @@ public class AccountService {
         return merchant;
     }
 
-    // ── Staff account CRUD ────────────────────────────────────────────────────
+    //  Staff account CRUD
 
-    /**
-     * Creates a new staff login account.
-     * Requires: Administrator role.
-     */
+
+    //creates a new staff login account
     public void createUserAccount(Connection conn, String username, String password, String role)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
@@ -84,14 +60,12 @@ public class AccountService {
         AccountSQL.createUserAccount(conn, username, password, role);
     }
 
-    //Deletes a staff login account
-    //Requires: Administrator role
-    //Prevents deletion of the last Administrator account (safety guard).
+    //Deletes a staff login account req admin roles to do so
     public void deleteUserAccount(Connection conn, String username)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
 
-        // Prevent accidental self-deletion
+        // cant self-delet
         UserAccount current = SessionManager.getInstance().getCurrentUser();
         if (current != null && current.getUsername().equalsIgnoreCase(username))
             throw new IllegalStateException("You cannot delete your own account.");
@@ -100,9 +74,6 @@ public class AccountService {
     }
 
     //Changes the role of an existing staff account
-
-    //Requires: Administrator role
-    //can also be achieved by deleting and recreating
     public void changeUserRole(Connection conn, String username, String newRole)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
@@ -111,10 +82,8 @@ public class AccountService {
         AccountSQL.changeUserRole(conn, username, newRole);
     }
 
-    /**
-     * Returns all staff accounts (username + role only — no passwords).
-     * Requires: Administrator role.
-     */
+
+    //returns all staff accounts
     public List<UserAccount> getAllStaffAccounts(Connection conn)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
@@ -129,10 +98,9 @@ public class AccountService {
         return users;
     }
 
-    //Reads a single merchant from the DB by their merchant_ID
-    // Returns null if not found.
+    //Reads a single merchant from the DB from merchant_ID
     public MerchantAccount getMerchant(Connection conn, int merchantID) throws SQLException {
-        ResultSet rs = AccountSQL.getAllMerchants(conn); // reuse existing query
+        ResultSet rs = AccountSQL.getAllMerchants(conn);
         while (rs.next()) {
             if (rs.getInt("merchant_ID") == merchantID) {
                 return mapRowToMerchant(rs);
@@ -142,7 +110,6 @@ public class AccountService {
     }
 
      //Returns all merchant accounts.
-     //Requires an Administrator or a Director of Operations
     public List<MerchantAccount> getAllMerchants(Connection conn)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageMerchantAccounts();
@@ -154,8 +121,8 @@ public class AccountService {
         return merchants;
     }
 
-    //Creates a new merchant account with the mandatory contact and financial details the brief requires before activation
-    //Requires an Administrator or Director of Operations.
+
+    //creates a new merchant account
     public void createMerchantAccount(Connection conn,
                                       String accountHolderName, String accountNumber,
                                       String contactName, String address,
@@ -170,8 +137,7 @@ public class AccountService {
                 agreedDiscount, login, password);
     }
 
-    //Updates the editable contact details of an existing merchant
-    //Requires: Administrator or Director of Operations
+
     public void updateMerchantDetails(Connection conn, int merchantID,
                                       String contactName, String address, String phoneNumber)
             throws SQLException, SessionManager.AccessDeniedException {
@@ -179,17 +145,15 @@ public class AccountService {
         AccountSQL.updateMerchantAccount(conn, merchantID, contactName, address, phoneNumber);
     }
 
-    //Deletes a merchant account and all associated discount tiers
-    //(cascading delete handled in AccountSQL)
-    //Requires: Administrator.
+
+    //Deletes a merchant account and associated discount tiers
     public void deleteMerchantAccount(Connection conn, int merchantID)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts(); // Admin only
         AccountSQL.deleteMerchantAccount(conn, merchantID);
     }
 
-    //Sets or changes the credit limit for a merchant
-    //Requires an Administrator or Director of Operations.
+    //Sets or changes the credit limit ,merchant
     public void setCreditLimit(Connection conn, int merchantID, double creditLimit)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanSetCreditLimit();
@@ -200,10 +164,6 @@ public class AccountService {
 
 
     //Replaces the entire discount plan for a merchant
-    //Deletes existing tiers first, then inserts the new ones
-    //Requires: Administrator or Director of Operations
-    //For a FIXED plan pass a single DiscountTier with min=0, max=null
-    //For a VARIABLE plan pass multiple tiers covering the desired ranges.
     public void setDiscountPlan(Connection conn, int merchantID, List<DiscountTier> tiers)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageDiscountPlans();
@@ -216,8 +176,8 @@ public class AccountService {
         }
     }
 
-    //Deletes all discount tiers for a merchant
-    //Requires an Administrator or Director of Operations
+
+    //Deletes discounts tiers
     public void deleteDiscountPlan(Connection conn, int merchantID)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageDiscountPlans();
@@ -243,17 +203,7 @@ public class AccountService {
 //        return tiers;
 //    }
 
-    //Automatically updates a merchant's account state based on how many days
-    //have passed since their payment was due (end of the calendar month)
-    // Rules from the Student's Brief:
-    //≤ 15 days late  → normal
-    //15–30 days late → suspended
-    //> 30 days late   in default
-    //This should be called every time a merchant account is accessed
-    //param conn is an active database connection
-    //param merchantID the merchant to check
-    //param paymentDueDate the date by which the payment was due
-     //return the updated AccountState
+    //Automatically updates a merchant's account state
     public MerchantAccount.AccountState updateAccountStateForPayment(
             Connection conn, int merchantID, LocalDate paymentDueDate)
             throws SQLException {
@@ -271,7 +221,6 @@ public class AccountService {
             newState = MerchantAccount.AccountState.IN_DEFAULT;
         }
 
-        // Only write to DB if state needs to change
         String current = AccountSQL.getMerchantStatus(conn, merchantID);
         if (!newState.getDbValue().equals(current)) {
             AccountSQL.updateMerchantStatus(conn, merchantID, newState.getDbValue());
@@ -279,17 +228,13 @@ public class AccountService {
         return newState;
     }
 
-    //Returns true if the merchant should see a late-payment reminder on login
-    //(like if they are 1–15 days past their payment due date but not yet suspendedr
+    //returns true if there needs to be a late payment reminder on login
     public boolean shouldShowPaymentReminder(LocalDate paymentDueDate) {
         long daysLate = ChronoUnit.DAYS.between(paymentDueDate, LocalDate.now());
         return daysLate > 0 && daysLate <= 15;
     }
 
     //Restores an "in default" merchant account to "normal"
-    //Per the brief: this can ONLY be done by the Director of Operations,
-    // AND only after a payment has been received.
-    //Requires: Director of Operations (or Administrator).
     public void reactivateDefaultAccount(Connection conn, int merchantID)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanReactivateDefaultAccount();

@@ -323,7 +323,6 @@ public class OrdersPage {
 
     private void generateInvoice(OrderRow r) {
         if (r == null) return;
-        // Re-use existing invoice ID if there is one, otherwise mint a new one
         String invId = (r.invoiceId.get() == null || r.invoiceId.get().isBlank())
                 ? "INV-" + (System.currentTimeMillis() % 10_000_000) + "-" + r.orderId.get()
                 : r.invoiceId.get();
@@ -375,7 +374,7 @@ public class OrdersPage {
         reload();
     }
 
-    // ─── New order dialog ───────────────────────────────────────────────
+    // New order dialog
     private void newOrderDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("New order");
@@ -529,8 +528,7 @@ public class OrdersPage {
                 }
                 ps.executeBatch();
             }
-            // Set the payment-due date on the merchant if they don't already have one.
-            // Per §8.1, payment is due by the end of the calendar month following the order.
+            // Set the payment-due date on the merchant if they don't already have one. to the end of the mouth
             try (PreparedStatement ps = conn.prepareStatement(
                     "UPDATE merchants SET last_payment_due=? WHERE merchant_ID=? AND last_payment_due IS NULL")) {
                 ps.setDate(1, java.sql.Date.valueOf(endOfNextMonth(date)));
@@ -538,7 +536,7 @@ public class OrdersPage {
                 ps.executeUpdate();
             }
             conn.commit();
-            // Re-evaluate merchant state (suspended/in_default) immediately after order
+            // Re-evaluate merchant state after order
             com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(m.id);
             UIUtil.info("Order created", "Order #" + orderId + " created for " + m.name + ".");
             reload();
@@ -546,15 +544,12 @@ public class OrdersPage {
     }
 
     private static LocalDate endOfNextMonth(LocalDate orderDate) {
-        // Per §8.1: "merchants ... can make payments for the goods they have
-        // ordered by the end of the calendar month". Use end of the month
-        // FOLLOWING the order so a typical order placed mid-month gives the
-        // merchant ~30-60 days to pay.
+
         LocalDate firstOfNextMonth = orderDate.plusMonths(1).withDayOfMonth(1);
         return firstOfNextMonth.withDayOfMonth(firstOfNextMonth.lengthOfMonth());
     }
 
-    // ─── Payment dialog ─────────────────────────────────────────────────
+    // Payment dialog
     private void paymentDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Record payment");
@@ -641,7 +636,7 @@ public class OrdersPage {
             ps.executeUpdate();
 
             double bal = outstandingBalance(merchantId);
-            // If balance cleared & account suspended → restore to normal (per §8.1)
+            // If balance cleared & account suspended restore to normal
             if (bal <= 0) {
                 try (PreparedStatement up = conn.prepareStatement(
                         "UPDATE merchants SET account_state='normal' WHERE merchant_ID=? AND account_state='suspended'")) {
@@ -653,7 +648,7 @@ public class OrdersPage {
                     up.setInt(1, merchantId); up.executeUpdate();
                 }
             }
-            // Re-evaluate state per the §8.1 rules (will not auto-clear in_default)
+            // Re-evaluate state per the ,will not auto-clear in_default
             com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(merchantId);
             UIUtil.info("Payment recorded",
                     String.format("Payment of £%.2f recorded. New balance: £%.2f", amount, bal));

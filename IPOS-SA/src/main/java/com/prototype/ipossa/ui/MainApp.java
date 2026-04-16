@@ -72,7 +72,7 @@ public class MainApp {
 
     private boolean isMerchant() { return currentMerchant != null; }
 
-    // ─── TOP BAR ────────────────────────────────────────────────────────
+    // top bar
     private HBox buildTopBar() {
         HBox bar = new HBox(12);
         bar.setAlignment(Pos.CENTER_LEFT);
@@ -115,7 +115,7 @@ public class MainApp {
         new LoginScreen(stage).show();
     }
 
-    // ─── SIDEBAR ────────────────────────────────────────────────────────
+    //SIDEBAR
     private VBox buildSidebar() {
         VBox bar = new VBox();
         bar.getStyleClass().add("sidebar");
@@ -130,14 +130,14 @@ public class MainApp {
         navButtons.clear();
 
         if (isMerchant()) {
-            // ── MERCHANT NAV ──
+            // MERCHANT NAV
             section(bar, "MERCHANT");
             addNav(bar, "Dashboard");
             addNav(bar, "Catalogue");
             addNav(bar, "My Orders");
             addNav(bar, "Account");
         } else {
-            // ── STAFF NAV ── role-gated so non-applicable tabs don't appear
+            //  role-gated so non-applicable tabs don't appear
             section(bar, "MAIN");
             addNav(bar, "Dashboard");
 
@@ -185,7 +185,7 @@ public class MainApp {
         bar.getChildren().add(nb.button);
     }
 
-    // ─── PAGE NAVIGATION ─────────────────────────────────────────────────
+    // pag navigation
     private void showPage(String name) {
         for (NavButton nb : navButtons) nb.setActive(nb.label.equals(name));
         pageTitleLabel.setText(name);
@@ -216,7 +216,7 @@ public class MainApp {
         };
     }
 
-    // ─── STOCK WARNINGS ─────────────────────────────────────────────────
+    // stock warning
     private void showStockWarnings() {
         try (Connection conn = MyJDBC.getConnection()) {
             ResultSet rs = conn.prepareStatement(
@@ -237,13 +237,10 @@ public class MainApp {
     }
 
     private void showMerchantPaymentReminder() {
-        // Placeholder: in a real system, calculate balance vs. payment due date.
-        // The existing AccountService.shouldShowPaymentReminder handles the logic;
-        // we keep this hook so the brief's "reminder on every login" requirement
-        // can be wired up in MerchantOrdersPage where balance is computed.
+        // Placeholder
     }
 
-    // ─── Inner nav button helper ────────────────────────────────────────
+    // inner nav button helper
     private static class NavButton {
         final Button button;
         final String label;

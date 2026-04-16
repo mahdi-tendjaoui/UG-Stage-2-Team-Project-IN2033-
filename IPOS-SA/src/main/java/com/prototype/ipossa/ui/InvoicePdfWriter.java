@@ -8,11 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Minimal pure-Java PDF writer — produces a single-page PDF with the
- * invoice details. Uses the built-in Helvetica font so no fonts need to
- * be embedded. Avoids adding any external library.
- */
+
+//invoice pdf creator with invoice details
 public class InvoicePdfWriter {
 
     public static class LineItem {
@@ -53,7 +50,7 @@ public class InvoicePdfWriter {
         // Bill-to
         cs.append("BT\n/F2 11 Tf\n72 700 Td\n(BILL TO) Tj\n");
         cs.append("/F1 11 Tf\n0 -16 Td\n(").append(esc(merchantName)).append(") Tj\n");
-        // Address can be multi-line — split on commas and newlines
+        // Address can be multi-line and  split on commas and newlines
         String[] addrLines = (merchantAddress == null ? "" : merchantAddress).split("[,\\n]");
         for (String l : addrLines) {
             String t = l.trim();
@@ -62,7 +59,7 @@ public class InvoicePdfWriter {
         }
         cs.append("ET\n");
 
-        // Items table header (rule + headings)
+        // Items table header
         float yTop = 600;
         cs.append("0.85 0.85 0.85 rg\n");
         cs.append("72 ").append(yTop).append(" 468 20 re f\n");

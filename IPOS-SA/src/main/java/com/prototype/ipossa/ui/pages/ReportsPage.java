@@ -28,22 +28,7 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Reports page implementing the six §8.1 / IPOS-SA-RPT reports:
- *
- *   (i)   Turnover for a given period (line chart by month + bar by item)
- *   (ii)  List of orders received from a particular merchant for a period
- *   (iii) Activity report for an individual merchant for a period
- *   (iv)  List of invoices raised against a merchant for a period
- *   (v)   List of all invoices raised by InfoPharma for a period
- *   (vi)  Stock turnover within a given period (bar chart, in vs out)
- *
- * Each report has appropriate visual representations:
- *   - Line graph for turnover over time
- *   - Pie chart for revenue share by merchant
- *   - Bar charts for item-level breakdowns and stock movement
- *   - Tables for invoice/order listings
- */
+
 public class ReportsPage {
 
     private final UserAccount user;
@@ -69,7 +54,7 @@ public class ReportsPage {
             return root;
         }
 
-        // ── Report picker + date range + merchant picker ─────────────────
+        // Report picker and  date range and merchant picker
         ComboBox<String> picker = new ComboBox<>();
         picker.getItems().addAll(
                 "(i) Turnover for period",
@@ -239,7 +224,7 @@ public class ReportsPage {
                 statBlock("Active merchants", String.valueOf(byMerchant.size())));
         visualArea.getChildren().add(headline);
 
-        // Line chart: revenue over time
+        // Line chart is the revenue over time
         if (!byMonth.isEmpty()) {
             CategoryAxis x = new CategoryAxis(); x.setLabel("Month");
             NumberAxis y = new NumberAxis(); y.setLabel("Revenue (£)");
@@ -254,7 +239,7 @@ public class ReportsPage {
             visualArea.getChildren().add(line);
         }
 
-        // Pie: revenue share by merchant
+        // Pie chart for revenue share by merchant
         ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
         for (var en : byMerchant.entrySet())
             pieData.add(new PieChart.Data(en.getKey(), en.getValue()));
@@ -277,7 +262,7 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
-    // ─── (ii) Orders received from a particular merchant for period ──
+    // Orders received from a particular merchant for period
     private void reportOrdersByMerchant() {
         MerchantRef m = merchantPicker.getValue();
         if (m == null) { visualArea.getChildren().add(warnMsg("Select a merchant.")); return; }
@@ -342,7 +327,7 @@ public class ReportsPage {
         table.getColumns().add(strCol("Payment",  "payment",  100));
         visualArea.getChildren().add(table);
 
-        // Bar chart: order values
+        // Bar chart for order values
         CategoryAxis x = new CategoryAxis(); x.setLabel("Order #");
         NumberAxis y = new NumberAxis(); y.setLabel("Value (£)");
         BarChart<String, Number> bar = new BarChart<>(x, y);
@@ -374,7 +359,7 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
-    // ─── (iii) Activity report for a merchant ────────────────────────
+    // Activity report for a merchant
     private void reportMerchantActivity() {
         MerchantRef m = merchantPicker.getValue();
         if (m == null) { visualArea.getChildren().add(warnMsg("Select a merchant.")); return; }
@@ -633,7 +618,7 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
-    // ─── DEBTOR REMINDERS (per IPOS-SA-RPT requirement) ──────────────
+    // DEBTOR REMINDERS (per IPOS-SA-RPT requirement)
     private void generateReminders() {
         StringBuilder all = new StringBuilder();
         try (Connection conn = MyJDBC.getConnection()) {
@@ -684,7 +669,7 @@ public class ReportsPage {
                 "Address on file: " + (addr == null ? "(not recorded)" : addr) + "\n";
     }
 
-    // ─── PRINT / SAVE ────────────────────────────────────────────────
+    // PRINT / SAVE
     private void printReport() {
         if (visualArea.getChildren().isEmpty() && textOutput.getText().isEmpty()) {
             UIUtil.warn("Nothing to print", "Generate a report first."); return;
@@ -714,7 +699,7 @@ public class ReportsPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
-    // ─── HELPERS ─────────────────────────────────────────────────────
+    // HELPERS
     private static <T> TableColumn<T, String> strCol(String title, String prop, double w) {
         TableColumn<T, String> c = new TableColumn<>(title);
         c.setCellValueFactory(new PropertyValueFactory<>(prop)); c.setPrefWidth(w); return c;
@@ -742,7 +727,7 @@ public class ReportsPage {
     }
     private String nz(String s) { return s == null ? "—" : s; }
 
-    // ─── ROW DTOs ────────────────────────────────────────────────────
+    // ROW DTOs
     public static class OrderRow {
         public final SimpleStringProperty orderId, date, amount, status, invoiceId, payment;
         public OrderRow(String o, String d, String a, String s, String i, String p) {
