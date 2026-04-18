@@ -58,8 +58,8 @@ public class MainApp {
         ThemeManager.get().register(scene);
         stage.setScene(scene);
         stage.setTitle(isMerchant()
-                ? "IPOS-SA — " + currentMerchant.getAccountHolderName() + " (Merchant)"
-                : "IPOS-SA — " + currentUser.getUsername() + " (" + currentUser.getRole() + ")");
+                ? "IPOS-SA - " + currentMerchant.getAccountHolderName() + " (Merchant)"
+                : "IPOS-SA - " + currentUser.getUsername() + " (" + currentUser.getRole() + ")");
         stage.show();
 
         showPage(navButtons.get(0).label);

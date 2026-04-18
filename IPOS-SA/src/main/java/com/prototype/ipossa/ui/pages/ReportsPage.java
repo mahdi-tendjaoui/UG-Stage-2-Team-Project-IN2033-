@@ -289,7 +289,7 @@ public class ReportsPage {
                         String.valueOf(rs.getDate("order_date")),
                         Formats.money(amt),
                         rs.getString("status"),
-                        rs.getString("invoice_ID") == null ? "—" : rs.getString("invoice_ID"),
+                        rs.getString("invoice_ID") == null ? "-" : rs.getString("invoice_ID"),
                         paymentStatus));
             }
         } catch (Exception ex) { showError(ex); return; }
@@ -424,7 +424,7 @@ public class ReportsPage {
         visualArea.getChildren().add(bar);
 
         StringBuilder txt = new StringBuilder();
-        txt.append("Activity report — ").append(m.name).append("\n");
+        txt.append("Activity report - ").append(m.name).append("\n");
         txt.append("Period: ").append(startPicker.getValue()).append(" to ").append(endPicker.getValue()).append("\n\n");
         txt.append(String.format("%-12s %-30s %6s %10s %12s%n",
                 "Item ID", "Description", "Qty", "Unit", "Line"));
@@ -663,7 +663,7 @@ public class ReportsPage {
         var f = fc.showSaveDialog(textOutput.getScene().getWindow());
         if (f == null) return;
         try (FileWriter w = new FileWriter(f)) {
-            w.write(currentReportTitle + " — generated " + LocalDate.now() + "\n\n");
+            w.write(currentReportTitle + " - generated " + LocalDate.now() + "\n\n");
             w.write(textOutput.getText());
             UIUtil.info("Saved", "Report saved to:\n" + f.getAbsolutePath());
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
@@ -694,7 +694,7 @@ public class ReportsPage {
         if (s == null) return "";
         return s.length() <= len ? s : s.substring(0, len - 1) + "…";
     }
-    private String nz(String s) { return s == null ? "—" : s; }
+    private String nz(String s) { return s == null ? "-" : s; }
 
     public static class OrderRow {
         public final SimpleStringProperty orderId, date, amount, status, invoiceId, payment;

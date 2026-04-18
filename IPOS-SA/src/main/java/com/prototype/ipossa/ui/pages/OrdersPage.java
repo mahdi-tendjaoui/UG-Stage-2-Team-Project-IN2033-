@@ -216,7 +216,7 @@ public class OrdersPage {
         if (r == null) return;
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Order #" + r.orderId.get());
-        d.setHeaderText(r.merchantName.get() + " — " + r.date.get());
+        d.setHeaderText(r.merchantName.get() + " - " + r.date.get());
 
         VBox box = new VBox(8);
         TableView<ItemRow> t = new TableView<>();
@@ -254,7 +254,7 @@ public class OrdersPage {
 
         Label totals = new Label(String.format("Total: £%.2f   •   Status: %s   •   Invoice: %s",
                 r.total.get(), r.status.get(),
-                r.invoiceId.get() == null ? "—" : r.invoiceId.get()));
+                r.invoiceId.get() == null ? "-" : r.invoiceId.get()));
         totals.getStyleClass().add("h2");
 
         box.getChildren().addAll(t, totals);

@@ -43,7 +43,7 @@ public class MerchantOrdersPage {
         place.setDisable(merchant.getAccountState() != MerchantAccount.AccountState.NORMAL);
         if (merchant.getAccountState() != MerchantAccount.AccountState.NORMAL) {
             place.setTooltip(new Tooltip("Account is " + merchant.getAccountState().getDbValue()
-                    + " — clear outstanding balance to place new orders."));
+                    + " - clear outstanding balance to place new orders."));
         }
         place.setOnAction(e -> placeOrderDialog());
 
@@ -151,7 +151,7 @@ public class MerchantOrdersPage {
         if (r == null) return;
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Order #" + r.orderId.get());
-        d.setHeaderText(merchant.getAccountHolderName() + " — " + r.date.get());
+        d.setHeaderText(merchant.getAccountHolderName() + " - " + r.date.get());
 
         TableView<ItemRow> t = new TableView<>();
         t.setPrefHeight(260);
@@ -183,7 +183,7 @@ public class MerchantOrdersPage {
 
         Label totals = new Label(String.format("Total £%.2f   ·   Status: %s   ·   Invoice: %s",
                 r.total.get(), r.status.get(),
-                r.invoiceId.get() == null ? "—" : r.invoiceId.get()));
+                r.invoiceId.get() == null ? "-" : r.invoiceId.get()));
         totals.getStyleClass().add("h2");
 
         VBox box = new VBox(8, t, totals);

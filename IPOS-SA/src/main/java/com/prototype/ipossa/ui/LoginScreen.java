@@ -28,7 +28,7 @@ public class LoginScreen {
         Label title = new Label("IPOS-SA");
         title.getStyleClass().add("login-title");
 
-        Label subtitle = new Label("InfoPharma Ordering System — sign in to continue");
+        Label subtitle = new Label("InfoPharma Ordering System - sign in to continue");
         subtitle.getStyleClass().add("login-subtitle");
         subtitle.setWrapText(true);
 
@@ -131,7 +131,7 @@ public class LoginScreen {
         Scene scene = new Scene(root, 1100, 760);
         ThemeManager.get().register(scene);
         stage.setScene(scene);
-        stage.setTitle("IPOS-SA — Sign in");
+        stage.setTitle("IPOS-SA - Sign in");
         stage.show();
 
         javafx.application.Platform.runLater(userField::requestFocus);

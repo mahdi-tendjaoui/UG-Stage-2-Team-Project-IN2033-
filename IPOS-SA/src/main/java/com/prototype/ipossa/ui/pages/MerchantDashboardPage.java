@@ -50,21 +50,21 @@ public class MerchantDashboardPage {
         info.getChildren().add(kv("Address", merchant.getAddress()));
         info.getChildren().add(kv("Phone",   merchant.getPhoneNumber()));
         info.getChildren().add(kv("Discount", merchant.getDiscountType() == null
-                ? "—" : merchant.getDiscountType().getDbValue()));
+                ? "-" : merchant.getDiscountType().getDbValue()));
         root.getChildren().add(info);
 
         com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(merchant.getMerchantID());
         if (com.prototype.ipossa.ui.MerchantStateUpdater.shouldShowReminder(merchant.getMerchantID())) {
             long late = com.prototype.ipossa.ui.MerchantStateUpdater.daysLate(merchant.getMerchantID());
             Label rem = new Label("⏰  Reminder: your payment is " + late + " day(s) overdue. "
-                    + "Please settle the outstanding balance — accounts more than 15 days late are automatically suspended.");
+                    + "Please settle the outstanding balance - accounts more than 15 days late are automatically suspended.");
             rem.getStyleClass().add("warning-banner");
             rem.setWrapText(true);
             rem.setMaxWidth(Double.MAX_VALUE);
             root.getChildren().add(rem);
         }
         if (merchant.getAccountState() == com.prototype.ipossa.systems.ACC.MerchantAccount.AccountState.SUSPENDED) {
-            Label s = new Label("⚠  Your account is SUSPENDED — no new orders can be placed until "
+            Label s = new Label("⚠  Your account is SUSPENDED - no new orders can be placed until "
                     + "the outstanding balance is cleared.");
             s.getStyleClass().add("warning-banner");
             s.setWrapText(true);
@@ -72,7 +72,7 @@ public class MerchantDashboardPage {
             root.getChildren().add(s);
         }
         if (merchant.getAccountState() == com.prototype.ipossa.systems.ACC.MerchantAccount.AccountState.IN_DEFAULT) {
-            Label s = new Label("⛔  Your account is IN DEFAULT — please contact InfoPharma's "
+            Label s = new Label("⛔  Your account is IN DEFAULT - please contact InfoPharma's "
                     + "Director of Operations to discuss reactivation.");
             s.getStyleClass().add("warning-banner");
             s.setWrapText(true);
@@ -104,7 +104,7 @@ public class MerchantDashboardPage {
 
     private HBox kv(String k, String v) {
         Label kk = new Label(k); kk.getStyleClass().add("dim"); kk.setMinWidth(100);
-        Label vv = new Label(v == null ? "—" : v);
+        Label vv = new Label(v == null ? "-" : v);
         HBox h = new HBox(10, kk, vv);
         h.setAlignment(Pos.CENTER_LEFT);
         return h;

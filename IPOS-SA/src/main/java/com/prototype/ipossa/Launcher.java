@@ -14,7 +14,7 @@ public class Launcher extends Application {
             System.out.println("=== Connected to DB ===");
         } catch (Exception e) {
             System.err.println("WARNING: could not reach database: " + e.getMessage());
-            System.err.println("The app will still start — log-in will fail until the DB is reachable.");
+            System.err.println("The app will still start - log-in will fail until the DB is reachable.");
         }
         SchemaInit.ensureTables();
         MerchantStateUpdater.refreshAll();

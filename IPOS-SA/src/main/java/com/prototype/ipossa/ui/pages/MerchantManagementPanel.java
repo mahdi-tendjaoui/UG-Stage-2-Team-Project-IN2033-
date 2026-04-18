@@ -229,7 +229,7 @@ public class MerchantManagementPanel {
 
         TableView<TierRow> tbl = new TableView<>(tierData);
         tbl.setPrefHeight(220);
-        tbl.setPlaceholder(UIUtil.dim("No tiers — click 'Add tier'."));
+        tbl.setPlaceholder(UIUtil.dim("No tiers - click 'Add tier'."));
 
         TableColumn<TierRow, String> c1 = new TableColumn<>("Min");
         c1.setCellValueFactory(cd -> new SimpleStringProperty(

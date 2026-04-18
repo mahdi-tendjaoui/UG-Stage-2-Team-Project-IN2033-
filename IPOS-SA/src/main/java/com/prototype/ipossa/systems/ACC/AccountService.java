@@ -187,7 +187,7 @@ public class AccountService {
         String currentState = AccountSQL.getMerchantStatus(conn, merchantID);
         if (!MerchantAccount.AccountState.IN_DEFAULT.getDbValue().equals(currentState)) {
             throw new IllegalStateException(
-                    "Account is not 'in default' — no reactivation needed.");
+                    "Account is not 'in default' - no reactivation needed.");
         }
         AccountSQL.updateMerchantStatus(conn,
                 merchantID, MerchantAccount.AccountState.NORMAL.getDbValue());
