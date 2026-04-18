@@ -412,7 +412,7 @@ public class MerchantOrdersPage {
         VBox box = new VBox(10); box.setPadding(new Insets(4));
 
         double currentBalance = outstandingBalance();
-        Label balance = new Label(String.format("Outstanding balance: £%.2f", currentBalance));
+        Label balance = new Label(String.format("Outstanding balance: £%.2f", Math.min(0, currentBalance)));
         balance.getStyleClass().add("dim");
 
         TextField amount = new TextField(String.format("%.2f", Math.max(0, currentBalance)));
@@ -429,7 +429,7 @@ public class MerchantOrdersPage {
         box.getChildren().addAll(
                 new Label("Merchant: " + merchant.getAccountHolderName()),
                 balance,
-                new Label("Amount £:"), amount,
+                new Label("Amount:"), amount,
                 new Label("Method:"), method,
                 new Label("Date:"), date,
                 new Label("Notes:"), notes);
