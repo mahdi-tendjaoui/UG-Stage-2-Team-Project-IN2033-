@@ -37,8 +37,8 @@ public class CataloguePage {
         if (readOnly || user == null) return false;
         var r = user.getRole();
         return r == com.prototype.ipossa.systems.ACC.Role.ADMINISTRATOR
-            || r == com.prototype.ipossa.systems.ACC.Role.DIRECTOR_OF_OPERATIONS
-            || r == com.prototype.ipossa.systems.ACC.Role.WAREHOUSE_EMPLOYEE;
+                || r == com.prototype.ipossa.systems.ACC.Role.DIRECTOR_OF_OPERATIONS
+                || r == com.prototype.ipossa.systems.ACC.Role.WAREHOUSE_EMPLOYEE;
     }
 
     public Node build() {
@@ -79,6 +79,7 @@ public class CataloguePage {
         });
         table.setItems(filtered);
 
+        // Low stock summary
         Label lowLabel = new Label();
         lowLabel.getStyleClass().add("warning-banner");
         lowLabel.setMaxWidth(Double.MAX_VALUE);
