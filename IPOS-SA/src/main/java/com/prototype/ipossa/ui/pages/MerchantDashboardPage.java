@@ -3,7 +3,6 @@ package com.prototype.ipossa.ui.pages;
 import com.prototype.ipossa.MyJDBC;
 import com.prototype.ipossa.systems.ACC.MerchantAccount;
 import com.prototype.ipossa.ui.UIUtil;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -60,10 +59,10 @@ public class MerchantDashboardPage {
         VBox info = new VBox(8);
         info.getStyleClass().add("card");
         info.getChildren().add(UIUtil.h2("Account details"));
-        info.getChildren().add(kv("Contact", merchant.getContactName()));
-        info.getChildren().add(kv("Address", merchant.getAddress()));
-        info.getChildren().add(kv("Phone",   merchant.getPhoneNumber()));
-        info.getChildren().add(kv("Discount", merchant.getDiscountType() == null
+        info.getChildren().add(AccountDetails("Contact", merchant.getContactName()));
+        info.getChildren().add(AccountDetails("Address", merchant.getAddress()));
+        info.getChildren().add(AccountDetails("Phone",   merchant.getPhoneNumber()));
+        info.getChildren().add(AccountDetails("Discount", merchant.getDiscountType() == null
                 ? "-" : merchant.getDiscountType().getDbValue()));
         root.getChildren().add(info);
 
@@ -107,6 +106,13 @@ public class MerchantDashboardPage {
         return sp;
     }
 
+    /**
+     * stat
+     * @param label
+     * @param val
+     * @param alert
+     * @return
+     */
     private VBox stat(String label, String val, boolean alert) {
         VBox v = new VBox(6);
         v.getStyleClass().add(alert ? "stat-card-accent" : "stat-card");
@@ -116,14 +122,24 @@ public class MerchantDashboardPage {
         return v;
     }
 
-    private HBox kv(String k, String v) {
-        Label kk = new Label(k); kk.getStyleClass().add("dim"); kk.setMinWidth(100);
-        Label vv = new Label(v == null ? "-" : v);
-        HBox h = new HBox(10, kk, vv);
+    /**
+     * AccountDetails
+     * @param descriptor
+     * @param details
+     * @return
+     */
+    private HBox AccountDetails(String descriptor, String details) {
+        Label descriptorLabel = new Label(descriptor); descriptorLabel.getStyleClass().add("dim"); descriptorLabel.setMinWidth(100);
+        Label detailsLabel = new Label(details == null ? "-" : details);
+        HBox h = new HBox(10, descriptorLabel, detailsLabel);
         h.setAlignment(Pos.CENTER_LEFT);
         return h;
     }
 
+    /**
+     * balance
+     * @return
+     */
     private double balance() {
         double o = 0, p = 0;
         try (Connection conn = MyJDBC.getConnection()) {
@@ -141,6 +157,10 @@ public class MerchantDashboardPage {
         return o - p;
     }
 
+    /**
+     * countOrders
+     * @return
+     */
     private int countOrders() {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(
@@ -149,6 +169,12 @@ public class MerchantDashboardPage {
             ResultSet rs = ps.executeQuery(); if (rs.next()) return rs.getInt(1);
         } catch (Exception ignored) {} return 0;
     }
+
+    /**
+     * pendingOrders
+     * shows pending orders
+     * @return
+     */
     private int pendingOrders() {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(

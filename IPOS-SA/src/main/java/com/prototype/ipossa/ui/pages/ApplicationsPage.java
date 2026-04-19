@@ -73,6 +73,10 @@ public class ApplicationsPage {
         return root;
     }
 
+    /**
+     * buildTable
+     * @return
+     */
     private TableView<Row> buildTable() {
         TableView<Row> t = new TableView<>();
         t.setPlaceholder(UIUtil.dim("No applications received."));
@@ -142,6 +146,9 @@ public class ApplicationsPage {
         return t;
     }
 
+    /**
+     * reload
+     */
     private void reload() {
         data.clear();
         try (Connection conn = MyJDBC.getConnection()) {
@@ -161,6 +168,9 @@ public class ApplicationsPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * receiveDialog
+     */
     private void receiveDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Receive application");
@@ -202,6 +212,11 @@ public class ApplicationsPage {
         d.showAndWait();
     }
 
+    /**
+     * updateStatus
+     * @param r
+     * @param newStatus
+     */
     private void updateStatus(Row r, String newStatus) {
         if (r == null) return;
         try (Connection conn = MyJDBC.getConnection();
@@ -212,6 +227,10 @@ public class ApplicationsPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * emailOutcome
+     * @param r
+     */
     private void emailOutcome(Row r) {
         if (r == null) return;
         String outcome = r.status.get();
@@ -323,13 +342,6 @@ public class ApplicationsPage {
         public String getName() { return name.get(); }
 
         /**
-         * Gets email.
-         *
-         * @return the email
-         */
-        public String getEmail() { return email.get(); }
-
-        /**
          * Gets address.
          *
          * @return the address
@@ -350,11 +362,5 @@ public class ApplicationsPage {
          */
         public String getStatus() { return status.get(); }
 
-        /**
-         * Gets submitted.
-         *
-         * @return the submitted
-         */
-        public String getSubmitted() { return submitted.get(); }
     }
 }

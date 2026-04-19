@@ -37,14 +37,12 @@ public class OrdersPage {
 
     /**
      * Instantiates a new Orders page.
-     *
      * @param user the user
      */
     public OrdersPage(UserAccount user) { this.user = user; }
 
     /**
      * Build node.
-     *
      * @return the node
      */
     public Node build() {
@@ -102,6 +100,10 @@ public class OrdersPage {
         return root;
     }
 
+    /**
+     * updateItem
+     * @return
+     */
     private TableView<OrderRow> buildTable() {
         TableView<OrderRow> t = new TableView<>();
         t.setPlaceholder(UIUtil.dim("No orders to show."));
@@ -116,6 +118,7 @@ public class OrdersPage {
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
         status.setPrefWidth(140);
         status.setCellFactory(c -> new TableCell<>() {
+            //updates a given item
             @Override protected void updateItem(String s, boolean empty) {
                 super.updateItem(s, empty);
                 if (empty || s == null) { setGraphic(null); setText(null); return; }
@@ -157,6 +160,12 @@ public class OrdersPage {
                     }
                 });
             }
+
+            /**
+             * updateItem
+             * @param v
+             * @param empty
+             */
             @Override protected void updateItem(Void v, boolean empty) {
                 super.updateItem(v, empty);
                 OrderRow r = getTableRow() == null ? null : getTableRow().getItem();
@@ -183,15 +192,33 @@ public class OrdersPage {
         return t;
     }
 
+    /**
+     * strCol
+     * @param title
+     * @param prop
+     * @param w
+     * @return
+     */
     private TableColumn<OrderRow, String> strCol(String title, String prop, double w) {
         TableColumn<OrderRow, String> c = new TableColumn<>(title);
         c.setCellValueFactory(new PropertyValueFactory<>(prop)); c.setPrefWidth(w); return c;
     }
+
+    /**
+     * numCol
+     * @param title
+     * @param prop
+     * @param w
+     * @return
+     */
     private TableColumn<OrderRow, Number> numCol(String title, String prop, double w) {
         TableColumn<OrderRow, Number> c = new TableColumn<>(title);
         c.setCellValueFactory(new PropertyValueFactory<>(prop)); c.setPrefWidth(w); return c;
     }
 
+    /**
+     * reload
+     */
     private void reload() {
         orders.clear();
         try (Connection conn = MyJDBC.getConnection()) {
@@ -225,6 +252,10 @@ public class OrdersPage {
         }
     }
 
+    /**
+     * viewOrder
+     * @param r
+     */
     private void viewOrder(OrderRow r) {
         if (r == null) return;
         Dialog<Void> d = new Dialog<>();
@@ -278,29 +309,10 @@ public class OrdersPage {
         d.showAndWait();
     }
 
-    private void advanceStatus(OrderRow r) {
-        if (r == null) return;
-        int idx = indexOfStatus(r.status.get());
-        if (idx < 0 || idx >= STATUSES.length - 1) {
-            UIUtil.info("Order", "Order is already delivered.");
-            return;
-        }
-        String next = STATUSES[idx + 1];
-        updateStatus(r, next);
-    }
-
-    private void markDelivered(OrderRow r) {
-        if (r == null) return;
-        updateStatus(r, "delivered");
-    }
-
-    private void archiveOrder(OrderRow r) {
-        if (r == null) return;
-        if (!UIUtil.confirm("Archive order",
-                "Archive order #" + r.orderId.get() + "? Archived orders are excluded from active operations.")) return;
-        updateStatus(r, "archived");
-    }
-
+    /**
+     * deleteOrder
+     * @param r
+     */
     private void deleteOrder(OrderRow r) {
         if (r == null) return;
         if (!UIUtil.confirm("Delete order",
@@ -318,6 +330,11 @@ public class OrdersPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * updateStatus
+     * @param r
+     * @param newStatus
+     */
     private void updateStatus(OrderRow r, String newStatus) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement st = conn.prepareStatement(
@@ -327,6 +344,11 @@ public class OrdersPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * indexOfStatus
+     * @param s
+     * @return
+     */
     private int indexOfStatus(String s) {
         if (s == null) return -1;
         for (int i = 0; i < STATUSES.length; i++)
@@ -334,6 +356,10 @@ public class OrdersPage {
         return -1;
     }
 
+    /**
+     * generateInvoice
+     * @param r
+     */
     private void generateInvoice(OrderRow r) {
         if (r == null) return;
 
@@ -385,6 +411,10 @@ public class OrdersPage {
         reload();
     }
 
+    /**
+     * newOrderDialog
+     * Displays a dialog for making new orders
+     */
     private void newOrderDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("New order");
@@ -483,12 +513,23 @@ public class OrdersPage {
         d.showAndWait();
     }
 
+    /**
+     * updateTotal
+     * @param cart
+     * @param lbl
+     */
     private void updateTotal(TableView<CartRow> cart, Label lbl) {
         double total = cart.getItems().stream()
                 .mapToDouble(r -> r.quantity.get() * r.unitCost.get()).sum();
         lbl.setText(String.format("Total: £%.2f", total));
     }
 
+    /**
+     * saveOrder
+     * @param m
+     * @param date
+     * @param items
+     */
     private void saveOrder(MerchantRef m, LocalDate date, java.util.List<CartRow> items) {
         double total = items.stream().mapToDouble(r -> r.quantity.get() * r.unitCost.get()).sum();
         try (Connection conn = MyJDBC.getConnection()) {
@@ -549,12 +590,21 @@ public class OrdersPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * endOfNextMonth
+     * @param orderDate
+     * @return the end of the month after a given date
+     */
     private static LocalDate endOfNextMonth(LocalDate orderDate) {
 
         LocalDate firstOfNextMonth = orderDate.plusMonths(1).withDayOfMonth(1);
         return firstOfNextMonth.withDayOfMonth(firstOfNextMonth.lengthOfMonth());
     }
 
+    /**
+     * paymentDialog
+     * Displays a dialog for making payments
+     */
     private void paymentDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Record payment");
@@ -611,6 +661,11 @@ public class OrdersPage {
         d.showAndWait();
     }
 
+    /**
+     * outstandingBalance
+     * @param merchantId
+     * @return
+     */
     private double outstandingBalance(int merchantId) {
         double orders = 0, paid = 0;
         try (Connection conn = MyJDBC.getConnection()) {
@@ -628,6 +683,14 @@ public class OrdersPage {
         return orders - paid;
     }
 
+    /**
+     * savePayment
+     * @param merchantId
+     * @param amount
+     * @param method
+     * @param date
+     * @param notes
+     */
     private void savePayment(int merchantId, double amount, String method, LocalDate date, String notes) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(
@@ -839,9 +902,21 @@ public class OrdersPage {
         public CartRow(String id, String d, int q, double c) { super(id, d, q, c); }
     }
 
+    /**
+     * MerchantRef
+     * @param id
+     * @param name
+     */
     private record MerchantRef(int id, String name) {
         @Override public String toString() { return name; }
     }
+
+    /**
+     * CatRef
+     * @param id
+     * @param description
+     * @param cost
+     */
     private record CatRef(String id, String description, double cost) {
         @Override public String toString() { return description + String.format("  (£%.2f)", cost); }
     }

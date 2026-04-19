@@ -109,6 +109,12 @@ public class MerchantOrdersPage {
                 view.setOnAction(e -> viewOrder(getTableRow().getItem()));
                 invoice.setOnAction(e -> generateInvoice(getTableRow().getItem()));
             }
+
+            /**
+             * updateItem
+             * @param v
+             * @param empty
+             */
             @Override protected void updateItem(Void v, boolean empty) {
                 super.updateItem(v, empty);
                 Row r = getTableRow() == null ? null : getTableRow().getItem();
@@ -131,15 +137,33 @@ public class MerchantOrdersPage {
         return root;
     }
 
+    /**
+     * strCol
+     * @param t
+     * @param p
+     * @param w
+     * @return
+     */
     private TableColumn<Row, String> strCol(String t, String p, double w) {
         TableColumn<Row, String> c = new TableColumn<>(t);
         c.setCellValueFactory(new PropertyValueFactory<>(p)); c.setPrefWidth(w); return c;
     }
+
+    /**
+     * numCol
+     * @param t
+     * @param p
+     * @param w
+     * @return
+     */
     private TableColumn<Row, Number> numCol(String t, String p, double w) {
         TableColumn<Row, Number> c = new TableColumn<>(t);
         c.setCellValueFactory(new PropertyValueFactory<>(p)); c.setPrefWidth(w); return c;
     }
 
+    /**
+     * reload
+     */
     private void reload() {
         data.clear();
         try (Connection conn = MyJDBC.getConnection();
@@ -160,6 +184,10 @@ public class MerchantOrdersPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * viewOrder
+     * @param r
+     */
     private void viewOrder(Row r) {
         if (r == null) return;
         Dialog<Void> d = new Dialog<>();
@@ -207,6 +235,10 @@ public class MerchantOrdersPage {
         d.showAndWait();
     }
 
+    /**
+     * placeOrderDialog
+     * displays a dialog for making payments
+     */
     private void placeOrderDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Place new order");
@@ -295,6 +327,11 @@ public class MerchantOrdersPage {
         d.showAndWait();
     }
 
+    /**
+     * saveOrder
+     * @param date
+     * @param items
+     */
     private void saveOrder(LocalDate date, List<CartRow> items) {
         double total = items.stream().mapToDouble(r -> r.quantity.get() * r.unitCost.get()).sum();
 
@@ -364,6 +401,10 @@ public class MerchantOrdersPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * generateInvoice
+     * @param r
+     */
     private void generateInvoice(Row r) {
         if (r == null) return;
         String invId = (r.invoiceId.get() == null || r.invoiceId.get().isBlank())
@@ -417,6 +458,9 @@ public class MerchantOrdersPage {
         reload();
     }
 
+    /**
+     * paymentDialog
+     */
     private void paymentDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Record payment");
@@ -470,6 +514,10 @@ public class MerchantOrdersPage {
         d.showAndWait();
     }
 
+    /**
+     * outstandingBalance
+     * @return
+     */
     private double outstandingBalance() {
         double o = 0, p = 0;
         try (Connection conn = MyJDBC.getConnection()) {
@@ -489,6 +537,13 @@ public class MerchantOrdersPage {
         return o - p;
     }
 
+    /**
+     * savePayment
+     * @param amount
+     * @param method
+     * @param date
+     * @param notes
+     */
     private void savePayment(double amount, String method, LocalDate date, String notes) {
         int merchantId = merchant.getMerchantID();
         try (Connection conn = MyJDBC.getConnection();
@@ -680,6 +735,14 @@ public class MerchantOrdersPage {
          */
         public CartRow(String i, String d, int q, double c) { super(i, d, q, c); }
     }
+
+    /**
+     * CatRef
+     * @param id
+     * @param description
+     * @param cost
+     * @param availability
+     */
     private record CatRef(String id, String description, double cost, int availability) {
         @Override public String toString() {
             return description + String.format("  (£%.2f, %d in stock)", cost, availability);

@@ -128,15 +128,33 @@ public class MerchantManagementPanel {
         return box;
     }
 
+    /**
+     * strCol
+     * @param t
+     * @param p
+     * @param w
+     * @return
+     */
     private TableColumn<MerchRow, String> strCol(String t, String p, double w) {
         TableColumn<MerchRow, String> c = new TableColumn<>(t);
         c.setCellValueFactory(new PropertyValueFactory<>(p)); c.setPrefWidth(w); return c;
     }
+
+    /**
+     * numCol
+     * @param t
+     * @param p
+     * @param w
+     * @return
+     */
     private TableColumn<MerchRow, Number> numCol(String t, String p, double w) {
         TableColumn<MerchRow, Number> c = new TableColumn<>(t);
         c.setCellValueFactory(new PropertyValueFactory<>(p)); c.setPrefWidth(w); return c;
     }
 
+    /**
+     * reload
+     */
     private void reload() {
         data.clear();
         List<MerchantAccount> all = controller.getAllMerchants();
@@ -147,6 +165,11 @@ public class MerchantManagementPanel {
                     m.getAccountState() == null ? "normal" : m.getAccountState().getDbValue()));
     }
 
+    /**
+     * merchantDialog
+     * dialog for editing a merchant's details
+     * @param existing
+     */
     private void merchantDialog(MerchRow existing) {
         Dialog<Void> d = new Dialog<>();
         d.setTitle(existing == null ? "New merchant" : "Edit merchant");
@@ -214,6 +237,11 @@ public class MerchantManagementPanel {
         d.showAndWait();
     }
 
+    /**
+     * creditDialog
+     * Dialog for setting credit limits
+     * @param r
+     */
     private void creditDialog(MerchRow r) {
         TextInputDialog d = new TextInputDialog(String.format("%.2f", r.creditLimit.get()));
         d.setTitle("Credit limit");
@@ -228,6 +256,11 @@ public class MerchantManagementPanel {
         });
     }
 
+    /**
+     * discountDialog
+     * Dialog for selecting a merchant's discount plan
+     * @param r
+     */
     private void discountDialog(MerchRow r) {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("Discount plan");
@@ -312,6 +345,12 @@ public class MerchantManagementPanel {
         d.showAndWait();
     }
 
+    /**
+     * inputDialog
+     * @param title
+     * @param prompt
+     * @return
+     */
     private TextInputDialog inputDialog(String title, String prompt) {
         TextInputDialog d = new TextInputDialog();
         d.setTitle(title); d.setHeaderText(null); d.setContentText(prompt);
@@ -319,6 +358,11 @@ public class MerchantManagementPanel {
         return d;
     }
 
+    /**
+     * stateDialog
+     * Displays a dialog for choosing what state to change a merchant's account to
+     * @param r
+     */
     private void stateDialog(MerchRow r) {
         List<String> opts = List.of("normal", "suspended", "in_default");
         ChoiceDialog<String> d = new ChoiceDialog<>(r.state.get(), opts);
@@ -342,6 +386,10 @@ public class MerchantManagementPanel {
         });
     }
 
+    /**
+     * deleteMerchant
+     * @param r
+     */
     private void deleteMerchant(MerchRow r) {
         if (r == null) return;
         if (!UIUtil.confirm("Delete merchant",

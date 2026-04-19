@@ -48,6 +48,10 @@ public class CataloguePage {
         this.readOnly = readOnly;
     }
 
+    /**
+     * canManage
+     * @return
+     */
     private boolean canManage() {
         if (readOnly || user == null) return false;
         var r = user.getRole();
@@ -115,6 +119,10 @@ public class CataloguePage {
         return root;
     }
 
+    /**
+     * updateLowStockLabel
+     * @param l
+     */
     private void updateLowStockLabel(Label l) {
         long low = data.stream().filter(r -> r.availability.get() < r.stockLimit.get()).count();
         if (low > 0) {
@@ -125,6 +133,10 @@ public class CataloguePage {
         }
     }
 
+    /**
+     * buildTable
+     * @return
+     */
     private TableView<Row> buildTable() {
         TableView<Row> t = new TableView<>();
         t.setPlaceholder(UIUtil.dim("No catalogue entries to show."));
@@ -178,6 +190,14 @@ public class CataloguePage {
         return t;
     }
 
+    /**
+     * col
+     * @param title
+     * @param prop
+     * @param w
+     * @return
+     * @param <T>
+     */
     @SuppressWarnings("unchecked")
     private <T> TableColumn<Row, String> col(String title, String prop, double w) {
         TableColumn<Row, String> c = new TableColumn<>(title);
@@ -185,6 +205,14 @@ public class CataloguePage {
         c.setPrefWidth(w);
         return c;
     }
+
+    /**
+     * numCol
+     * @param title
+     * @param prop
+     * @param w
+     * @return
+     */
     private TableColumn<Row, Number> numCol(String title, String prop, double w) {
         TableColumn<Row, Number> c = new TableColumn<>(title);
         c.setCellValueFactory(new PropertyValueFactory<>(prop));
@@ -192,6 +220,9 @@ public class CataloguePage {
         return c;
     }
 
+    /**
+     * reload
+     */
     private void reload() {
         data.clear();
         try (Connection conn = MyJDBC.getConnection()) {
@@ -213,6 +244,9 @@ public class CataloguePage {
         }
     }
 
+    /**
+     * addDialog
+     */
     private void addDialog() {
         Row r = new Row("", "", "box", "Caps", 10, 0, 0, 0);
         if (openEditor(r, "Add product")) {
@@ -236,6 +270,10 @@ public class CataloguePage {
         }
     }
 
+    /**
+     * editDialog
+     * @param r
+     */
     private void editDialog(Row r) {
         if (r == null) return;
         if (openEditor(r, "Edit product")) {
@@ -259,6 +297,10 @@ public class CataloguePage {
         }
     }
 
+    /**
+     * stockDialog
+     * @param r
+     */
     private void stockDialog(Row r) {
         if (r == null) return;
         TextInputDialog d = new TextInputDialog(String.valueOf(r.availability.get()));
@@ -282,6 +324,10 @@ public class CataloguePage {
         });
     }
 
+    /**
+     * deleteRow
+     * @param r
+     */
     private void deleteRow(Row r) {
         if (r == null) return;
         if (!UIUtil.confirm("Delete product",
@@ -293,6 +339,12 @@ public class CataloguePage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * openEditor
+     * @param r
+     * @param title
+     * @return
+     */
     private boolean openEditor(Row r, String title) {
         Dialog<Boolean> d = new Dialog<>();
         d.setTitle(title);
@@ -413,32 +465,11 @@ public class CataloguePage {
         public String getDescription() { return description.get(); }
 
         /**
-         * Gets package type.
-         *
-         * @return the package type
-         */
-        public String getPackageType() { return packageType.get(); }
-
-        /**
          * Gets unit.
          *
          * @return the unit
          */
         public String getUnit() { return unit.get(); }
-
-        /**
-         * Gets units in pack.
-         *
-         * @return the units in pack
-         */
-        public int getUnitsInPack() { return unitsInPack.get(); }
-
-        /**
-         * Gets package cost.
-         *
-         * @return the package cost
-         */
-        public double getPackageCost() { return packageCost.get(); }
 
         /**
          * Gets availability.
@@ -447,11 +478,5 @@ public class CataloguePage {
          */
         public int getAvailability() { return availability.get(); }
 
-        /**
-         * Gets stock limit.
-         *
-         * @return the stock limit
-         */
-        public int getStockLimit() { return stockLimit.get(); }
     }
 }

@@ -72,6 +72,12 @@ public class DashboardPage {
         return sp;
     }
 
+    /**
+     * statCard
+     * @param label
+     * @param value
+     * @return
+     */
     private VBox statCard(String label, String value) {
         VBox v = new VBox(6);
         v.getStyleClass().add("stat-card");
@@ -83,6 +89,10 @@ public class DashboardPage {
         return v;
     }
 
+    /**
+     * recentOrdersList
+     * @return
+     */
     private Node recentOrdersList() {
         VBox box = new VBox(6);
         try (Connection conn = MyJDBC.getConnection()) {
@@ -114,6 +124,10 @@ public class DashboardPage {
         return box;
     }
 
+    /**
+     * merchantStatesList
+     * @return
+     */
     private Node merchantStatesList() {
         VBox box = new VBox(6);
         try (Connection conn = MyJDBC.getConnection()) {
@@ -148,6 +162,11 @@ public class DashboardPage {
         return box;
     }
 
+    /**
+     * count
+     * @param sql
+     * @return
+     */
     private String count(String sql) {
         try (Connection conn = MyJDBC.getConnection()) {
             ResultSet rs = conn.prepareStatement(sql).executeQuery();
@@ -155,5 +174,11 @@ public class DashboardPage {
         } catch (Exception ignored) {}
         return "–";
     }
+
+    /**
+     * safeCount
+     * @param sql
+     * @return
+     */
     private String safeCount(String sql) { return count(sql); }
 }
