@@ -11,7 +11,7 @@ module com.prototype.ipossa {
     exports com.prototype.ipossa.systems.ACC;
     exports com.prototype.ipossa.systems.CAT;
     exports com.prototype.ipossa.systems.ORD;
-    exports com.prototype.ipossa.systems.RPRT;
+//    exports com.prototype.ipossa.systems.RPRT;
 
     opens com.prototype.ipossa to javafx.fxml, javafx.graphics;
     opens com.prototype.ipossa.ui to javafx.fxml, javafx.graphics;

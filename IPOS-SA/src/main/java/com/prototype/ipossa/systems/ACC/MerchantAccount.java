@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Merchant account.
+ * The class Merchant account.
  */
 public class MerchantAccount {
     private int merchantID;
@@ -235,7 +235,7 @@ public class MerchantAccount {
     /**
      * Sets account number.
      *
-     * @param n the n
+     * @param n the account number
      */
     public void setAccountNumber(String n) { this.accountNumber = n; }
 
@@ -249,7 +249,7 @@ public class MerchantAccount {
     /**
      * Sets contact name.
      *
-     * @param n the n
+     * @param n the name
      */
     public void setContactName(String n) { this.contactName = n; }
 
@@ -263,7 +263,7 @@ public class MerchantAccount {
     /**
      * Sets address.
      *
-     * @param a the a
+     * @param a the address
      */
     public void setAddress(String a)   { this.address = a; }
 
@@ -277,7 +277,7 @@ public class MerchantAccount {
     /**
      * Sets phone number.
      *
-     * @param p the p
+     * @param p the phone number
      */
     public void setPhoneNumber(String p) { this.phoneNumber = p; }
 
@@ -291,7 +291,7 @@ public class MerchantAccount {
     /**
      * Sets credit limit.
      *
-     * @param l the l
+     * @param l the credit limit
      */
     public void setCreditLimit(double l) { this.creditLimit = l; }
 
@@ -305,7 +305,7 @@ public class MerchantAccount {
     /**
      * Sets discount type.
      *
-     * @param t the t
+     * @param t the discount type
      */
     public void setDiscountType(DiscountType t) { this.discountType = t; }
 
@@ -333,7 +333,7 @@ public class MerchantAccount {
     /**
      * Sets password.
      *
-     * @param pw the pw
+     * @param pw the password
      */
     public void setPassword(String pw) { this.password = pw; }
 
@@ -347,7 +347,7 @@ public class MerchantAccount {
     /**
      * Sets account state.
      *
-     * @param s the s
+     * @param s the account state
      */
     public void setAccountState(AccountState s) { this.accountState = s; }
 

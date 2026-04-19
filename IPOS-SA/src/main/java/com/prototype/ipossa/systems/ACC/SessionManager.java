@@ -1,7 +1,7 @@
 package com.prototype.ipossa.systems.ACC;
 
 /**
- * The type Session manager.
+ * The class Session manager.
  */
 public class SessionManager {
 
@@ -51,21 +51,21 @@ public class SessionManager {
     }
 
     /**
-     * Is logged in boolean.
+     * Is logged in
      *
      * @return the boolean
      */
     public boolean isLoggedIn() { return currentUser != null || currentMerchant != null; }
 
     /**
-     * Is staff logged in boolean.
+     * Is staff logged in
      *
      * @return the boolean
      */
     public boolean isStaffLoggedIn() { return currentUser != null; }
 
     /**
-     * Is merchant logged in boolean.
+     * Is merchant logged in.
      *
      * @return the boolean
      */

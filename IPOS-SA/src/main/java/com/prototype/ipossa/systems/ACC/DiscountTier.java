@@ -1,7 +1,7 @@
 package com.prototype.ipossa.systems.ACC;
 
 /**
- * The type Discount tier.
+ * The class Discount tier.
  */
 public class DiscountTier {
     private int discountID;

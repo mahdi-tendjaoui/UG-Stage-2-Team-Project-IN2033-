@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Order service.
+ * The class Order service.
  */
 public class OrderService {
     private List<Order> orders;

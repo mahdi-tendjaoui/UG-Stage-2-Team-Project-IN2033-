@@ -7,18 +7,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
- * The type Catalogue service.
+ * The class Catalogue service.
  */
 public class CatalogueService {
-
     /**
      * Gets all items.
      *
-     * @return the all items
+     * @return all the items
      */
-//returns  catalogue table.
+//returns catalogue table.
     public List<CatalogueItem> getAllItems() {
         List<CatalogueItem> items = new ArrayList<>();
         try (Connection conn = MyJDBC.getConnection();
@@ -32,12 +30,11 @@ public class CatalogueService {
         }
         return items;
     }
-
     /**
      * Search items list.
      *
      * @param keyword the keyword
-     * @return the list
+     * @return the items in the list
      */
 //returns item_ID, description
     public List<CatalogueItem> searchItems(String keyword) {
@@ -59,7 +56,6 @@ public class CatalogueService {
         }
         return items;
     }
-
     /**
      * Gets low stock items.
      *
@@ -80,7 +76,6 @@ public class CatalogueService {
         }
         return items;
     }
-
     /**
      * Add product boolean.
      *
@@ -110,7 +105,6 @@ public class CatalogueService {
             return false;
         }
     }
-
     /**
      * Update item boolean.
      *
@@ -140,11 +134,10 @@ public class CatalogueService {
             return false;
         }
     }
-
     /**
      * Add stock boolean.
      *
-     * @param itemId   the item id
+     * @param itemId the item id
      * @param quantity the quantity
      * @return the boolean
      */
@@ -161,11 +154,10 @@ public class CatalogueService {
             return false;
         }
     }
-
     /**
      * Update stock boolean.
      *
-     * @param itemId      the item id
+     * @param itemId the item id
      * @param newQuantity the new quantity
      * @return the boolean
      */
@@ -182,13 +174,12 @@ public class CatalogueService {
             return false;
         }
     }
-
     /**
      * Sets stock limit.
      *
-     * @param itemId     the item id
+     * @param itemId the item id
      * @param stockLimit the stock limit
-     * @return the stock limit
+     * @return the boolean
      */
     public boolean setStockLimit(String itemId, int stockLimit) {
         try (Connection conn = MyJDBC.getConnection();
@@ -203,7 +194,6 @@ public class CatalogueService {
             return false;
         }
     }
-
     /**
      * Delete item boolean.
      *

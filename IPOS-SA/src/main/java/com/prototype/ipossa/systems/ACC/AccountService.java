@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Account service.
+ * The class Account service.
  */
 public class AccountService {
 
     /**
      * Login staff user account.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @param password the password
      * @return the user account
@@ -36,7 +36,7 @@ public class AccountService {
     /**
      * Login merchant merchant account.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param login    the login
      * @param password the password
      * @return the merchant account
@@ -58,7 +58,7 @@ public class AccountService {
     /**
      * Create user account.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @param password the password
      * @param role     the role
@@ -78,7 +78,7 @@ public class AccountService {
     /**
      * Delete user account.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @throws SQLException          the sql exception
      * @throws AccessDeniedException the access denied exception
@@ -97,7 +97,7 @@ public class AccountService {
     /**
      * Change user role.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @param newRole  the new role
      * @throws SQLException          the sql exception
@@ -114,7 +114,7 @@ public class AccountService {
     /**
      * Gets all staff accounts.
      *
-     * @param conn the conn
+     * @param conn the connection
      * @return the all staff accounts
      * @throws SQLException          the sql exception
      * @throws AccessDeniedException the access denied exception
@@ -136,7 +136,7 @@ public class AccountService {
     /**
      * Gets merchant.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @return the merchant
      * @throws SQLException the sql exception
@@ -154,7 +154,7 @@ public class AccountService {
     /**
      * Gets all merchants.
      *
-     * @param conn the conn
+     * @param conn the connection
      * @return the all merchants
      * @throws SQLException          the sql exception
      * @throws AccessDeniedException the access denied exception
@@ -173,7 +173,7 @@ public class AccountService {
     /**
      * Create merchant account.
      *
-     * @param conn              the conn
+     * @param conn              the connection
      * @param accountHolderName the account holder name
      * @param accountNumber     the account number
      * @param contactName       the contact name
@@ -203,7 +203,7 @@ public class AccountService {
     /**
      * Update merchant details.
      *
-     * @param conn        the conn
+     * @param conn        the connection
      * @param merchantID  the merchant id
      * @param contactName the contact name
      * @param address     the address
@@ -221,7 +221,7 @@ public class AccountService {
     /**
      * Delete merchant account.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @throws SQLException          the sql exception
      * @throws AccessDeniedException the access denied exception
@@ -235,7 +235,7 @@ public class AccountService {
     /**
      * Sets credit limit.
      *
-     * @param conn        the conn
+     * @param conn        the connection
      * @param merchantID  the merchant id
      * @param creditLimit the credit limit
      * @throws SQLException          the sql exception
@@ -252,7 +252,7 @@ public class AccountService {
     /**
      * Sets discount plan.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @param tiers      the tiers
      * @throws SQLException          the sql exception
@@ -273,7 +273,7 @@ public class AccountService {
     /**
      * Delete discount plan.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @throws SQLException          the sql exception
      * @throws AccessDeniedException the access denied exception
@@ -287,7 +287,7 @@ public class AccountService {
     /**
      * Update account state for payment merchant account . account state.
      *
-     * @param conn           the conn
+     * @param conn           the connection
      * @param merchantID     the merchant id
      * @param paymentDueDate the payment due date
      * @return the merchant account . account state
@@ -331,7 +331,7 @@ public class AccountService {
     /**
      * Reactivate default account.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @throws SQLException          the sql exception
      * @throws AccessDeniedException the access denied exception
@@ -352,7 +352,7 @@ public class AccountService {
     /**
      * Handle payment received.
      *
-     * @param conn           the conn
+     * @param conn           the connection
      * @param merchantID     the merchant id
      * @param balanceCleared the balance cleared
      * @throws SQLException the sql exception

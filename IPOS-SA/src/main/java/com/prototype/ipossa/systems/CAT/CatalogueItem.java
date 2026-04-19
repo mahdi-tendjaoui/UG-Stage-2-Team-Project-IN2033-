@@ -1,11 +1,8 @@
 package com.prototype.ipossa.systems.CAT;
-
-
 /**
- * The type Catalogue item.
+ * The class Catalogue item.
  */
 public class CatalogueItem {
-
     private String itemId;
     private String description;
     private String packageType;
@@ -14,24 +11,22 @@ public class CatalogueItem {
     private double packageCost;
     private int availability;
     private int stockLimit;
-
     /**
      * Instantiates a new Catalogue item.
      */
     public CatalogueItem() {
     }
-
     /**
      * Instantiates a new Catalogue item.
      *
-     * @param itemId       the item id
-     * @param description  the description
-     * @param packageType  the package type
-     * @param unit         the unit
-     * @param unitsInPack  the units in pack
-     * @param packageCost  the package cost
+     * @param itemId the item id
+     * @param description the description
+     * @param packageType the package type
+     * @param unit the unit
+     * @param unitsInPack the units in pack
+     * @param packageCost the package cost
      * @param availability the availability
-     * @param stockLimit   the stock limit
+     * @param stockLimit the stock limit
      */
     public CatalogueItem(String itemId, String description,
                          String packageType, String unit,
@@ -46,14 +41,12 @@ public class CatalogueItem {
         this.availability = availability;
         this.stockLimit = stockLimit;
     }
-
     /**
      * Gets item id.
      *
      * @return the item id
      */
     public String getItemId() { return itemId; }
-
     /**
      * Gets description.
      *
@@ -62,7 +55,6 @@ public class CatalogueItem {
     public String getDescription() {
         return description;
     }
-
     /**
      * Gets package type.
      *
@@ -71,7 +63,6 @@ public class CatalogueItem {
     public String getPackageType() {
         return packageType;
     }
-
     /**
      * Gets unit.
      *
@@ -80,7 +71,6 @@ public class CatalogueItem {
     public String getUnit() {
         return unit;
     }
-
     /**
      * Gets units in pack.
      *
@@ -89,7 +79,6 @@ public class CatalogueItem {
     public int getUnitsInPack() {
         return unitsInPack;
     }
-
     /**
      * Gets package cost.
      *
@@ -98,7 +87,6 @@ public class CatalogueItem {
     public double getPackageCost() {
         return packageCost;
     }
-
     /**
      * Gets availability.
      *
@@ -107,7 +95,6 @@ public class CatalogueItem {
     public int getAvailability() {
         return availability;
     }
-
     /**
      * Gets stock limit.
      *
@@ -116,7 +103,6 @@ public class CatalogueItem {
     public int getStockLimit() {
         return stockLimit;
     }
-
     /**
      * Sets availability.
      *
@@ -125,7 +111,6 @@ public class CatalogueItem {
     public void setAvailability(int availability) {
         this.availability = availability;
     }
-
     /**
      * Sets stock limit.
      *
@@ -134,7 +119,6 @@ public class CatalogueItem {
     public void setStockLimit(int stockLimit) {
         this.stockLimit = stockLimit;
     }
-
     /**
      * Sets package cost.
      *

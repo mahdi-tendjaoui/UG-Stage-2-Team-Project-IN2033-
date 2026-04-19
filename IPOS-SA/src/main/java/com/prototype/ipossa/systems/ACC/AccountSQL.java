@@ -3,14 +3,14 @@ package com.prototype.ipossa.systems.ACC;
 import java.sql.*;
 
 /**
- * The type Account sql.
+ * The class Account sql.
  */
 public class AccountSQL {
 
     /**
      * Validate user boolean.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @param password the password
      * @return the boolean
@@ -28,7 +28,7 @@ public class AccountSQL {
     /**
      * Gets user role.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @return the user role
      * @throws SQLException the sql exception
@@ -46,7 +46,7 @@ public class AccountSQL {
     /**
      * Create user account.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @param password the password
      * @param role     the role
@@ -65,7 +65,7 @@ public class AccountSQL {
     /**
      * Delete user account.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @throws SQLException the sql exception
      */
@@ -80,7 +80,7 @@ public class AccountSQL {
     /**
      * Change user role.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param username the username
      * @param newRole  the new role
      * @throws SQLException the sql exception
@@ -97,7 +97,7 @@ public class AccountSQL {
     /**
      * Gets all users.
      *
-     * @param conn the conn
+     * @param conn the connection
      * @return the all users
      * @throws SQLException the sql exception
      */
@@ -109,7 +109,7 @@ public class AccountSQL {
     /**
      * Authenticate merchant boolean.
      *
-     * @param conn     the conn
+     * @param conn     the connection
      * @param login    the login
      * @param password the password
      * @return the boolean
@@ -128,7 +128,7 @@ public class AccountSQL {
     /**
      * Create merchant account.
      *
-     * @param conn              the conn
+     * @param conn              the connection
      * @param accountHolderName the account holder name
      * @param accountNumber     the account number
      * @param contactName       the contact name
@@ -162,7 +162,7 @@ public class AccountSQL {
     /**
      * Delete merchant account.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @throws SQLException the sql exception
      */
@@ -188,7 +188,7 @@ public class AccountSQL {
     /**
      * Update merchant account.
      *
-     * @param conn        the conn
+     * @param conn        the connection
      * @param merchantID  the merchant id
      * @param contactName the contact name
      * @param address     the address
@@ -210,7 +210,7 @@ public class AccountSQL {
     /**
      * Sets credit limit.
      *
-     * @param conn        the conn
+     * @param conn        the connection
      * @param merchantID  the merchant id
      * @param creditLimit the credit limit
      * @throws SQLException the sql exception
@@ -227,7 +227,7 @@ public class AccountSQL {
     /**
      * Update merchant status.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @param status     the status
      * @throws SQLException the sql exception
@@ -244,7 +244,7 @@ public class AccountSQL {
     /**
      * Gets merchant status.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @return the merchant status
      * @throws SQLException the sql exception
@@ -262,7 +262,7 @@ public class AccountSQL {
     /**
      * Gets merchant id.
      *
-     * @param conn  the conn
+     * @param conn  the connection
      * @param login the login
      * @return the merchant id
      * @throws SQLException the sql exception
@@ -281,7 +281,7 @@ public class AccountSQL {
     /**
      * Gets all merchants.
      *
-     * @param conn the conn
+     * @param conn the connection
      * @return the all merchants
      * @throws SQLException the sql exception
      */
@@ -293,7 +293,7 @@ public class AccountSQL {
     /**
      * Add discount tier.
      *
-     * @param conn          the conn
+     * @param conn          the connection
      * @param merchantID    the merchant id
      * @param minOrderValue the min order value
      * @param maxOrderValue the max order value
@@ -318,7 +318,7 @@ public class AccountSQL {
     /**
      * Delete discount tiers.
      *
-     * @param conn       the conn
+     * @param conn       the connection
      * @param merchantID the merchant id
      * @throws SQLException the sql exception
      */
