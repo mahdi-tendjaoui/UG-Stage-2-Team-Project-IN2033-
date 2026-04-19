@@ -180,6 +180,10 @@ public enum Role {
         return this != MERCHANT && this != UNKNOWN;
     }
 
+    /**
+     * toString
+     * @return
+     */
     @Override
     public String toString() {
         return dbValue;

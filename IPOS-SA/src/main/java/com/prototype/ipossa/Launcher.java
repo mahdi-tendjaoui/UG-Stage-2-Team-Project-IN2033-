@@ -29,6 +29,10 @@ public class Launcher extends Application {
         launch(args);
     }
 
+    /**
+     * start
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setMinWidth(1000);

@@ -386,6 +386,10 @@ public class MerchantAccount {
      */
     public boolean canGenerateReports()         { return role.canGenerateReports(); }
 
+    /**
+     * toString
+     * @return
+     */
     @Override
     public String toString() {
         return String.format("MerchantAccount{id=%d, name='%s', account='%s', state=%s}",

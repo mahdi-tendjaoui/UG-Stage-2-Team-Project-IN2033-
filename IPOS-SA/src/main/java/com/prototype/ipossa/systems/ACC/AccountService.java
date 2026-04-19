@@ -368,6 +368,12 @@ public class AccountService {
 
     }
 
+    /**
+     * mapRowToMerchant
+     * @param rs
+     * @return
+     * @throws SQLException
+     */
     private MerchantAccount mapRowToMerchant(ResultSet rs) throws SQLException {
         return new MerchantAccount(
                 rs.getInt("merchant_ID"),
@@ -383,6 +389,16 @@ public class AccountService {
                 rs.getString("account_state"));
     }
 
+    /**
+     * validateMerchantDetails
+     * @param accountHolderName
+     * @param contactName
+     * @param address
+     * @param phoneNumber
+     * @param creditLimit
+     * @param login
+     * @param password
+     */
     private void validateMerchantDetails(String accountHolderName, String contactName,
                                          String address, String phoneNumber,
                                          double creditLimit, String login, String password) {
