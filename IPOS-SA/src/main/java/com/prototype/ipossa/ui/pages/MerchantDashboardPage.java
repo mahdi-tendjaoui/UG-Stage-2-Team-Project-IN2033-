@@ -70,7 +70,7 @@ public class MerchantDashboardPage {
         com.prototype.ipossa.ui.MerchantStateUpdater.refreshOne(merchant.getMerchantID());
         if (com.prototype.ipossa.ui.MerchantStateUpdater.shouldShowReminder(merchant.getMerchantID())) {
             long late = com.prototype.ipossa.ui.MerchantStateUpdater.daysLate(merchant.getMerchantID());
-            Label rem = new Label("⏰  Reminder: your payment is " + late + " day(s) overdue. "
+            Label rem = new Label("Reminder: your payment is " + late + " day(s) overdue. "
                     + "Please settle the outstanding balance - accounts more than 15 days late are automatically suspended.");
             rem.getStyleClass().add("warning-banner");
             rem.setWrapText(true);
@@ -86,7 +86,7 @@ public class MerchantDashboardPage {
             root.getChildren().add(s);
         }
         if (merchant.getAccountState() == com.prototype.ipossa.systems.ACC.MerchantAccount.AccountState.IN_DEFAULT) {
-            Label s = new Label("⛔  Your account is IN DEFAULT - please contact InfoPharma's "
+            Label s = new Label("Your account is IN DEFAULT - please contact InfoPharma's "
                     + "Director of Operations to discuss reactivation.");
             s.getStyleClass().add("warning-banner");
             s.setWrapText(true);
