@@ -63,7 +63,7 @@ public class OrderService {
     }
 
     /**
-     * Update order status boolean.
+     * Update order status.
      *
      * @param orderID   the order id
      * @param newStatus the new status
@@ -92,7 +92,7 @@ public class OrderService {
     }
 
     /**
-     * Search order order.
+     * Search order.
      *
      * @param orderID the order id
      * @return the order
