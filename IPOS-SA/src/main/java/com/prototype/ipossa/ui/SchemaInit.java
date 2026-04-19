@@ -109,6 +109,13 @@ public class SchemaInit {
         }
     }
 
+    /**
+     * addColumnIfMissing
+     * @param conn
+     * @param table
+     * @param column
+     * @param definition
+     */
     private static void addColumnIfMissing(Connection conn, String table, String column, String definition) {
         try (var rs = conn.getMetaData().getColumns(null, null, table, column)) {
             if (rs.next()) return;
@@ -121,6 +128,12 @@ public class SchemaInit {
         }
     }
 
+    /**
+     * forceColumnDefault
+     * @param conn
+     * @param table
+     * @param column
+     */
     private static void forceColumnDefault(Connection conn, String table, String column) {
         try (Statement st = conn.createStatement()) {
             st.executeUpdate("ALTER TABLE " + table + " MODIFY COLUMN " + column +
@@ -131,6 +144,10 @@ public class SchemaInit {
         }
     }
 
+    /**
+     * ensureOrderIdAutoIncrement
+     * @param conn
+     */
     private static void ensureOrderIdAutoIncrement(Connection conn) {
         try (var rs = conn.getMetaData().getColumns(null, null, "orders", "order_ID")) {
             if (!rs.next()) return;
@@ -147,6 +164,10 @@ public class SchemaInit {
         }
     }
 
+    /**
+     * seedMerchantLogins
+     * @param conn
+     */
     private static void seedMerchantLogins(Connection conn) {
         String[][] seeds = {
                 {"CityPharmacy",  "city",    "northampton"},

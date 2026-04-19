@@ -52,6 +52,12 @@ public class UIUtil {
         return r.isPresent() && r.get() == ButtonType.OK;
     }
 
+    /**
+     * show
+     * @param type
+     * @param title
+     * @param msg
+     */
     private static void show(Alert.AlertType type, String title, String msg) {
         Alert a = new Alert(type, msg, ButtonType.OK);
         a.setTitle(title);
@@ -60,6 +66,10 @@ public class UIUtil {
         a.showAndWait();
     }
 
+    /**
+     * styleAlert
+     * @param a
+     */
     private static void styleAlert(Alert a) {
         var dp = a.getDialogPane();
         dp.getScene().getStylesheets().add("data:text/css;base64," +
@@ -69,6 +79,10 @@ public class UIUtil {
         dp.setMinHeight(Region.USE_PREF_SIZE);
     }
 
+    /**
+     * dialogCss
+     * @return
+     */
     private static String dialogCss() {
 
         return """

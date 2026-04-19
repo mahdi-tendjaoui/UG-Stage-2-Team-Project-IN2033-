@@ -86,8 +86,16 @@ public class MainApp {
         else showMerchantPaymentReminder();
     }
 
+    /**
+     * isMerchant
+     * @return
+     */
     private boolean isMerchant() { return currentMerchant != null; }
 
+    /**
+     * buildTopBar
+     * @return
+     */
     private HBox buildTopBar() {
         HBox bar = new HBox(12);
         bar.setAlignment(Pos.CENTER_LEFT);
@@ -123,6 +131,9 @@ public class MainApp {
         return bar;
     }
 
+    /**
+     * logout
+     */
     private void logout() {
         if (!UIUtil.confirm("Logout", "Are you sure you want to log out?")) return;
         new AccountController().logout();
@@ -130,6 +141,10 @@ public class MainApp {
         new LoginScreen(stage).show();
     }
 
+    /**
+     * buildSidebar
+     * @return
+     */
     private VBox buildSidebar() {
         VBox bar = new VBox();
         bar.getStyleClass().add("sidebar");
@@ -185,12 +200,22 @@ public class MainApp {
         return bar;
     }
 
+    /**
+     * section
+     * @param bar
+     * @param title
+     */
     private void section(VBox bar, String title) {
         Label l = new Label(title);
         l.getStyleClass().add("sidebar-section");
         bar.getChildren().add(l);
     }
 
+    /**
+     * addNav
+     * @param bar
+     * @param label
+     */
     private void addNav(VBox bar, String label) {
         NavButton nb = new NavButton(label);
         nb.button.setOnAction(e -> showPage(label));
@@ -198,6 +223,10 @@ public class MainApp {
         bar.getChildren().add(nb.button);
     }
 
+    /**
+     * showPage
+     * @param name
+     */
     private void showPage(String name) {
         for (NavButton nb : navButtons) nb.setActive(nb.label.equals(name));
         pageTitleLabel.setText(name);
@@ -206,6 +235,11 @@ public class MainApp {
         if (page != null) contentArea.getChildren().add(page);
     }
 
+    /**
+     * buildPage
+     * @param name
+     * @return
+     */
     private Node buildPage(String name) {
         if (isMerchant()) {
             return switch (name) {
@@ -228,6 +262,9 @@ public class MainApp {
         };
     }
 
+    /**
+     * showStockWarnings
+     */
     private void showStockWarnings() {
         try (Connection conn = MyJDBC.getConnection()) {
             ResultSet rs = conn.prepareStatement(

@@ -43,6 +43,12 @@ public class MerchantStateUpdater {
         }
     }
 
+    /**
+     * refresh
+     * @param conn
+     * @param id
+     * @param currentState
+     */
     private static void refresh(Connection conn, int id, String currentState) {
         long daysLate = daysLate(conn, id);
         String desired;
@@ -84,6 +90,12 @@ public class MerchantStateUpdater {
         } catch (Exception e) { return 0; }
     }
 
+    /**
+     * daysLate
+     * @param conn
+     * @param merchantId
+     * @return
+     */
     private static long daysLate(Connection conn, int merchantId) {
         double totalPaid = 0;
         try (PreparedStatement ps = conn.prepareStatement(
@@ -111,6 +123,12 @@ public class MerchantStateUpdater {
         return 0;
     }
 
+    /**
+     * balance
+     * @param conn
+     * @param id
+     * @return
+     */
     private static double balance(Connection conn, int id) {
         double o = 0, p = 0;
         try (PreparedStatement ps = conn.prepareStatement(
@@ -126,6 +144,11 @@ public class MerchantStateUpdater {
         return o - p;
     }
 
+    /**
+     * endOfNextMonth
+     * @param orderDate
+     * @return
+     */
     private static LocalDate endOfNextMonth(LocalDate orderDate) {
         LocalDate firstOfNextMonth = orderDate.plusMonths(1).withDayOfMonth(1);
         return firstOfNextMonth.withDayOfMonth(firstOfNextMonth.lengthOfMonth());

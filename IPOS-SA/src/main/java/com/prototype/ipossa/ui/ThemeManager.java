@@ -65,8 +65,15 @@ public class ThemeManager {
      */
     public void unregister(Scene scene) { scenes.remove(scene); }
 
+    /**
+     * applyAll
+     */
     private void applyAll() { for (Scene s : scenes) apply(s); }
 
+    /**
+     * apply
+     * @param scene
+     */
     private void apply(Scene scene) {
         scene.getStylesheets().clear();
         scene.getStylesheets().add("data:text/css;base64," +
@@ -77,6 +84,9 @@ public class ThemeManager {
         }
     }
 
+    /**
+     * css
+     */
     private String css() {
 
         String light = """
