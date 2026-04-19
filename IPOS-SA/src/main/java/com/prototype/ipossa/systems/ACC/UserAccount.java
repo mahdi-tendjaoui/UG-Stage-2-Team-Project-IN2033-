@@ -1,7 +1,7 @@
 package com.prototype.ipossa.systems.ACC;
 
 /**
- * The type User account.
+ * The class User account.
  */
 public class UserAccount {
 

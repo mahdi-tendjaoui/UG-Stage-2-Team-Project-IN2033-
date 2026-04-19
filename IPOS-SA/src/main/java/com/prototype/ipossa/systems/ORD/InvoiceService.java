@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Invoice service.
+ * The class Invoice service.
  */
 public class InvoiceService {
     private List<Invoice> invoices;
@@ -17,7 +17,7 @@ public class InvoiceService {
     }
 
     /**
-     * Generate invoices invoice.
+     * Generate invoices.
      *
      * @param invoiceID   the invoice id
      * @param order       the order
@@ -35,7 +35,7 @@ public class InvoiceService {
     }
 
     /**
-     * Search invoice invoice.
+     * Search invoice.
      *
      * @param invoiceID the invoice id
      * @return the invoice

@@ -172,7 +172,7 @@ public enum Role {
     }
 
     /**
-     * Is staff role boolean.
+     * Is staff role boolean
      *
      * @return the boolean
      */
