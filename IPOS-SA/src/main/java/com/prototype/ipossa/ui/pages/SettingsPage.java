@@ -13,22 +13,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 /**
- * The type Settings page.
+ * The Settings page.
  */
 public class SettingsPage {
 
     private final UserAccount user;
 
     /**
-     * Instantiates a new Settings page.
-     *
+     * Instantiates the settings page and the user.
      * @param user the user
      */
     public SettingsPage(UserAccount user) { this.user = user; }
 
     /**
      * Build node.
-     *
+     * Puts everything together
      * @return the node
      */
     public Node build() {
@@ -44,6 +43,13 @@ public class SettingsPage {
         return root;
     }
 
+    /**
+     * buildTab
+     * creates tabs that we can switch between. the account and system panes are attached to it
+     * @param name
+     * @param content
+     * @return t
+     */
     private Tab buildTab(String name, Node content) {
         Tab t = new Tab(name);
         ScrollPane sp = new ScrollPane(content);
@@ -52,6 +58,11 @@ public class SettingsPage {
         return t;
     }
 
+    /**
+     * accountPane
+     * The pane for the account tab in the settings page
+     * @return box
+     */
     private Node accountPane() {
         VBox box = new VBox(12); box.setPadding(new Insets(12));
 
@@ -108,6 +119,11 @@ public class SettingsPage {
         return box;
     }
 
+    /**
+     * systemPane
+     * The pane for the system tab in the settings page
+     * @return box
+     */
     private Node systemPane() {
         VBox box = new VBox(14); box.setPadding(new Insets(12));
 
@@ -142,6 +158,12 @@ public class SettingsPage {
         return box;
     }
 
+    /**
+     * LoadEmail
+     * Loads emails associated with the given username
+     * @param username
+     * @return the user's email or an empty string
+     */
     private String loadEmail(String username) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT email FROM user_emails WHERE username=?")) {
@@ -152,6 +174,12 @@ public class SettingsPage {
         return "";
     }
 
+    /**
+     * SaveEmail
+     * Saves the email to the associated username on the database
+     * @param username
+     * @param email
+     */
     private void saveEmail(String username, String email) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(
