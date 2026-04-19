@@ -8,8 +8,20 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Account service.
+ */
 public class AccountService {
 
+    /**
+     * Login staff user account.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @param password the password
+     * @return the user account
+     * @throws SQLException the sql exception
+     */
     public UserAccount loginStaff(Connection conn, String username, String password)
             throws SQLException {
         boolean valid = AccountSQL.validateUser(conn, username, password);
@@ -21,6 +33,15 @@ public class AccountService {
         return user;
     }
 
+    /**
+     * Login merchant merchant account.
+     *
+     * @param conn     the conn
+     * @param login    the login
+     * @param password the password
+     * @return the merchant account
+     * @throws SQLException the sql exception
+     */
     public MerchantAccount loginMerchant(Connection conn, String login, String password)
             throws SQLException {
         boolean valid = AccountSQL.authenticateMerchant(conn, login, password);
@@ -34,6 +55,16 @@ public class AccountService {
         return merchant;
     }
 
+    /**
+     * Create user account.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @param password the password
+     * @param role     the role
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void createUserAccount(Connection conn, String username, String password, String role)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
@@ -44,6 +75,14 @@ public class AccountService {
         AccountSQL.createUserAccount(conn, username, password, role);
     }
 
+    /**
+     * Delete user account.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void deleteUserAccount(Connection conn, String username)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
@@ -55,6 +94,15 @@ public class AccountService {
         AccountSQL.deleteUserAccount(conn, username);
     }
 
+    /**
+     * Change user role.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @param newRole  the new role
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void changeUserRole(Connection conn, String username, String newRole)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
@@ -63,6 +111,14 @@ public class AccountService {
         AccountSQL.changeUserRole(conn, username, newRole);
     }
 
+    /**
+     * Gets all staff accounts.
+     *
+     * @param conn the conn
+     * @return the all staff accounts
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public List<UserAccount> getAllStaffAccounts(Connection conn)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
@@ -77,6 +133,14 @@ public class AccountService {
         return users;
     }
 
+    /**
+     * Gets merchant.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @return the merchant
+     * @throws SQLException the sql exception
+     */
     public MerchantAccount getMerchant(Connection conn, int merchantID) throws SQLException {
         ResultSet rs = AccountSQL.getAllMerchants(conn);
         while (rs.next()) {
@@ -87,6 +151,14 @@ public class AccountService {
         return null;
     }
 
+    /**
+     * Gets all merchants.
+     *
+     * @param conn the conn
+     * @return the all merchants
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public List<MerchantAccount> getAllMerchants(Connection conn)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageMerchantAccounts();
@@ -98,6 +170,22 @@ public class AccountService {
         return merchants;
     }
 
+    /**
+     * Create merchant account.
+     *
+     * @param conn              the conn
+     * @param accountHolderName the account holder name
+     * @param accountNumber     the account number
+     * @param contactName       the contact name
+     * @param address           the address
+     * @param phoneNumber       the phone number
+     * @param creditLimit       the credit limit
+     * @param agreedDiscount    the agreed discount
+     * @param login             the login
+     * @param password          the password
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void createMerchantAccount(Connection conn,
                                       String accountHolderName, String accountNumber,
                                       String contactName, String address,
@@ -112,6 +200,17 @@ public class AccountService {
                 agreedDiscount, login, password);
     }
 
+    /**
+     * Update merchant details.
+     *
+     * @param conn        the conn
+     * @param merchantID  the merchant id
+     * @param contactName the contact name
+     * @param address     the address
+     * @param phoneNumber the phone number
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void updateMerchantDetails(Connection conn, int merchantID,
                                       String contactName, String address, String phoneNumber)
             throws SQLException, SessionManager.AccessDeniedException {
@@ -119,12 +218,29 @@ public class AccountService {
         AccountSQL.updateMerchantAccount(conn, merchantID, contactName, address, phoneNumber);
     }
 
+    /**
+     * Delete merchant account.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void deleteMerchantAccount(Connection conn, int merchantID)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageUserAccounts();
         AccountSQL.deleteMerchantAccount(conn, merchantID);
     }
 
+    /**
+     * Sets credit limit.
+     *
+     * @param conn        the conn
+     * @param merchantID  the merchant id
+     * @param creditLimit the credit limit
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void setCreditLimit(Connection conn, int merchantID, double creditLimit)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanSetCreditLimit();
@@ -133,6 +249,15 @@ public class AccountService {
         AccountSQL.setCreditLimit(conn, merchantID, creditLimit);
     }
 
+    /**
+     * Sets discount plan.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @param tiers      the tiers
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void setDiscountPlan(Connection conn, int merchantID, List<DiscountTier> tiers)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageDiscountPlans();
@@ -145,12 +270,29 @@ public class AccountService {
         }
     }
 
+    /**
+     * Delete discount plan.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void deleteDiscountPlan(Connection conn, int merchantID)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanManageDiscountPlans();
         AccountSQL.deleteDiscountTiers(conn, merchantID);
     }
 
+    /**
+     * Update account state for payment merchant account . account state.
+     *
+     * @param conn           the conn
+     * @param merchantID     the merchant id
+     * @param paymentDueDate the payment due date
+     * @return the merchant account . account state
+     * @throws SQLException the sql exception
+     */
     public MerchantAccount.AccountState updateAccountStateForPayment(
             Connection conn, int merchantID, LocalDate paymentDueDate)
             throws SQLException {
@@ -175,11 +317,25 @@ public class AccountService {
         return newState;
     }
 
+    /**
+     * Should show payment reminder boolean.
+     *
+     * @param paymentDueDate the payment due date
+     * @return the boolean
+     */
     public boolean shouldShowPaymentReminder(LocalDate paymentDueDate) {
         long daysLate = ChronoUnit.DAYS.between(paymentDueDate, LocalDate.now());
         return daysLate > 0 && daysLate <= 15;
     }
 
+    /**
+     * Reactivate default account.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @throws SQLException          the sql exception
+     * @throws AccessDeniedException the access denied exception
+     */
     public void reactivateDefaultAccount(Connection conn, int merchantID)
             throws SQLException, SessionManager.AccessDeniedException {
         SessionManager.getInstance().requireCanReactivateDefaultAccount();
@@ -193,6 +349,14 @@ public class AccountService {
                 merchantID, MerchantAccount.AccountState.NORMAL.getDbValue());
     }
 
+    /**
+     * Handle payment received.
+     *
+     * @param conn           the conn
+     * @param merchantID     the merchant id
+     * @param balanceCleared the balance cleared
+     * @throws SQLException the sql exception
+     */
     public void handlePaymentReceived(Connection conn, int merchantID, boolean balanceCleared)
             throws SQLException {
         if (!balanceCleared) return;

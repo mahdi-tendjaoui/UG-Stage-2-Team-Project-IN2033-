@@ -23,6 +23,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
 
+/**
+ * The type Orders page.
+ */
 public class OrdersPage {
 
     private final UserAccount user;
@@ -32,8 +35,18 @@ public class OrdersPage {
 
     private static final String[] STATUSES = {"accepted", "ready to dispatch", "dispatched", "delivered"};
 
+    /**
+     * Instantiates a new Orders page.
+     *
+     * @param user the user
+     */
     public OrdersPage(UserAccount user) { this.user = user; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox root = new VBox(14);
 
@@ -647,10 +660,46 @@ public class OrdersPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * The type Order row.
+     */
     public static class OrderRow {
-        public final SimpleStringProperty orderId, merchantId;
-        public final SimpleStringProperty merchantName, date, status, invoiceId;
+        /**
+         * The Order id.
+         */
+        public final SimpleStringProperty orderId, /**
+         * The Merchant id.
+         */
+        merchantId;
+        /**
+         * The Merchant name.
+         */
+        public final SimpleStringProperty merchantName, /**
+         * The Date.
+         */
+        date, /**
+         * The Status.
+         */
+        status, /**
+         * The Invoice id.
+         */
+        invoiceId;
+        /**
+         * The Total.
+         */
         public final SimpleDoubleProperty total;
+
+        /**
+         * Instantiates a new Order row.
+         *
+         * @param oid    the oid
+         * @param mid    the mid
+         * @param mname  the mname
+         * @param date   the date
+         * @param status the status
+         * @param total  the total
+         * @param invId  the inv id
+         */
         public OrderRow(String oid, String mid, String mname, String date, String status, double total, String invId) {
             this.orderId = new SimpleStringProperty(oid);
             this.merchantId = new SimpleStringProperty(mid);
@@ -660,32 +709,133 @@ public class OrdersPage {
             this.total = new SimpleDoubleProperty(total);
             this.invoiceId = new SimpleStringProperty(invId);
         }
+
+        /**
+         * Gets order id.
+         *
+         * @return the order id
+         */
         public String getOrderId() { return orderId.get(); }
+
+        /**
+         * Gets merchant id.
+         *
+         * @return the merchant id
+         */
         public String getMerchantId() { return merchantId.get(); }
+
+        /**
+         * Gets merchant name.
+         *
+         * @return the merchant name
+         */
         public String getMerchantName() { return merchantName.get(); }
+
+        /**
+         * Gets date.
+         *
+         * @return the date
+         */
         public String getDate() { return date.get(); }
+
+        /**
+         * Gets status.
+         *
+         * @return the status
+         */
         public String getStatus() { return status.get(); }
+
+        /**
+         * Gets total.
+         *
+         * @return the total
+         */
         public double getTotal() { return total.get(); }
+
+        /**
+         * Gets invoice id.
+         *
+         * @return the invoice id
+         */
         public String getInvoiceId() { return invoiceId.get(); }
     }
 
+    /**
+     * The type Item row.
+     */
     public static class ItemRow {
-        public final SimpleStringProperty itemId, description;
+        /**
+         * The Item id.
+         */
+        public final SimpleStringProperty itemId, /**
+         * The Description.
+         */
+        description;
+        /**
+         * The Quantity.
+         */
         public final SimpleIntegerProperty quantity;
+        /**
+         * The Unit cost.
+         */
         public final SimpleDoubleProperty unitCost;
+
+        /**
+         * Instantiates a new Item row.
+         *
+         * @param id   the id
+         * @param desc the desc
+         * @param q    the q
+         * @param c    the c
+         */
         public ItemRow(String id, String desc, int q, double c) {
             this.itemId = new SimpleStringProperty(id);
             this.description = new SimpleStringProperty(desc);
             this.quantity = new SimpleIntegerProperty(q);
             this.unitCost = new SimpleDoubleProperty(c);
         }
+
+        /**
+         * Gets item id.
+         *
+         * @return the item id
+         */
         public String getItemId() { return itemId.get(); }
+
+        /**
+         * Gets description.
+         *
+         * @return the description
+         */
         public String getDescription() { return description.get(); }
+
+        /**
+         * Gets quantity.
+         *
+         * @return the quantity
+         */
         public int getQuantity() { return quantity.get(); }
+
+        /**
+         * Gets unit cost.
+         *
+         * @return the unit cost
+         */
         public double getUnitCost() { return unitCost.get(); }
     }
 
+    /**
+     * The type Cart row.
+     */
     public static class CartRow extends ItemRow {
+        /**
+         * Instantiates a new Cart row.
+         *
+         * @param id the id
+         * @param d  the d
+         * @param q  the q
+         * @param c  the c
+         */
         public CartRow(String id, String d, int q, double c) { super(id, d, q, c); }
     }
 

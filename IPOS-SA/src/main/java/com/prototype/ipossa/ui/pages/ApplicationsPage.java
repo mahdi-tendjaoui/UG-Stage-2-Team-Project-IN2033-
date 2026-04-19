@@ -19,14 +19,27 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * The type Applications page.
+ */
 public class ApplicationsPage {
 
     private final UserAccount user;
     private final ObservableList<Row> data = FXCollections.observableArrayList();
     private TableView<Row> table;
 
+    /**
+     * Instantiates a new Applications page.
+     *
+     * @param user the user
+     */
     public ApplicationsPage(UserAccount user) { this.user = user; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox root = new VBox(14);
 
@@ -246,9 +259,45 @@ public class ApplicationsPage {
         d.showAndWait();
     }
 
+    /**
+     * The type Row.
+     */
     public static class Row {
+        /**
+         * The Id.
+         */
         public final SimpleIntegerProperty id;
-        public final SimpleStringProperty name, email, address, type, status, submitted;
+        /**
+         * The Name.
+         */
+        public final SimpleStringProperty name, /**
+         * The Email.
+         */
+        email, /**
+         * The Address.
+         */
+        address, /**
+         * The Type.
+         */
+        type, /**
+         * The Status.
+         */
+        status, /**
+         * The Submitted.
+         */
+        submitted;
+
+        /**
+         * Instantiates a new Row.
+         *
+         * @param id  the id
+         * @param n   the n
+         * @param e   the e
+         * @param a   the a
+         * @param t   the t
+         * @param s   the s
+         * @param sub the sub
+         */
         public Row(int id, String n, String e, String a, String t, String s, String sub) {
             this.id = new SimpleIntegerProperty(id);
             this.name = new SimpleStringProperty(n == null ? "" : n);
@@ -258,12 +307,54 @@ public class ApplicationsPage {
             this.status = new SimpleStringProperty(s == null ? "pending" : s);
             this.submitted = new SimpleStringProperty(sub == null ? "" : sub);
         }
+
+        /**
+         * Gets id.
+         *
+         * @return the id
+         */
         public int getId() { return id.get(); }
+
+        /**
+         * Gets name.
+         *
+         * @return the name
+         */
         public String getName() { return name.get(); }
+
+        /**
+         * Gets email.
+         *
+         * @return the email
+         */
         public String getEmail() { return email.get(); }
+
+        /**
+         * Gets address.
+         *
+         * @return the address
+         */
         public String getAddress() { return address.get(); }
+
+        /**
+         * Gets type.
+         *
+         * @return the type
+         */
         public String getType() { return type.get(); }
+
+        /**
+         * Gets status.
+         *
+         * @return the status
+         */
         public String getStatus() { return status.get(); }
+
+        /**
+         * Gets submitted.
+         *
+         * @return the submitted
+         */
         public String getSubmitted() { return submitted.get(); }
     }
 }

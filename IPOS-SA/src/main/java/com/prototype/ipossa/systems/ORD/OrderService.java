@@ -3,16 +3,36 @@ package com.prototype.ipossa.systems.ORD;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Order service.
+ */
 public class OrderService {
     private List<Order> orders;
 
+    /**
+     * Instantiates a new Order service.
+     */
     public OrderService() {
         this.orders = new ArrayList<>();
 
     }
+
+    /**
+     * Order exists boolean.
+     *
+     * @param orderID the order id
+     * @return the boolean
+     */
     public boolean orderExists(String orderID) {
         return searchOrder(orderID) != null;
     }
+
+    /**
+     * Gets merchant orders.
+     *
+     * @param merchantID the merchant id
+     * @return the merchant orders
+     */
     public List<Order> getMerchantOrders(String merchantID) {
         List<Order> merchantOrders = new ArrayList<>();
 
@@ -25,6 +45,12 @@ public class OrderService {
         }
         return merchantOrders;
     }
+
+    /**
+     * Gets incomplete orders.
+     *
+     * @return the incomplete orders
+     */
     public List<Order> getIncompleteOrders() {
         List<Order> inompleteOrders = new ArrayList<>();
 
@@ -35,6 +61,14 @@ public class OrderService {
         }
         return inompleteOrders;
     }
+
+    /**
+     * Update order status boolean.
+     *
+     * @param orderID   the order id
+     * @param newStatus the new status
+     * @return the boolean
+     */
     public boolean updateOrderStatus(String orderID, Order.OrderStatus newStatus) {
         Order order = searchOrder(orderID);
 
@@ -56,6 +90,13 @@ public class OrderService {
         }
         return false;
     }
+
+    /**
+     * Search order order.
+     *
+     * @param orderID the order id
+     * @return the order
+     */
     public Order searchOrder(String orderID) {
         for (Order order : orders) {
             if (order.getOrderID().equals(orderID)) {
@@ -64,6 +105,13 @@ public class OrderService {
         }
         return null;
     }
+
+    /**
+     * Remove order boolean.
+     *
+     * @param orderID the order id
+     * @return the boolean
+     */
     public boolean removeOrder(String orderID) {
         Order order = searchOrder(orderID);
         if (order != null) {
@@ -72,6 +120,13 @@ public class OrderService {
         }
         return false;
     }
+
+    /**
+     * Add order boolean.
+     *
+     * @param order the order
+     * @return the boolean
+     */
     public boolean addOrder(Order order) {
         if (order == null ||orderExists(order.getOrderID())) {
             return false;

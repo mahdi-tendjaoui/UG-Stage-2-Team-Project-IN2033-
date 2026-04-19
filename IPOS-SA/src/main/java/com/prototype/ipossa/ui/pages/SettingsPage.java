@@ -12,11 +12,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * The type Settings page.
+ */
 public class SettingsPage {
 
     private final UserAccount user;
+
+    /**
+     * Instantiates a new Settings page.
+     *
+     * @param user the user
+     */
     public SettingsPage(UserAccount user) { this.user = user; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         TabPane tabs = new TabPane();
         tabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);

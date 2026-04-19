@@ -10,11 +10,23 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+/**
+ * The type Login screen.
+ */
 public class LoginScreen {
 
     private final Stage stage;
+
+    /**
+     * Instantiates a new Login screen.
+     *
+     * @param stage the stage
+     */
     public LoginScreen(Stage stage) { this.stage = stage; }
 
+    /**
+     * Show.
+     */
     public void show() {
         StackPane root = new StackPane();
         root.getStyleClass().addAll("root", "login-root");

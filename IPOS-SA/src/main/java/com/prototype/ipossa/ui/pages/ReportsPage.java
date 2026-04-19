@@ -28,6 +28,9 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * The type Reports page.
+ */
 public class ReportsPage {
 
     private final UserAccount user;
@@ -37,8 +40,18 @@ public class ReportsPage {
     private ComboBox<MerchantRef> merchantPicker;
     private String currentReportTitle = "Report";
 
+    /**
+     * Instantiates a new Reports page.
+     *
+     * @param user the user
+     */
     public ReportsPage(UserAccount user) { this.user = user; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox root = new VBox(14);
 
@@ -696,22 +709,119 @@ public class ReportsPage {
     }
     private String nz(String s) { return s == null ? "-" : s; }
 
+    /**
+     * The type Order row.
+     */
     public static class OrderRow {
-        public final SimpleStringProperty orderId, date, amount, status, invoiceId, payment;
+        /**
+         * The Order id.
+         */
+        public final SimpleStringProperty orderId, /**
+         * The Date.
+         */
+        date, /**
+         * The Amount.
+         */
+        amount, /**
+         * The Status.
+         */
+        status, /**
+         * The Invoice id.
+         */
+        invoiceId, /**
+         * The Payment.
+         */
+        payment;
+
+        /**
+         * Instantiates a new Order row.
+         *
+         * @param o the o
+         * @param d the d
+         * @param a the a
+         * @param s the s
+         * @param i the
+         * @param p the p
+         */
         public OrderRow(String o, String d, String a, String s, String i, String p) {
             this.orderId = new SimpleStringProperty(o); this.date = new SimpleStringProperty(d);
             this.amount = new SimpleStringProperty(a); this.status = new SimpleStringProperty(s);
             this.invoiceId = new SimpleStringProperty(i); this.payment = new SimpleStringProperty(p);
         }
+
+        /**
+         * Gets order id.
+         *
+         * @return the order id
+         */
         public String getOrderId() { return orderId.get(); }
+
+        /**
+         * Gets date.
+         *
+         * @return the date
+         */
         public String getDate() { return date.get(); }
+
+        /**
+         * Gets amount.
+         *
+         * @return the amount
+         */
         public String getAmount() { return amount.get(); }
+
+        /**
+         * Gets status.
+         *
+         * @return the status
+         */
         public String getStatus() { return status.get(); }
+
+        /**
+         * Gets invoice id.
+         *
+         * @return the invoice id
+         */
         public String getInvoiceId() { return invoiceId.get(); }
+
+        /**
+         * Gets payment.
+         *
+         * @return the payment
+         */
         public String getPayment() { return payment.get(); }
     }
+
+    /**
+     * The type Item row.
+     */
     public static class ItemRow {
-        public final SimpleStringProperty itemId, description, qty, unit, lineTotal;
+        /**
+         * The Item id.
+         */
+        public final SimpleStringProperty itemId, /**
+         * The Description.
+         */
+        description, /**
+         * The Qty.
+         */
+        qty, /**
+         * The Unit.
+         */
+        unit, /**
+         * The Line total.
+         */
+        lineTotal;
+
+        /**
+         * Instantiates a new Item row.
+         *
+         * @param i  the
+         * @param d  the d
+         * @param q  the q
+         * @param u  the u
+         * @param lt the lt
+         */
         public ItemRow(String i, String d, String q, String u, String lt) {
             this.itemId = new SimpleStringProperty(i);
             this.description = new SimpleStringProperty(d);
@@ -719,14 +829,77 @@ public class ReportsPage {
             this.unit = new SimpleStringProperty(u);
             this.lineTotal = new SimpleStringProperty(lt);
         }
+
+        /**
+         * Gets item id.
+         *
+         * @return the item id
+         */
         public String getItemId() { return itemId.get(); }
+
+        /**
+         * Gets description.
+         *
+         * @return the description
+         */
         public String getDescription() { return description.get(); }
+
+        /**
+         * Gets qty.
+         *
+         * @return the qty
+         */
         public String getQty() { return qty.get(); }
+
+        /**
+         * Gets unit.
+         *
+         * @return the unit
+         */
         public String getUnit() { return unit.get(); }
+
+        /**
+         * Gets line total.
+         *
+         * @return the line total
+         */
         public String getLineTotal() { return lineTotal.get(); }
     }
+
+    /**
+     * The type Invoice row.
+     */
     public static class InvoiceRow {
-        public final SimpleStringProperty invoiceId, orderId, date, merchant, amount, status;
+        /**
+         * The Invoice id.
+         */
+        public final SimpleStringProperty invoiceId, /**
+         * The Order id.
+         */
+        orderId, /**
+         * The Date.
+         */
+        date, /**
+         * The Merchant.
+         */
+        merchant, /**
+         * The Amount.
+         */
+        amount, /**
+         * The Status.
+         */
+        status;
+
+        /**
+         * Instantiates a new Invoice row.
+         *
+         * @param inv the inv
+         * @param o   the o
+         * @param d   the d
+         * @param m   the m
+         * @param a   the a
+         * @param s   the s
+         */
         public InvoiceRow(String inv, String o, String d, String m, String a, String s) {
             this.invoiceId = new SimpleStringProperty(inv);
             this.orderId = new SimpleStringProperty(o);
@@ -735,11 +908,47 @@ public class ReportsPage {
             this.amount = new SimpleStringProperty(a);
             this.status = new SimpleStringProperty(s);
         }
+
+        /**
+         * Gets invoice id.
+         *
+         * @return the invoice id
+         */
         public String getInvoiceId() { return invoiceId.get(); }
+
+        /**
+         * Gets order id.
+         *
+         * @return the order id
+         */
         public String getOrderId() { return orderId.get(); }
+
+        /**
+         * Gets date.
+         *
+         * @return the date
+         */
         public String getDate() { return date.get(); }
+
+        /**
+         * Gets merchant.
+         *
+         * @return the merchant
+         */
         public String getMerchant() { return merchant.get(); }
+
+        /**
+         * Gets amount.
+         *
+         * @return the amount
+         */
         public String getAmount() { return amount.get(); }
+
+        /**
+         * Gets status.
+         *
+         * @return the status
+         */
         public String getStatus() { return status.get(); }
     }
     private record MerchantRef(int id, String name) {

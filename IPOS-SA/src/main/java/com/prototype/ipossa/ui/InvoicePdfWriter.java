@@ -8,18 +8,64 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Invoice pdf writer.
+ */
 public class InvoicePdfWriter {
 
+    /**
+     * The type Line item.
+     */
     public static class LineItem {
-        public final String itemId, description;
+        /**
+         * The Item id.
+         */
+        public final String itemId, /**
+         * The Description.
+         */
+        description;
+        /**
+         * The Quantity.
+         */
         public final int quantity;
+        /**
+         * The Unit cost.
+         */
         public final double unitCost;
+
+        /**
+         * Instantiates a new Line item.
+         *
+         * @param id the id
+         * @param d  the d
+         * @param q  the q
+         * @param c  the c
+         */
         public LineItem(String id, String d, int q, double c) {
             this.itemId = id; this.description = d; this.quantity = q; this.unitCost = c;
         }
+
+        /**
+         * Line total double.
+         *
+         * @return the double
+         */
         public double lineTotal() { return quantity * unitCost; }
     }
 
+    /**
+     * Write.
+     *
+     * @param out             the out
+     * @param invoiceId       the invoice id
+     * @param orderId         the order id
+     * @param orderDate       the order date
+     * @param merchantName    the merchant name
+     * @param merchantAddress the merchant address
+     * @param items           the items
+     * @param total           the total
+     * @throws Exception the exception
+     */
     public static void write(File out,
                              String invoiceId, String orderId, String orderDate,
                              String merchantName, String merchantAddress,

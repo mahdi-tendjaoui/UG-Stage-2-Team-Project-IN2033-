@@ -16,6 +16,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Main app.
+ */
 public class MainApp {
 
     private final Stage stage;
@@ -30,18 +33,33 @@ public class MainApp {
     private Label pageTitleLabel;
     private BorderPane root;
 
+    /**
+     * Instantiates a new Main app.
+     *
+     * @param stage the stage
+     * @param user  the user
+     */
     public MainApp(Stage stage, UserAccount user) {
         this.stage = stage;
         this.currentUser = user;
         this.currentMerchant = null;
     }
 
+    /**
+     * Instantiates a new Main app.
+     *
+     * @param stage    the stage
+     * @param merchant the merchant
+     */
     public MainApp(Stage stage, MerchantAccount merchant) {
         this.stage = stage;
         this.currentUser = null;
         this.currentMerchant = merchant;
     }
 
+    /**
+     * Show.
+     */
     public void show() {
         root = new BorderPane();
         root.getStyleClass().add("root");
@@ -234,8 +252,20 @@ public class MainApp {
     }
 
     private static class NavButton {
+        /**
+         * The Button.
+         */
         final Button button;
+        /**
+         * The Label.
+         */
         final String label;
+
+        /**
+         * Instantiates a new Nav button.
+         *
+         * @param label the label
+         */
         NavButton(String label) {
             this.label = label;
             button = new Button(label);
@@ -243,6 +273,12 @@ public class MainApp {
             button.setAlignment(Pos.CENTER_LEFT);
             button.getStyleClass().add("nav-button");
         }
+
+        /**
+         * Sets active.
+         *
+         * @param active the active
+         */
         void setActive(boolean active) {
             button.getStyleClass().remove("nav-button-active");
             if (active) button.getStyleClass().add("nav-button-active");

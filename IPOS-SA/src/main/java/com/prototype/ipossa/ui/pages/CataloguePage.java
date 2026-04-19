@@ -20,6 +20,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * The type Catalogue page.
+ */
 public class CataloguePage {
 
     private final UserAccount user;
@@ -27,7 +30,19 @@ public class CataloguePage {
     private final ObservableList<Row> data = FXCollections.observableArrayList();
     private TableView<Row> table;
 
+    /**
+     * Instantiates a new Catalogue page.
+     *
+     * @param user the user
+     */
     public CataloguePage(UserAccount user) { this(user, false); }
+
+    /**
+     * Instantiates a new Catalogue page.
+     *
+     * @param user     the user
+     * @param readOnly the read only
+     */
     public CataloguePage(UserAccount user, boolean readOnly) {
         this.user = user;
         this.readOnly = readOnly;
@@ -41,6 +56,11 @@ public class CataloguePage {
                 || r == com.prototype.ipossa.systems.ACC.Role.WAREHOUSE_EMPLOYEE;
     }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox root = new VBox(14);
 
@@ -323,10 +343,50 @@ public class CataloguePage {
         return Boolean.TRUE.equals(d.showAndWait().orElse(false));
     }
 
+    /**
+     * The type Row.
+     */
     public static class Row {
-        public final SimpleStringProperty itemId, description, packageType, unit;
-        public final SimpleIntegerProperty unitsInPack, availability, stockLimit;
+        /**
+         * The Item id.
+         */
+        public final SimpleStringProperty itemId, /**
+         * The Description.
+         */
+        description, /**
+         * The Package type.
+         */
+        packageType, /**
+         * The Unit.
+         */
+        unit;
+        /**
+         * The Units in pack.
+         */
+        public final SimpleIntegerProperty unitsInPack, /**
+         * The Availability.
+         */
+        availability, /**
+         * The Stock limit.
+         */
+        stockLimit;
+        /**
+         * The Package cost.
+         */
         public final SimpleDoubleProperty packageCost;
+
+        /**
+         * Instantiates a new Row.
+         *
+         * @param id   the id
+         * @param desc the desc
+         * @param pt   the pt
+         * @param u    the u
+         * @param uip  the uip
+         * @param c    the c
+         * @param av   the av
+         * @param lim  the lim
+         */
         public Row(String id, String desc, String pt, String u, int uip, double c, int av, int lim) {
             this.itemId = new SimpleStringProperty(id);
             this.description = new SimpleStringProperty(desc);
@@ -337,13 +397,61 @@ public class CataloguePage {
             this.availability = new SimpleIntegerProperty(av);
             this.stockLimit = new SimpleIntegerProperty(lim);
         }
+
+        /**
+         * Gets item id.
+         *
+         * @return the item id
+         */
         public String getItemId() { return itemId.get(); }
+
+        /**
+         * Gets description.
+         *
+         * @return the description
+         */
         public String getDescription() { return description.get(); }
+
+        /**
+         * Gets package type.
+         *
+         * @return the package type
+         */
         public String getPackageType() { return packageType.get(); }
+
+        /**
+         * Gets unit.
+         *
+         * @return the unit
+         */
         public String getUnit() { return unit.get(); }
+
+        /**
+         * Gets units in pack.
+         *
+         * @return the units in pack
+         */
         public int getUnitsInPack() { return unitsInPack.get(); }
+
+        /**
+         * Gets package cost.
+         *
+         * @return the package cost
+         */
         public double getPackageCost() { return packageCost.get(); }
+
+        /**
+         * Gets availability.
+         *
+         * @return the availability
+         */
         public int getAvailability() { return availability.get(); }
+
+        /**
+         * Gets stock limit.
+         *
+         * @return the stock limit
+         */
         public int getStockLimit() { return stockLimit.get(); }
     }
 }

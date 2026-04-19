@@ -19,6 +19,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Merchant management panel.
+ */
 public class MerchantManagementPanel {
 
     private final UserAccount user;
@@ -26,8 +29,18 @@ public class MerchantManagementPanel {
     private final ObservableList<MerchRow> data = FXCollections.observableArrayList();
     private TableView<MerchRow> table;
 
+    /**
+     * Instantiates a new Merchant management panel.
+     *
+     * @param user the user
+     */
     public MerchantManagementPanel(UserAccount user) { this.user = user; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox box = new VBox(12);
 
@@ -337,10 +350,42 @@ public class MerchantManagementPanel {
         else UIUtil.error("Error", "Could not delete merchant. (Check that related orders are archived.)");
     }
 
+    /**
+     * The type Merch row.
+     */
     public static class MerchRow {
+        /**
+         * The Id.
+         */
         public final int id;
-        public final SimpleStringProperty name, accountNo, discountType, state;
+        /**
+         * The Name.
+         */
+        public final SimpleStringProperty name, /**
+         * The Account no.
+         */
+        accountNo, /**
+         * The Discount type.
+         */
+        discountType, /**
+         * The State.
+         */
+        state;
+        /**
+         * The Credit limit.
+         */
         public final SimpleDoubleProperty creditLimit;
+
+        /**
+         * Instantiates a new Merch row.
+         *
+         * @param id the id
+         * @param n  the n
+         * @param a  the a
+         * @param cl the cl
+         * @param dt the dt
+         * @param s  the s
+         */
         public MerchRow(int id, String n, String a, double cl, String dt, String s) {
             this.id = id;
             this.name = new SimpleStringProperty(n == null ? "" : n);
@@ -349,15 +394,63 @@ public class MerchantManagementPanel {
             this.discountType = new SimpleStringProperty(dt);
             this.state = new SimpleStringProperty(s == null ? "normal" : s);
         }
+
+        /**
+         * Gets name.
+         *
+         * @return the name
+         */
         public String getName() { return name.get(); }
+
+        /**
+         * Gets account no.
+         *
+         * @return the account no
+         */
         public String getAccountNo() { return accountNo.get(); }
+
+        /**
+         * Gets credit limit.
+         *
+         * @return the credit limit
+         */
         public double getCreditLimit() { return creditLimit.get(); }
+
+        /**
+         * Gets discount type.
+         *
+         * @return the discount type
+         */
         public String getDiscountType() { return discountType.get(); }
+
+        /**
+         * Gets state.
+         *
+         * @return the state
+         */
         public String getState() { return state.get(); }
     }
 
     private static class TierRow {
-        Double min, max; double rate;
+        /**
+         * The Min.
+         */
+        Double min, /**
+         * The Max.
+         */
+        max;
+        /**
+         * The Rate.
+         */
+        double rate;
+
+        /**
+         * Instantiates a new Tier row.
+         *
+         * @param min  the min
+         * @param max  the max
+         * @param rate the rate
+         */
         TierRow(Double min, Double max, double rate) { this.min = min; this.max = max; this.rate = rate; }
     }
 }

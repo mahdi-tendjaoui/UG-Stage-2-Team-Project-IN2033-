@@ -2,8 +2,20 @@ package com.prototype.ipossa.systems.ACC;
 
 import java.sql.*;
 
+/**
+ * The type Account sql.
+ */
 public class AccountSQL {
 
+    /**
+     * Validate user boolean.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @param password the password
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public static boolean validateUser(Connection conn, String username, String password) throws SQLException {
         String query = "SELECT * FROM logins WHERE username = ? AND password = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -13,6 +25,14 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Gets user role.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @return the user role
+     * @throws SQLException the sql exception
+     */
     public static String getUserRole(Connection conn, String username) throws SQLException {
         String query = "SELECT role FROM logins WHERE username = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -23,6 +43,15 @@ public class AccountSQL {
         return null;
     }
 
+    /**
+     * Create user account.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @param password the password
+     * @param role     the role
+     * @throws SQLException the sql exception
+     */
     public static void createUserAccount(Connection conn, String username, String password, String role) throws SQLException {
         String query = "INSERT INTO logins (username, password, role) VALUES (?, ?, ?)";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -33,6 +62,13 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Delete user account.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @throws SQLException the sql exception
+     */
     public static void deleteUserAccount(Connection conn, String username) throws SQLException {
         String query = "DELETE FROM logins WHERE username = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -41,6 +77,14 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Change user role.
+     *
+     * @param conn     the conn
+     * @param username the username
+     * @param newRole  the new role
+     * @throws SQLException the sql exception
+     */
     public static void changeUserRole(Connection conn, String username, String newRole) throws SQLException {
         String query = "UPDATE logins SET role = ? WHERE username = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -50,11 +94,27 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Gets all users.
+     *
+     * @param conn the conn
+     * @return the all users
+     * @throws SQLException the sql exception
+     */
     public static ResultSet getAllUsers(Connection conn) throws SQLException {
         String query = "SELECT username, role FROM logins";
         return conn.prepareStatement(query).executeQuery();
     }
 
+    /**
+     * Authenticate merchant boolean.
+     *
+     * @param conn     the conn
+     * @param login    the login
+     * @param password the password
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public static boolean authenticateMerchant(Connection conn, String login, String password) throws SQLException {
         String query = "SELECT 1 FROM merchants " +
                        "WHERE LOWER(TRIM(login)) = LOWER(TRIM(?)) AND password = ?";
@@ -65,6 +125,21 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Create merchant account.
+     *
+     * @param conn              the conn
+     * @param accountHolderName the account holder name
+     * @param accountNumber     the account number
+     * @param contactName       the contact name
+     * @param address           the address
+     * @param phoneNumber       the phone number
+     * @param creditLimit       the credit limit
+     * @param agreedDiscount    the agreed discount
+     * @param login             the login
+     * @param password          the password
+     * @throws SQLException the sql exception
+     */
     public static void createMerchantAccount(Connection conn, String accountHolderName, String accountNumber, String contactName, String address,
                                              String phoneNumber, double creditLimit, String agreedDiscount, String login, String password) throws SQLException {
         String query = "INSERT INTO merchants (account_holder_name, account_number, contact_name, address, " +
@@ -84,6 +159,13 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Delete merchant account.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @throws SQLException the sql exception
+     */
     public static void deleteMerchantAccount(Connection conn, int merchantID) throws SQLException {
 
         String[] queries = {
@@ -103,6 +185,16 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Update merchant account.
+     *
+     * @param conn        the conn
+     * @param merchantID  the merchant id
+     * @param contactName the contact name
+     * @param address     the address
+     * @param phoneNumber the phone number
+     * @throws SQLException the sql exception
+     */
     public static void updateMerchantAccount(Connection conn, int merchantID, String contactName,
                                              String address, String phoneNumber) throws SQLException {
         String query = "UPDATE merchants SET contact_name = ?, address = ?, phone_number = ? WHERE merchant_ID = ?";
@@ -115,6 +207,14 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Sets credit limit.
+     *
+     * @param conn        the conn
+     * @param merchantID  the merchant id
+     * @param creditLimit the credit limit
+     * @throws SQLException the sql exception
+     */
     public static void setCreditLimit(Connection conn, int merchantID, double creditLimit) throws SQLException {
         String query = "UPDATE merchants SET credit_limit = ? WHERE merchant_ID = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -124,6 +224,14 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Update merchant status.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @param status     the status
+     * @throws SQLException the sql exception
+     */
     public static void updateMerchantStatus(Connection conn, int merchantID, String status) throws SQLException {
         String query = "UPDATE merchants SET account_state = ? WHERE merchant_ID = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -133,6 +241,14 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Gets merchant status.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @return the merchant status
+     * @throws SQLException the sql exception
+     */
     public static String getMerchantStatus(Connection conn, int merchantID) throws SQLException {
         String query = "SELECT account_state FROM merchants WHERE merchant_ID = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {
@@ -143,6 +259,14 @@ public class AccountSQL {
         return null;
     }
 
+    /**
+     * Gets merchant id.
+     *
+     * @param conn  the conn
+     * @param login the login
+     * @return the merchant id
+     * @throws SQLException the sql exception
+     */
     public static int getMerchantID(Connection conn, String login) throws SQLException {
         String query = "SELECT merchant_ID FROM merchants " +
                        "WHERE LOWER(TRIM(login)) = LOWER(TRIM(?))";
@@ -154,11 +278,28 @@ public class AccountSQL {
         return -1;
     }
 
+    /**
+     * Gets all merchants.
+     *
+     * @param conn the conn
+     * @return the all merchants
+     * @throws SQLException the sql exception
+     */
     public static ResultSet getAllMerchants(Connection conn) throws SQLException {
         String query = "SELECT * FROM merchants";
         return conn.prepareStatement(query).executeQuery();
     }
 
+    /**
+     * Add discount tier.
+     *
+     * @param conn          the conn
+     * @param merchantID    the merchant id
+     * @param minOrderValue the min order value
+     * @param maxOrderValue the max order value
+     * @param discountRate  the discount rate
+     * @throws SQLException the sql exception
+     */
     public static void addDiscountTier(Connection conn, int merchantID, Double minOrderValue,
                                        Double maxOrderValue, double discountRate) throws SQLException {
         String query = "INSERT INTO merchants_discounts (merchant_ID, min_order_value, max_order_value, discount_rate) " +
@@ -174,6 +315,13 @@ public class AccountSQL {
         }
     }
 
+    /**
+     * Delete discount tiers.
+     *
+     * @param conn       the conn
+     * @param merchantID the merchant id
+     * @throws SQLException the sql exception
+     */
     public static void deleteDiscountTiers(Connection conn, int merchantID) throws SQLException {
         String query = "DELETE FROM merchants_discounts WHERE merchant_ID = ?";
         try (PreparedStatement st = conn.prepareStatement(query)) {

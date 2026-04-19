@@ -19,6 +19,9 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The type Users page.
+ */
 public class UsersPage {
 
     private final UserAccount currentUser;
@@ -27,11 +30,22 @@ public class UsersPage {
     private final ObservableList<Row> data = FXCollections.observableArrayList();
     private TableView<Row> table;
 
+    /**
+     * Instantiates a new Users page.
+     *
+     * @param currentUser the current user
+     * @param stage       the stage
+     */
     public UsersPage(UserAccount currentUser, Stage stage) {
         this.currentUser = currentUser;
         this.stage = stage;
     }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
 
         TabPane tabs = new TabPane();
@@ -203,13 +217,41 @@ public class UsersPage {
         else UIUtil.error("Error", "Could not delete user.");
     }
 
+    /**
+     * The type Row.
+     */
     public static class Row {
-        public final SimpleStringProperty username, role;
+        /**
+         * The Username.
+         */
+        public final SimpleStringProperty username, /**
+         * The Role.
+         */
+        role;
+
+        /**
+         * Instantiates a new Row.
+         *
+         * @param u the u
+         * @param r the r
+         */
         public Row(String u, String r) {
             this.username = new SimpleStringProperty(u);
             this.role = new SimpleStringProperty(r);
         }
+
+        /**
+         * Gets username.
+         *
+         * @return the username
+         */
         public String getUsername() { return username.get(); }
+
+        /**
+         * Gets role.
+         *
+         * @return the role
+         */
         public String getRole() { return role.get(); }
     }
 }

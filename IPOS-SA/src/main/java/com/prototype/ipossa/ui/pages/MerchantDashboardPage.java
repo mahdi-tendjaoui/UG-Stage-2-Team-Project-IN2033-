@@ -14,11 +14,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * The type Merchant dashboard page.
+ */
 public class MerchantDashboardPage {
 
     private final MerchantAccount merchant;
+
+    /**
+     * Instantiates a new Merchant dashboard page.
+     *
+     * @param m the m
+     */
     public MerchantDashboardPage(MerchantAccount m) { this.merchant = m; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox root = new VBox(16);
 

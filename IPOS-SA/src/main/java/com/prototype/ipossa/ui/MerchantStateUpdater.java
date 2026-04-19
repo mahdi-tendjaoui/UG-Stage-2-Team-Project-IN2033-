@@ -8,8 +8,14 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * The type Merchant state updater.
+ */
 public class MerchantStateUpdater {
 
+    /**
+     * Refresh all.
+     */
     public static void refreshAll() {
         try (Connection conn = MyJDBC.getConnection()) {
             ResultSet rs = conn.prepareStatement(
@@ -20,6 +26,11 @@ public class MerchantStateUpdater {
         }
     }
 
+    /**
+     * Refresh one.
+     *
+     * @param merchantId the merchant id
+     */
     public static void refreshOne(int merchantId) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(
@@ -61,6 +72,12 @@ public class MerchantStateUpdater {
         }
     }
 
+    /**
+     * Days late long.
+     *
+     * @param merchantId the merchant id
+     * @return the long
+     */
     public static long daysLate(int merchantId) {
         try (Connection conn = MyJDBC.getConnection()) {
             return daysLate(conn, merchantId);
@@ -114,6 +131,12 @@ public class MerchantStateUpdater {
         return firstOfNextMonth.withDayOfMonth(firstOfNextMonth.lengthOfMonth());
     }
 
+    /**
+     * Should show reminder boolean.
+     *
+     * @param merchantId the merchant id
+     * @return the boolean
+     */
     public static boolean shouldShowReminder(int merchantId) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(

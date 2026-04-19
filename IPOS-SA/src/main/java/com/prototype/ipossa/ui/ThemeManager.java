@@ -6,9 +6,18 @@ import javafx.scene.Scene;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Theme manager.
+ */
 public class ThemeManager {
 
     private static final ThemeManager INSTANCE = new ThemeManager();
+
+    /**
+     * Get theme manager.
+     *
+     * @return the theme manager
+     */
     public static ThemeManager get() { return INSTANCE; }
 
     private final SimpleBooleanProperty darkMode = new SimpleBooleanProperty(false);
@@ -18,16 +27,42 @@ public class ThemeManager {
         darkMode.addListener((o, ov, nv) -> applyAll());
     }
 
+    /**
+     * Dark mode property simple boolean property.
+     *
+     * @return the simple boolean property
+     */
     public SimpleBooleanProperty darkModeProperty() { return darkMode; }
+
+    /**
+     * Is dark boolean.
+     *
+     * @return the boolean
+     */
     public boolean isDark() { return darkMode.get(); }
+
+    /**
+     * Toggle.
+     */
     public void toggle() { darkMode.set(!darkMode.get()); }
 
+    /**
+     * Register.
+     *
+     * @param scene the scene
+     */
     public void register(Scene scene) {
         if (!scenes.contains(scene)) {
             scenes.add(scene);
             apply(scene);
         }
     }
+
+    /**
+     * Unregister.
+     *
+     * @param scene the scene
+     */
     public void unregister(Scene scene) { scenes.remove(scene); }
 
     private void applyAll() { for (Scene s : scenes) apply(s); }

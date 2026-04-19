@@ -8,9 +8,17 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Catalogue service.
+ */
 public class CatalogueService {
 
-    //returns  catalogue table.
+    /**
+     * Gets all items.
+     *
+     * @return the all items
+     */
+//returns  catalogue table.
     public List<CatalogueItem> getAllItems() {
         List<CatalogueItem> items = new ArrayList<>();
         try (Connection conn = MyJDBC.getConnection();
@@ -25,7 +33,13 @@ public class CatalogueService {
         return items;
     }
 
-    //returns item_ID, description
+    /**
+     * Search items list.
+     *
+     * @param keyword the keyword
+     * @return the list
+     */
+//returns item_ID, description
     public List<CatalogueItem> searchItems(String keyword) {
         List<CatalogueItem> items = new ArrayList<>();
         String like = "%" + keyword + "%";
@@ -46,7 +60,12 @@ public class CatalogueService {
         return items;
     }
 
-    //Returns items where availability is below stock limit
+    /**
+     * Gets low stock items.
+     *
+     * @return the low stock items
+     */
+//Returns items where availability is below stock limit
     public List<CatalogueItem> getLowStockItems() {
         List<CatalogueItem> items = new ArrayList<>();
         try (Connection conn = MyJDBC.getConnection();
@@ -62,7 +81,13 @@ public class CatalogueService {
         return items;
     }
 
-    //inester new product
+    /**
+     * Add product boolean.
+     *
+     * @param item the item
+     * @return the boolean
+     */
+//inester new product
     public boolean addProduct(CatalogueItem item) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement st = conn.prepareStatement("""
@@ -86,7 +111,13 @@ public class CatalogueService {
         }
     }
 
-    //updates fields
+    /**
+     * Update item boolean.
+     *
+     * @param item the item
+     * @return the boolean
+     */
+//updates fields
     public boolean updateItem(CatalogueItem item) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement st = conn.prepareStatement("""
@@ -110,6 +141,13 @@ public class CatalogueService {
         }
     }
 
+    /**
+     * Add stock boolean.
+     *
+     * @param itemId   the item id
+     * @param quantity the quantity
+     * @return the boolean
+     */
     public boolean addStock(String itemId, int quantity) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement st = conn.prepareStatement(
@@ -124,6 +162,13 @@ public class CatalogueService {
         }
     }
 
+    /**
+     * Update stock boolean.
+     *
+     * @param itemId      the item id
+     * @param newQuantity the new quantity
+     * @return the boolean
+     */
     public boolean updateStock(String itemId, int newQuantity) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement st = conn.prepareStatement(
@@ -138,6 +183,13 @@ public class CatalogueService {
         }
     }
 
+    /**
+     * Sets stock limit.
+     *
+     * @param itemId     the item id
+     * @param stockLimit the stock limit
+     * @return the stock limit
+     */
     public boolean setStockLimit(String itemId, int stockLimit) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement st = conn.prepareStatement(
@@ -152,6 +204,12 @@ public class CatalogueService {
         }
     }
 
+    /**
+     * Delete item boolean.
+     *
+     * @param itemId the item id
+     * @return the boolean
+     */
     public boolean deleteItem(String itemId) {
         try (Connection conn = MyJDBC.getConnection();
              PreparedStatement st = conn.prepareStatement(

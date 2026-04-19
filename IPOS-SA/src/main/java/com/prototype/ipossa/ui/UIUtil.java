@@ -7,12 +7,42 @@ import javafx.scene.layout.Region;
 
 import java.util.Optional;
 
+/**
+ * The type Ui util.
+ */
 public class UIUtil {
 
+    /**
+     * Info.
+     *
+     * @param title the title
+     * @param msg   the msg
+     */
     public static void info(String title, String msg) { show(Alert.AlertType.INFORMATION, title, msg); }
+
+    /**
+     * Warn.
+     *
+     * @param title the title
+     * @param msg   the msg
+     */
     public static void warn(String title, String msg) { show(Alert.AlertType.WARNING, title, msg); }
+
+    /**
+     * Error.
+     *
+     * @param title the title
+     * @param msg   the msg
+     */
     public static void error(String title, String msg) { show(Alert.AlertType.ERROR, title, msg); }
 
+    /**
+     * Confirm boolean.
+     *
+     * @param title the title
+     * @param msg   the msg
+     * @return the boolean
+     */
     public static boolean confirm(String title, String msg) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION, msg, ButtonType.OK, ButtonType.CANCEL);
         a.setTitle(title);
@@ -52,7 +82,27 @@ public class UIUtil {
             """;
     }
 
+    /**
+     * H 1 label.
+     *
+     * @param s the s
+     * @return the label
+     */
     public static Label h1(String s) { Label l = new Label(s); l.getStyleClass().add("h1"); return l; }
+
+    /**
+     * H 2 label.
+     *
+     * @param s the s
+     * @return the label
+     */
     public static Label h2(String s) { Label l = new Label(s); l.getStyleClass().add("h2"); return l; }
+
+    /**
+     * Dim label.
+     *
+     * @param s the s
+     * @return the label
+     */
     public static Label dim(String s) { Label l = new Label(s); l.getStyleClass().add("dim"); return l; }
 }

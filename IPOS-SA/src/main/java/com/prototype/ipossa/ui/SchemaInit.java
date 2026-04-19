@@ -6,8 +6,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
+/**
+ * The type Schema init.
+ */
 public class SchemaInit {
 
+    /**
+     * Ensure tables.
+     */
     public static void ensureTables() {
         try (Connection conn = MyJDBC.getConnection(); Statement st = conn.createStatement()) {
 

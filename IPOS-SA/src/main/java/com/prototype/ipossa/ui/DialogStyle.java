@@ -2,8 +2,16 @@ package com.prototype.ipossa.ui;
 
 import javafx.scene.control.Dialog;
 
+/**
+ * The type Dialog style.
+ */
 public class DialogStyle {
 
+    /**
+     * Apply.
+     *
+     * @param d the d
+     */
     public static void apply(Dialog<?> d) {
         var dp = d.getDialogPane();
         dp.getScene().getStylesheets().add("data:text/css;base64," +
@@ -14,6 +22,11 @@ public class DialogStyle {
         dp.setGraphic(null);
     }
 
+    /**
+     * Css string.
+     *
+     * @return the string
+     */
     public static String css() {
         return """
             .root.theme-light { -bg:#f4f6f9; -panel:#ffffff; -panel-2:#f3f5f8; -text:#0e1116; -text-dim:#5c6470; -border:#e3e7ec; -accent:#bbfa34; -accent-text:#0a0c10; -danger:#dc2626; -warn:#d97706; -success:#16a34a; }

@@ -11,11 +11,25 @@ import javafx.scene.layout.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+/**
+ * The type Merchant account page.
+ */
 public class MerchantAccountPage {
 
     private final MerchantAccount merchant;
+
+    /**
+     * Instantiates a new Merchant account page.
+     *
+     * @param m the m
+     */
     public MerchantAccountPage(MerchantAccount m) { this.merchant = m; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox root = new VBox(14);
 

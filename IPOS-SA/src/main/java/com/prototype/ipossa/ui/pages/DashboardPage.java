@@ -12,12 +12,25 @@ import javafx.scene.layout.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+/**
+ * The type Dashboard page.
+ */
 public class DashboardPage {
 
     private final UserAccount user;
 
+    /**
+     * Instantiates a new Dashboard page.
+     *
+     * @param user the user
+     */
     public DashboardPage(UserAccount user) { this.user = user; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox root = new VBox(16);
         root.getChildren().add(UIUtil.h2("Welcome back, " + user.getUsername()));

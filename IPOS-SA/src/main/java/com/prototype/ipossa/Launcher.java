@@ -6,8 +6,16 @@ import com.prototype.ipossa.ui.SchemaInit;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * The type Launcher.
+ */
 public class Launcher extends Application {
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         try {
             MyJDBC.getConnection().close();

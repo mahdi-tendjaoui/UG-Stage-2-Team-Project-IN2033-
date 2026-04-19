@@ -5,7 +5,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
+/**
+ * The type My jdbc.
+ */
 public class MyJDBC {
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     * @throws Exception the exception
+     */
     public static Connection getConnection() throws Exception {
         Properties props = new Properties();
 

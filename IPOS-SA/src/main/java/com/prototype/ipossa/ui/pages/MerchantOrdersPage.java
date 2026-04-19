@@ -22,14 +22,27 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The type Merchant orders page.
+ */
 public class MerchantOrdersPage {
 
     private final MerchantAccount merchant;
     private final ObservableList<Row> data = FXCollections.observableArrayList();
     private TableView<Row> table;
 
+    /**
+     * Instantiates a new Merchant orders page.
+     *
+     * @param m the m
+     */
     public MerchantOrdersPage(MerchantAccount m) { this.merchant = m; }
 
+    /**
+     * Build node.
+     *
+     * @return the node
+     */
     public Node build() {
         VBox root = new VBox(14);
 
@@ -514,9 +527,37 @@ public class MerchantOrdersPage {
         }
     }
 
+    /**
+     * The type Row.
+     */
     public static class Row {
-        public final SimpleStringProperty orderId, date, status, invoiceId;
+        /**
+         * The Order id.
+         */
+        public final SimpleStringProperty orderId, /**
+         * The Date.
+         */
+        date, /**
+         * The Status.
+         */
+        status, /**
+         * The Invoice id.
+         */
+        invoiceId;
+        /**
+         * The Total.
+         */
         public final SimpleDoubleProperty total;
+
+        /**
+         * Instantiates a new Row.
+         *
+         * @param oid the oid
+         * @param d   the d
+         * @param t   the t
+         * @param s   the s
+         * @param inv the inv
+         */
         public Row(String oid, String d, double t, String s, String inv) {
             this.orderId = new SimpleStringProperty(oid);
             this.date = new SimpleStringProperty(d);
@@ -524,28 +565,119 @@ public class MerchantOrdersPage {
             this.status = new SimpleStringProperty(s);
             this.invoiceId = new SimpleStringProperty(inv);
         }
+
+        /**
+         * Gets order id.
+         *
+         * @return the order id
+         */
         public String getOrderId() { return orderId.get(); }
+
+        /**
+         * Gets date.
+         *
+         * @return the date
+         */
         public String getDate() { return date.get(); }
+
+        /**
+         * Gets total.
+         *
+         * @return the total
+         */
         public double getTotal() { return total.get(); }
+
+        /**
+         * Gets status.
+         *
+         * @return the status
+         */
         public String getStatus() { return status.get(); }
+
+        /**
+         * Gets invoice id.
+         *
+         * @return the invoice id
+         */
         public String getInvoiceId() { return invoiceId.get(); }
     }
+
+    /**
+     * The type Item row.
+     */
     public static class ItemRow {
-        public final SimpleStringProperty itemId, description;
+        /**
+         * The Item id.
+         */
+        public final SimpleStringProperty itemId, /**
+         * The Description.
+         */
+        description;
+        /**
+         * The Quantity.
+         */
         public final SimpleIntegerProperty quantity;
+        /**
+         * The Unit cost.
+         */
         public final SimpleDoubleProperty unitCost;
+
+        /**
+         * Instantiates a new Item row.
+         *
+         * @param i the
+         * @param d the d
+         * @param q the q
+         * @param c the c
+         */
         public ItemRow(String i, String d, int q, double c) {
             this.itemId = new SimpleStringProperty(i);
             this.description = new SimpleStringProperty(d);
             this.quantity = new SimpleIntegerProperty(q);
             this.unitCost = new SimpleDoubleProperty(c);
         }
+
+        /**
+         * Gets item id.
+         *
+         * @return the item id
+         */
         public String getItemId() { return itemId.get(); }
+
+        /**
+         * Gets description.
+         *
+         * @return the description
+         */
         public String getDescription() { return description.get(); }
+
+        /**
+         * Gets quantity.
+         *
+         * @return the quantity
+         */
         public int getQuantity() { return quantity.get(); }
+
+        /**
+         * Gets unit cost.
+         *
+         * @return the unit cost
+         */
         public double getUnitCost() { return unitCost.get(); }
     }
+
+    /**
+     * The type Cart row.
+     */
     public static class CartRow extends ItemRow {
+        /**
+         * Instantiates a new Cart row.
+         *
+         * @param i the
+         * @param d the d
+         * @param q the q
+         * @param c the c
+         */
         public CartRow(String i, String d, int q, double c) { super(i, d, q, c); }
     }
     private record CatRef(String id, String description, double cost, int availability) {
