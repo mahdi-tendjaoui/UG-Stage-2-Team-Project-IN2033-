@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * The type Account controller.
+ * The class Account controller.
  */
 public class AccountController {
 
@@ -93,8 +93,8 @@ public class AccountController {
 
     /**
      * Change staff role boolean.
-     *
      * @param username the username
+     *
      * @param newRole  the new role
      * @return the boolean
      */
@@ -113,7 +113,6 @@ public class AccountController {
 
     /**
      * Gets all staff accounts.
-     *
      * @return the all staff accounts
      */
     public List<UserAccount> getAllStaffAccounts() {

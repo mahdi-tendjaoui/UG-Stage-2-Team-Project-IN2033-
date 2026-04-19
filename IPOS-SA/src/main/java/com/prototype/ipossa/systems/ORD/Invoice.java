@@ -1,7 +1,7 @@
 package com.prototype.ipossa.systems.ORD;
 
 /**
- * The type Invoice.
+ * The class Invoice.
  */
 public class Invoice {
     private String invoiceID;

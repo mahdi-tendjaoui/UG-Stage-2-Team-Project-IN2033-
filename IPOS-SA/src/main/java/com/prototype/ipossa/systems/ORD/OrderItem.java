@@ -1,7 +1,7 @@
 package com.prototype.ipossa.systems.ORD;
 
 /**
- * The type Order item.
+ * The class Order item.
  */
 public class OrderItem {
     private String productID;
