@@ -43,7 +43,7 @@ public class UsersPage {
 
     /**
      * Build node.
-     *
+     * sets up the screen, attaching the merchant pane and staff pane to tabs
      * @return the node
      */
     public Node build() {
@@ -57,6 +57,7 @@ public class UsersPage {
 
         if (currentUser.canManageMerchantAccounts()) {
             Tab merchantsTab = new Tab("Merchants");
+            //gets merchant users from here
             ScrollPane sp = new ScrollPane(new MerchantManagementPanel(currentUser).build());
             sp.setFitToWidth(true);
             sp.setPadding(new Insets(0));
@@ -70,6 +71,11 @@ public class UsersPage {
         return root;
     }
 
+    /**
+     * staffPane
+     * shows all the staff accounts
+     * @return the staff pane
+     */
     private Node staffPane() {
         VBox root = new VBox(12); root.setPadding(new Insets(12));
 
@@ -104,8 +110,15 @@ public class UsersPage {
         return root;
     }
 
+
+    /**
+     * buildTable
+     * sets up the table displaying the user and their details
+     * @return
+     */
     private TableView<Row> buildTable() {
         TableView<Row> t = new TableView<>();
+        //if empty
         t.setPlaceholder(UIUtil.dim("No staff accounts."));
 
         TableColumn<Row, String> u = new TableColumn<>("Username");
@@ -125,6 +138,7 @@ public class UsersPage {
                 changeRole.setOnAction(e -> changeRoleDialog(getTableRow().getItem()));
                 delete.setOnAction(e -> deleteUser(getTableRow().getItem()));
             }
+            //Allows us to update items
             @Override protected void updateItem(Void v, boolean empty) {
                 super.updateItem(v, empty);
                 Row row = getTableRow() == null ? null : getTableRow().getItem();
@@ -145,6 +159,10 @@ public class UsersPage {
         return t;
     }
 
+    /**
+     * Reload
+     * reloads all the users onto the screen
+     */
     private void reload() {
         data.clear();
         List<UserAccount> users = controller.getAllStaffAccounts();
@@ -152,15 +170,24 @@ public class UsersPage {
             data.add(new Row(ua.getUsername(), ua.getRole().getDbValue()));
     }
 
+    /**
+     * selectableRoles
+     * @return returns a list of selectable roles
+     */
     private List<String> selectableRoles() {
         return Arrays.stream(Role.values()).filter(Role::isStaffRole).map(Role::getDbValue).toList();
     }
 
+    /**
+     * addDialog
+     * Dialog for adding a new user to the system
+     */
     private void addDialog() {
         Dialog<Void> d = new Dialog<>();
         d.setTitle("New staff user");
         d.setHeaderText(null);
 
+        //adding new user's details
         GridPane g = new GridPane(); g.setHgap(10); g.setVgap(8); g.setPadding(new Insets(4));
         TextField u = new TextField();
         PasswordField p = new PasswordField();
@@ -189,6 +216,11 @@ public class UsersPage {
         d.showAndWait();
     }
 
+    /**
+     * changeRoleDialog
+     * changes the user's role
+     * @param row
+     */
     private void changeRoleDialog(Row row) {
         if (row == null) return;
         if (row.username.get().equalsIgnoreCase(currentUser.getUsername())) {
@@ -207,6 +239,11 @@ public class UsersPage {
         });
     }
 
+    /**
+     * deleteUser
+     * deletes the user
+     * @param row
+     */
     private void deleteUser(Row row) {
         if (row == null) return;
         if (row.username.get().equalsIgnoreCase(currentUser.getUsername())) {
@@ -216,7 +253,6 @@ public class UsersPage {
         if (controller.deleteStaffAccount(row.username.get())) reload();
         else UIUtil.error("Error", "Could not delete user.");
     }
-
     /**
      * The type Row.
      */

@@ -42,14 +42,13 @@ public class ReportsPage {
 
     /**
      * Instantiates a new Reports page.
-     *
      * @param user the user
      */
     public ReportsPage(UserAccount user) { this.user = user; }
 
     /**
      * Build node.
-     *
+     * builds the report page
      * @return the node
      */
     public Node build() {
@@ -144,6 +143,10 @@ public class ReportsPage {
         return root;
     }
 
+    /**
+     * loadMerchants
+     * loads merchants
+     */
     private void loadMerchants() {
         try (Connection conn = MyJDBC.getConnection()) {
             ResultSet rs = conn.prepareStatement(
@@ -154,6 +157,10 @@ public class ReportsPage {
         } catch (Exception ignored) {}
     }
 
+    /**
+     * renderReport
+     * @param name
+     */
     private void renderReport(String name) {
         visualArea.getChildren().clear();
         textOutput.clear();
@@ -173,6 +180,10 @@ public class ReportsPage {
         else if (name.startsWith("(vi)"))  reportStockTurnover();
     }
 
+    /**
+     * reportTurnover
+     * displays a merchant's turnover over a given period
+     */
     private void reportTurnover() {
         java.sql.Date s = java.sql.Date.valueOf(startPicker.getValue());
         java.sql.Date e = java.sql.Date.valueOf(endPicker.getValue());
@@ -264,6 +275,10 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
+    /**
+     * reportOrdersByMerchant
+     * shows a merchant's orders and order value over a given time period
+     */
     private void reportOrdersByMerchant() {
         MerchantRef m = merchantPicker.getValue();
         if (m == null) { visualArea.getChildren().add(warnMsg("Select a merchant.")); return; }
@@ -356,6 +371,10 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
+    /**
+     * reportMerchantActivity
+     * Shows a given merchant's orders and revenue during a given period of time
+     */
     private void reportMerchantActivity() {
         MerchantRef m = merchantPicker.getValue();
         if (m == null) { visualArea.getChildren().add(warnMsg("Select a merchant.")); return; }
@@ -452,16 +471,30 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
+    /**
+     * reportInvoicesForMerchant
+     * displays stats from a given merchant's invoices
+     */
     private void reportInvoicesForMerchant() {
         MerchantRef m = merchantPicker.getValue();
         if (m == null) { visualArea.getChildren().add(warnMsg("Select a merchant.")); return; }
         renderInvoiceList(m, "Invoices for " + m.name);
     }
 
+    /**
+     * reportAllInvoices
+     * Displays stats based on all invoices generated from merchant orders
+     */
     private void reportAllInvoices() {
         renderInvoiceList(null, "All invoices");
     }
 
+    /**
+     * renderInvoiceList
+     * Shows stats based on generated invoices for a given merchant's orders
+     * @param m
+     * @param headline
+     */
     private void renderInvoiceList(MerchantRef m, String headline) {
         java.sql.Date s = java.sql.Date.valueOf(startPicker.getValue());
         java.sql.Date e = java.sql.Date.valueOf(endPicker.getValue());
@@ -541,6 +574,10 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
+    /**
+     * reportStockTurnover
+     * generates a bar chart and stats for stock turnover over a given period of time
+     */
     private void reportStockTurnover() {
         java.sql.Date s = java.sql.Date.valueOf(startPicker.getValue());
         java.sql.Date e = java.sql.Date.valueOf(endPicker.getValue());
@@ -603,6 +640,10 @@ public class ReportsPage {
         textOutput.setText(txt.toString());
     }
 
+    /**
+     * generateReminders
+     * generates debt reminder letters for all merchants with outstanding credit
+     */
     private void generateReminders() {
         StringBuilder all = new StringBuilder();
         try (Connection conn = MyJDBC.getConnection()) {
@@ -632,6 +673,15 @@ public class ReportsPage {
         } catch (Exception e) { showError(e); }
     }
 
+    /***
+     * reminderLetter
+     * generates the debt reminder letter
+     * @param name
+     * @param acc
+     * @param addr
+     * @param balance
+     * @return
+     */
     private String reminderLetter(String name, String acc, String addr, double balance) {
         return String.format("""
             InfoPharma Ltd
@@ -653,6 +703,10 @@ public class ReportsPage {
                 "Address on file: " + (addr == null ? "(not recorded)" : addr) + "\n";
     }
 
+    /**
+     * printReport
+     * allows us to print reports
+     */
     private void printReport() {
         if (visualArea.getChildren().isEmpty() && textOutput.getText().isEmpty()) {
             UIUtil.warn("Nothing to print", "Generate a report first."); return;
@@ -665,6 +719,10 @@ public class ReportsPage {
         if (job.showPrintDialog(visualArea.getScene().getWindow()) && job.printPage(iv)) job.endJob();
     }
 
+    /**
+     * saveReport
+     * Allows us to save reports as text files
+     */
     private void saveReport() {
         if (textOutput.getText().isEmpty()) { UIUtil.warn("Nothing to save", "Generate a report first."); return; }
         FileChooser fc = new FileChooser();
@@ -682,27 +740,71 @@ public class ReportsPage {
         } catch (Exception e) { UIUtil.error("Error", e.getMessage()); }
     }
 
+    /**
+     * TableColumn
+     * template that allows us to add columns to the page
+     * @param title
+     * @param prop
+     * @param w
+     * @return
+     * @param <T>
+     */
     private static <T> TableColumn<T, String> strCol(String title, String prop, double w) {
         TableColumn<T, String> c = new TableColumn<>(title);
         c.setCellValueFactory(new PropertyValueFactory<>(prop)); c.setPrefWidth(w); return c;
     }
+
+    /**
+     * statBlock
+     * displays the stats in reports
+     * @param label
+     * @param value
+     * @return
+     */
     private VBox statBlock(String label, String value) {
         Label l = new Label(label); l.getStyleClass().add("dim");
         Label v = new Label(value); v.getStyleClass().add("h2");
         VBox b = new VBox(2, l, v); b.getStyleClass().add("stat-card");
         return b;
     }
+
+    /**
+     * emptyMsg
+     * disyplays a message stating that no data is available to generate a report
+     * @return
+     */
     private Label emptyMsg() {
         Label l = new Label("No data available for this report."); l.getStyleClass().add("dim"); return l;
     }
+
+    /**
+     * warnMsg
+     * displays warning messages
+     * @param msg
+     * @return
+     */
     private Label warnMsg(String msg) {
         Label l = new Label(msg); l.setStyle("-fx-text-fill: -danger;"); return l;
     }
+
+    /**
+     * showError
+     * displays errors
+     * @param e
+     */
     private void showError(Exception e) {
         Label l = new Label("Error: " + e.getMessage());
         l.setStyle("-fx-text-fill: -danger;");
         visualArea.getChildren().add(l);
     }
+
+    /**
+     * trunc
+     * shortens strings to the desired length
+     * @param s
+     * @param len
+     * @return shortened string
+     */
     private String trunc(String s, int len) {
         if (s == null) return "";
         return s.length() <= len ? s : s.substring(0, len - 1) + "…";
@@ -735,7 +837,6 @@ public class ReportsPage {
 
         /**
          * Instantiates a new Order row.
-         *
          * @param o the o
          * @param d the d
          * @param a the a
@@ -750,43 +851,43 @@ public class ReportsPage {
         }
 
         /**
+         * getOrderId
          * Gets order id.
-         *
          * @return the order id
          */
         public String getOrderId() { return orderId.get(); }
 
         /**
+         * getDate
          * Gets date.
-         *
          * @return the date
          */
         public String getDate() { return date.get(); }
 
         /**
+         * getAmount
          * Gets amount.
-         *
          * @return the amount
          */
         public String getAmount() { return amount.get(); }
 
         /**
+         * getStatus
          * Gets status.
-         *
          * @return the status
          */
         public String getStatus() { return status.get(); }
 
         /**
+         * getInvoiceId
          * Gets invoice id.
-         *
          * @return the invoice id
          */
         public String getInvoiceId() { return invoiceId.get(); }
 
         /**
+         * getPayment
          * Gets payment.
-         *
          * @return the payment
          */
         public String getPayment() { return payment.get(); }
@@ -815,7 +916,6 @@ public class ReportsPage {
 
         /**
          * Instantiates a new Item row.
-         *
          * @param i  the
          * @param d  the d
          * @param q  the q
@@ -831,36 +931,36 @@ public class ReportsPage {
         }
 
         /**
+         * getItemId
          * Gets item id.
-         *
          * @return the item id
          */
         public String getItemId() { return itemId.get(); }
 
         /**
+         * getDescription
          * Gets description.
-         *
          * @return the description
          */
         public String getDescription() { return description.get(); }
 
         /**
+         * getQty
          * Gets qty.
-         *
          * @return the qty
          */
         public String getQty() { return qty.get(); }
 
         /**
+         * getUnit
          * Gets unit.
-         *
          * @return the unit
          */
         public String getUnit() { return unit.get(); }
 
         /**
+         * getLineTotal
          * Gets line total.
-         *
          * @return the line total
          */
         public String getLineTotal() { return lineTotal.get(); }
@@ -891,8 +991,8 @@ public class ReportsPage {
         status;
 
         /**
+         * InvoiceRow
          * Instantiates a new Invoice row.
-         *
          * @param inv the inv
          * @param o   the o
          * @param d   the d
@@ -910,47 +1010,48 @@ public class ReportsPage {
         }
 
         /**
+         * getInvoiceId
          * Gets invoice id.
-         *
          * @return the invoice id
          */
         public String getInvoiceId() { return invoiceId.get(); }
 
         /**
+         * getOrderId
          * Gets order id.
-         *
          * @return the order id
          */
         public String getOrderId() { return orderId.get(); }
 
         /**
+         * getDate
          * Gets date.
-         *
          * @return the date
          */
         public String getDate() { return date.get(); }
 
         /**
+         * getMerchant
          * Gets merchant.
-         *
          * @return the merchant
          */
         public String getMerchant() { return merchant.get(); }
 
         /**
+         * getAmount
          * Gets amount.
-         *
          * @return the amount
          */
         public String getAmount() { return amount.get(); }
 
         /**
+         * getStatus
          * Gets status.
-         *
          * @return the status
          */
         public String getStatus() { return status.get(); }
     }
+    //fetches records
     private record MerchantRef(int id, String name) {
         @Override public String toString() { return name; }
     }
