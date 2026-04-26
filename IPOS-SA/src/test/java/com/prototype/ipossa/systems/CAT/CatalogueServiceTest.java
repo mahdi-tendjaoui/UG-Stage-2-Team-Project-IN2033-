@@ -154,11 +154,25 @@ public class CatalogueServiceTest {
                 itemId,
                 "Updated Test Item",
                 "Bottle",
-                "Tabs",
+                "Caps",
                 20,
                 4.99,
                 9,
                 3
         );
+        boolean result = instance.updateItem(updatedItem);
+
+        assertTrue(result, "should be updated");
+        List<CatalogueItem> items = instance.searchItems(itemId);
+        CatalogueItem found = findItemById(items, itemId);
+        assertNotNull(found, "Updated item should be found");
+        assertEquals("Updated Test Item", found.getDescription());
+        assertEquals("Bottle", found.getPackageType());
+        assertEquals("Caps", found.getUnit());
+        assertEquals(20, found.getUnitsInPack());
+        assertEquals(4.99, found.getPackageCost(), 0.001);
+        assertEquals(9, found.getAvailability());
+        assertEquals(3, found.getStockLimit());
+        instance.deleteItem(itemId);
     }
 }
